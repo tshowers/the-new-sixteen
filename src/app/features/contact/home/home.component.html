@@ -1,0 +1,161 @@
+<div class="container-fluid mt-5">
+    <!-- Natural Language Query Input -->
+    <div class="mb-4">
+        <label for="queryInput" class="form-label">Ask about your contacts:</label>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <button class="btn" (click)="navigateToEditContact()" id="addContactIcon" title="Add a Contact Record">
+                    <i class="fa-solid fa-plus"></i>
+                </button>
+                <button class="btn" (click)="navigateToList()" id="listContactsIcon" title="All Contacts">
+                    <i class="fa-solid fa-list"></i>
+                </button>
+
+                <button class="btn" (click)="navigateToImport()" id="importContactsIcon" title="Import .csv file">
+                    <i class="fa-solid fa-file-arrow-up"></i>
+                </button>
+            </div>
+            <input type="text" class="form-control large-text ms-2" id="queryInput" placeholder="e.g., 'Show me all contacts in the Chicagoland area'">
+            <button class="btn btn-primary ms-2" type="button" (click)="submitQuery()">Submit</button>
+        </div>
+    </div>
+    <!-- Suggested Contact to Reach Out To -->
+    <div class="row mt-4">
+        <h2>Suggested Contact</h2>
+        <div class="col">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-4">
+                        <app-contact-card-1 *ngIf="suggestedContact" [contact]="suggestedContact"></app-contact-card-1>
+                    </div>
+                    <div class="col-md-8">
+                        <app-contact-card-3 *ngIf="suggestedContact" [contact]="suggestedContact"></app-contact-card-3>
+                        <p class="card-text">This section recommends a contact to reach out to, selected based on factors like the duration since your last interaction and the urgency of re-engagement. Staying connected can enhance relationship management and business opportunities.</p>
+                        <!-- Placeholder for suggested contact details -->
+                        <div id="suggestedContact" class="mt-3" *ngIf="suggestedContact">
+                            <strong>Last Contacted:</strong> 
+                            <span id="lastContacted">
+                                
+                                {{ suggestedContact.lastContacted ? (suggestedContact.lastContacted | date:'mediumDate') : (suggestedContact.dateAdded ? (suggestedContact.dateAdded | date:'mediumDate') : 'No Date Available') }}
+                            </span><br>
+                            <strong>Reason for Suggestion:</strong> 
+                            <span id="contactReason">
+                                {{ determineReason() }}
+                            </span>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Who To Contact</h5>
+                    <p class="card-text">Display the contacts you should be contacting next.</p>
+                    <app-weekly-calendar [weekData]="weeklyChartData | async"></app-weekly-calendar>
+                    <canvas #priorityContactsChart style="max-height: 500px;"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Data Quality Index: {{ healthScore | number:'1.0-2' }}</h5>
+                    <p  class="card-text">This chart provides a visual representation of missing contact information within the database. Each segment highlights the absence of key data points such as last names, phone numbers, email addresses, and more. By identifying these gaps, we aim to improve the completeness and reliability of our contact records.</p>
+
+                    <canvas #missingDataChart></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-7">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Contacts Added Over Time</h5>
+                    <p class="card-text">This graph shows the number of contacts added to the database each day.</p>
+                    <canvas #contactsOverTimeChart></canvas>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-5">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Contacts by Type</h5>
+                    <p class="card-text">A pie chart showing the distribution of contacts by type.</p>
+                    <canvas #contactsByTypeChart></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-7">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Network Stength Score</h5>
+                    <p class="card-text">Evaluate the overall health of your network based on interaction frequency, connections, engagement levels, etc</p>
+                    <canvas #networkHealthChart id="networkHealthChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Contacts by US Timezones</h5>
+                    <p class="card-text">Distribution of contacts across different US timezones.</p>
+                    <canvas #timezonesChart></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Last Contact Timeline</h5>
+                    <p class="card-text">Timeline showing when each contact was last contacted.</p>
+                    <canvas #lastContactTimelineChart id="lastContactTimelineChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Communication Frequency</h5>
+                    <p class="card-text">Frequency of communication with each contact over a specific period.</p>
+                    <div style="width: 100%; overflow-x: auto;">
+                        <canvas #communicationFrequencyChart id="communicationFrequencyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Contact Acquisition Source</h5>
+                    <p class="card-text">How contacts are acquired, showing effective channels.</p>
+                    <canvas #acquisitionSourceChart id="acquisitionSourceChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Demographic Breakdown</h5>
+                    <p class="card-text"> Breakdown of contacts by demographic data like age, profession, or company size.</p>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col">
+                                <canvas #professionChart id="professionChart"></canvas>
+                            </div>
+                            <div class="col">
+                                <canvas #genderChart id="genderChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

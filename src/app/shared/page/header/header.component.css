@@ -1,0 +1,10 @@
+.navbar-nav {
+    display: flex;
+    width: 100%; /* Ensure the nav takes full width of its container */
+  }
+  
+  .navbar-nav .nav-item:last-child {
+    margin-left: auto; /* This pushes the last item to the right */
+  }
+  
+ 

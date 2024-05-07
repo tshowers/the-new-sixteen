@@ -1,0 +1,87 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <h1>Contacts</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10">
+
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <button class="btn" (click)="navigateToEditContact()" id="addContactIcon" title="Add a Contact Record">
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
+                </div>
+
+                <div class="input-group-prepend">
+                    <button class="btn" (click)="exportToCSV()" id="exportContactsIcon" title="Export">
+                        <i class="fa-solid fa-file-export"></i>
+                    </button>
+                </div>
+
+                <span class="input-group-addon bg-theme"><i class="fas fa-filter"></i></span>
+                <!-- Use 'disabled' binding with the async pipe to check if contacts exist and are more than 0 -->
+                <input [(ngModel)]="searchText" type="text" class="form-control form-control-lg ta-input-element" placeholder="Filter contacts . . ." [disabled]="(contacts$ | async)?.length === 0">
+            </div>
+        </div>
+        <div class="col-md-2 text-right">
+            <!-- Check if the observable has emitted data and use the count to determine singular/plural -->
+            <span *ngIf="contacts$ | async as contacts">
+                {{ contacts.length }} Item<span *ngIf="contacts.length !== 1">s</span>
+            </span>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col">
+            <ng-container *ngIf="(contacts$ | async) as contacts; else spinner">
+                <div class="sales-list p-5" id="orderList" *ngIf="contacts.length > 0; else noData">
+                    <table class="table table-hover table-striped">
+                        <thead>
+                            <tr>
+                                <th>Company</th>
+                                <th>Email</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Category</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Use the async pipe to subscribe to the contacts$ observable -->
+                            <tr *ngFor="let contact of (contacts$ | async) | filterContacts:searchText" (click)="onView(contact)" style="cursor: pointer;">
+                                <td>{{ contact?.company?.name }}</td>
+                                <!-- Safely access the first email address, if available -->
+                                <td>{{ (contact.emailAddresses && contact.emailAddresses.length && contact.emailAddresses.length > 0) ? contact.emailAddresses[0].emailAddress : 'No email' }}</td>
+                                <td class="text-capitalize">{{ contact?.firstName }}</td>
+                                <td class="text-capitalize">{{ contact?.lastName }}</td>
+                                <td>
+                                    <span *ngFor="let category of contact.profileTypes; let i = index">
+                                        {{category}} 
+                                   </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </ng-container>
+            <ng-template #noData>
+                <div class="alert alert-info mt-5">No contacts found.</div>
+            </ng-template>
+        </div>
+    </div>
+</div>
+<ng-template #spinner>
+    <div id="preloader">
+        <div id="ctn-preloader" class="ctn-preloader">
+            <div class="round_spinner">
+                <div class="spinner"></div>
+                <div class="text">
+                    <img src="assets/taliferro-website-logo.png" width="100" height="100" alt="Taliferro">
+                    <h4><span >Taliferro</span> </h4>
+                </div>
+            </div>
+            <h2 class="head">Hold Tight!</h2>
+            <p></p>
+        </div>
+    </div>
+</ng-template>

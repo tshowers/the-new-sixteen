@@ -1,0 +1,88 @@
+<div class="sidebar" id="sidebar">
+    <nav class="sidebar-nav" id="sidebar-nav-scroller">
+        <ul class="nav">
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle ta-sidebar-link" (click)="toggleDropdown($event, 'onboardingDropdown')" style="cursor:pointer"> Client Onboarding </a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item"> <a class="nav-link ta-sidebar-link disabled" aria-disabled="true" routerLink="/"> Welcome </a> </li>
+                    <li class="nav-item"> <a class="nav-link ta-sidebar-link disabled" aria-disabled="true" routerLink="/"> Setup </a> </li>
+                </ul>
+            </li>
+            <li class="divider"></li>
+
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle ta-sidebar-link" (click)="toggleDropdown($event, 'discoveryDopdown')" style="cursor:pointer">Client Discovery </a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item"> <a class="nav-link ta-sidebar-link disabled" aria-disabled="true" routerLink="/"> Client Profiles </a> </li>
+                    <li class="nav-item"> <a class="nav-link ta-sidebar-link disabled" aria-disabled="true" routerLink="/"> Needs Assessment </a> </li>
+                </ul>
+            </li>
+
+            <li class="divider"></li>
+
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle ta-sidebar-link" (click)="toggleDropdown($event, 'engagementDopdown')" style="cursor:pointer">Engagement Planning </a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item"> <a class="nav-link ta-sidebar-link disabled" aria-disabled="true" routerLink="/"> Client Profiles </a> </li>
+                    <li class="nav-item"> <a class="nav-link ta-sidebar-link disabled" aria-disabled="true" routerLink="/"> Needs Assessment </a> </li>
+                </ul>
+            </li>
+            <li class="divider"></li>
+
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle ta-sidebar-link" (click)="toggleDropdown($event, 'projectDopdown')" style="cursor:pointer">Project Execution </a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item"> <a class="nav-link ta-sidebar-link disabled" aria-disabled="true" routerLink="/"> Project Dashboard </a> </li>
+                    <li class="nav-item"> <a class="nav-link ta-sidebar-link disabled" aria-disabled="true" routerLink="/">Task Management </a> </li>
+                    <li class="nav-item"> <a class="nav-link ta-sidebar-link disabled" aria-disabled="true" routerLink="/">Communication Tools </a> </li>
+                </ul>
+            </li>
+            <li class="divider"></li>
+
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle ta-sidebar-link" (click)="toggleDropdown($event, 'performanceDopdown')" style="cursor:pointer">Performance Tracking </a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item"> <a class="nav-link ta-sidebar-link disabled" aria-disabled="true" routerLink="/">Time Tracking </a> </li>
+                    <li class="nav-item"> <a class="nav-link ta-sidebar-link disabled" aria-disabled="true" routerLink="/">Expense Management </a> </li>
+                </ul>
+            </li>
+            <li class="divider"></li>
+
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle ta-sidebar-link" (click)="toggleDropdown($event, 'billingDopdown')" style="cursor:pointer">Billing and Invoicing </a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item"> <a class="nav-link ta-sidebar-link disabled" aria-disabled="true" routerLink="/">Invoicing </a> </li>
+                    <li class="nav-item"> <a class="nav-link ta-sidebar-link disabled" aria-disabled="true" routerLink="/">Payment Processing </a> </li>
+                </ul>
+            </li>
+            <li class="divider"></li>
+
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle ta-sidebar-link" (click)="toggleDropdown($event, 'retentionDopdown')" style="cursor:pointer">Client Retention </a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item"> <a class="nav-link ta-sidebar-link disabled" aria-disabled="true" routerLink="/">Feedback and Surveys </a> </li>
+                    <li class="nav-item"> <a class="nav-link ta-sidebar-link disabled" aria-disabled="true" routerLink="/">Follow-Up Scheduling</a> </li>
+                </ul>
+            </li>
+            <li class="divider"></li>
+
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle ta-sidebar-link" (click)="toggleDropdown($event, 'resourceDopdown')" style="cursor:pointer">Resource Management</a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item"> <a class="nav-link ta-sidebar-link disabled" aria-disabled="true" routerLink="/">Document Storage</a> </li>
+                    <li class="nav-item"> <a class="nav-link ta-sidebar-link disabled" aria-disabled="true" routerLink="/">Resource Allocation</a> </li>
+                </ul>
+            </li>
+            <li class="divider"></li>
+
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle ta-sidebar-link" (click)="toggleDropdown($event, 'resourceDopdown')" style="cursor:pointer">Settings and Customization</a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item"> <a class="nav-link ta-sidebar-link disabled" aria-disabled="true" routerLink="/">User Preferences</a> </li>
+                    <li class="nav-item"> <a class="nav-link ta-sidebar-link disabled" aria-disabled="true" routerLink="/">Access Management</a> </li>
+                </ul>
+            </li>
+
+        </ul>
+    </nav>
+</div>

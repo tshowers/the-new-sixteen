@@ -1,0 +1,12 @@
+<div class="weekly-calendar">
+    <div class="month-header">{{ month }}</div>
+    <div class="week-row">
+        <div class="day" *ngFor="let day of weekData">
+            <div class="date-header">{{ day.date }}</div>
+            <ul class="contacts-list">
+                <!-- Adjusting here to show firstName and lastName -->
+                <li  *ngFor="let contact of day.contacts" (click)="onView(contact)" class="contact-item">{{ contact.firstName }} {{ contact.lastName }}</li>
+            </ul>
+        </div>
+    </div>
+</div>

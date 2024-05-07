@@ -1,0 +1,13 @@
+/* Adjust the specific size and responsiveness of the card containing the form */
+.card.pages-card {
+    width: 100%; /* Use full width to ensure there is enough space */
+    max-width: 500px; /* Set a maximum width for the form to look appropriate */
+    margin: 0 auto; /* Center the card horizontally */
+}
+
+/* You might also want to adjust the column settings for medium devices */
+@media (min-width: 768px) {
+    .col-md-12 {
+        max-width: 100%; /* Optional: you might adjust this as needed */
+    }
+}

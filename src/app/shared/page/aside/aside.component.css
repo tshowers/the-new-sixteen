@@ -1,0 +1,16 @@
+.aside-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #2c99e0; /* Replace #yourThemeColor with actual color */
+    color: #fff; /* Adjust text color as needed */
+}
+
+.aside-header i {
+    cursor: pointer; /* Makes the icon clickable */
+}
+
+
+
+

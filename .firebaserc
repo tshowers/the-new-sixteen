@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "taliferro-de66f"
+  },
+  "targets": {
+    "taliferro-de66f": {
+      "hosting": {
+        "the-new-sixteen": [
+          "taliferro-platform"
+        ]
+      }
+    }
   }
 }

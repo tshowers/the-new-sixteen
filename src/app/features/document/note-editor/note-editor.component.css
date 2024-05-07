@@ -1,0 +1,5 @@
+.large-text {
+    font-size: 20pt; /* Sets the font size to 20 points */
+    height: auto; /* Adjust height to fit larger text, if necessary */
+    padding: 10px; /* Optional: Increases padding to align text nicely within the input box */
+}

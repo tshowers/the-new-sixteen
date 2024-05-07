@@ -1,0 +1,8 @@
+<!-- Breadcrumb -->
+<ol class="breadcrumb bc-colored bg-theme d-flex justify-content-end" id="breadcrumb">
+  <li class="breadcrumb-item text-capitalize" [ngClass]="{'active': c.active}" *ngFor="let c of crumbs">
+    <a *ngIf="c.link" style="cursor:pointer" (click)="onRouteTo(c.link)">{{c?.name}}</a>
+    <span *ngIf="!c.link">{{c?.name}}</span> </li>
+  <li title="Did you know you can turn on continuous help by clicking the question mark? Once clicked the question mark will pulse, and as you go from page to page, a popup will display detailing information about the page. You can turn the continuous help off by clicking question mark again." class="ml-auto wow fadeInRight">
+    <i class="fa fa-question-circle" style="cursor:pointer" [ngClass]="{'ta-on hertbit' : authService.userService.user?.helpNeeded}" aria-hidden="true" (click)="toggleHelp()"></i>  <a (click)="help()" style="cursor: pointer">Help</a> </li>
+</ol>

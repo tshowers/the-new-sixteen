@@ -1,0 +1,27 @@
+
+/* Adjust the specific size and responsiveness of the card containing the form */
+.card.pages-card {
+    width: 100%; /* Use full width to ensure there is enough space */
+    max-width: 500px; /* Set a maximum width for the form to look appropriate */
+    margin: 0 auto; /* Center the card horizontally */
+}
+
+/* You might also want to adjust the column settings for medium devices */
+@media (min-width: 768px) {
+    .col-md-12 {
+        max-width: 100%; /* Optional: you might adjust this as needed */
+    }
+}
+@keyframes blink-animation {
+    0%, 100% { color: black; }
+    16.67%, 50%, 83.33% { color: red; } /* Red at these intervals */
+  }
+  
+  .blink-text {
+    animation: blink-animation 1.5s linear 1; /* Runs for 1.5 seconds */
+    animation-fill-mode: forwards; /* Keeps the color black after finishing */
+    text-align: center;
+    font-size: larger;
+  }
+  
+

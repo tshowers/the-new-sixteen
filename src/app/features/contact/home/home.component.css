@@ -1,0 +1,65 @@
+.large-text {
+    font-size: 20pt; /* Sets the font size to 20 points */
+    height: auto; /* Adjust height to fit larger text, if necessary */
+    padding: 10px; /* Optional: Increases padding to align text nicely within the input box */
+}
+.card-body-2 {
+    position: relative;
+    max-height: 400px;  /* Limits the height of the card */
+    background-image: url('/assets/graph-placeholder.jpg');
+    background-size: cover;  /* Ensures the image covers the entire area */
+    background-position: center;  /* Centers the background image */
+    color: #000;  /* Adjust text color as needed */
+    padding: 15px;  /* Adds padding to keep content from the edges */
+    overflow: hidden;  /* Hides any overflowing content */
+}
+
+.card-title, .card-text {
+    position: relative;  /* Positions text relative to the card */
+    background-color: rgba(255, 255, 255, 0.9);  /* Semi-transparent white background */
+    padding: 5px;  /* Adds padding around the text */
+    border-radius: 5px;  /* Optional: rounds the corners of the text background */
+}
+#addContactIcon {
+    background-color: #4CAF50; /* Green background */
+    border-radius: 50%; /* Circle shape */
+    padding: 10px; /* Padding around the icon */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Drop shadow */
+}
+
+#addContactIcon i {
+    color: white; /* White icon */
+}
+@keyframes flash {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+#addContactIcon {
+    animation: flash 2.5s 5;
+}
+
+#importContactsIcon {
+    background-color: #1e6d21; /* Green background */
+    border-radius: 50%; /* Circle shape */
+    padding: 10px; /* Padding around the icon */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Drop shadow */
+}
+
+#importContactsIcon i {
+    color: white; /* White icon */
+}
+#listContactsIcon {
+    background-color: #123e13; /* Green background */
+    border-radius: 50%; /* Circle shape */
+    padding: 10px; /* Padding around the icon */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Drop shadow */
+}
+
+#listContactsIcon i {
+    color: white; /* White icon */
+}
+
+
+
+  

@@ -1,0 +1,52 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col">
+      <h1><i class="fa-regular fa-note-sticky"></i> Notes <span *ngIf="contact"> for {{contact.firstName}} {{contact.lastName}}</span> </h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="editor-container">
+        <form (ngSubmit)="saveNote()" class="form-control">
+          <div class="form-row">
+            <label for="subject">Subject:</label>
+            <input type="text" id="subject" [(ngModel)]="note.subject" name="subject" class="form-control large-text">
+          </div>
+          <div class="form-row mt-5">
+            <label for="body">Body:</label>
+            <textarea id="body" [(ngModel)]="note.body" name="body" rows="10" cols="30" class="form-control"></textarea>
+          </div>
+          <div class="form-row mt-5">
+            <button type="submit" class="btn btn-primary btn-lg btn-round btn-width">Save Note</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <h4>Saved Notes:</h4>
+      <div class="accordion" id="noteAccordion">
+        <div *ngFor="let note of contact?.notes; let i = index" class="accordion-item">
+          <h2 class="accordion-header d-flex justify-content-between align-items-center">
+            <!-- Subject Container -->
+            <div class="flex-grow-1">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#collapse' + i" aria-expanded="false" [attr.aria-controls]="'collapse' + i">
+                {{ note.subject }}
+              </button>
+            </div>
+            <!-- Buttons Container -->
+          </h2>
+          <div [id]="'collapse' + i" class="accordion-collapse collapse" [attr.data-bs-parent]="'#noteAccordion'">
+            <div class="accordion-body">
+              <div [innerHTML]="note.body"></div>
+            </div>
+            <div class="text-center mt-2 mb-2">
+              <button (click)="editNote(i)" class="btn btn-primary btn-sm"><i class="fa-solid fa-pen-to-square"></i></button>
+              <button (click)="deleteNote(i)" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash-can"></i></button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

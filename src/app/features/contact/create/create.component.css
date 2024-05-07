@@ -1,0 +1,53 @@
+.btn-width {
+    width: 150px;
+}
+.progress-bar-animated {
+    background-color: #4CAF50; /* Example: a different color */
+    animation: progress-bar-stripes 1s linear infinite;
+  }
+  .large-text {
+    font-size: 20pt; /* Sets the font size to 20 points */
+    height: auto; /* Adjust height to fit larger text, if necessary */
+    padding: 10px; /* Optional: Increases padding to align text nicely within the input box */
+}
+.large-text-select {
+    font-size: 20pt;     /* Large font size */
+    line-height: normal; /* Adjust line height for vertical alignment */
+    display: block;      /* Ensures the select element occupies the full width */
+    width: 100%;         /* Ensures full width in a responsive manner */
+    box-sizing: border-box; /* Includes padding and border in the element's total dimensions */
+}
+select {
+    height: 60px !important;
+}
+
+input, select {
+  margin-top: 10px;  
+}
+.btn-primary {
+   background-color: #2c99e0 !important; 
+}
+.multi-select {
+  height: 200px !important;
+}
+#noteIcon {
+  background-color: #33a437; /* Green background */
+  border-radius: 50%; /* Circle shape */
+  padding: 10px; /* Padding around the icon */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Drop shadow */
+}
+
+#noteIcon i {
+  color: white; /* White icon */
+}
+
+#uploadIcon {
+  background-color: #1e6d21; /* Green background */
+  border-radius: 50%; /* Circle shape */
+  padding: 10px; /* Padding around the icon */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Drop shadow */
+}
+
+#uploadIcon i {
+  color: white; /* White icon */
+}

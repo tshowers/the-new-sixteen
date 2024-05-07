@@ -1,0 +1,47 @@
+<div class="container-fluid">
+    <div class="row mb-5">
+        <div class="col text-center"><a href="https://taliferro.tech">
+                <img src="assets/taliferro-website-logo.png" alt="Taliferro Tech, LLC">
+            </a>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <p class="text-center blink-text" *ngIf="message" style="font-size: larger;"> {{message}}</p>
+            <div class="card pages-card" *ngIf="!message">
+                <div class="card-body">
+                    <div class="small text-center text-dark">Login</div>
+                    <form #userForm="ngForm" (ngSubmit)="onSubmit();userForm.reset();">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon text-theme"><i class="fa fa-user"></i></span>
+                                <input [(ngModel)]="emailAddress" #email="ngModel" type="email" id="emailAddress" name="email" autocomplete="off" class="form-control form-control-lg" placeholder="Email Address" required>
+                            </div>
+                            <div [hidden]="email.valid || email.pristine" class="alert alert-danger"> Email Address is required </div>
+                        </div>
+                        <div class="form-group form-actions">
+                            <button class="btn btn-theme login-btn" type="submit" [disabled]="!userForm.form.valid">Log In</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-md-2"></div>
+        <div class="col-md-8 text-center" style="font-size: smaller;">
+            <h4>
+                Experience Simplicity with Email-Only Sign-In
+            </h4>
+            <p> Our innovative email-only sign-in system streamlines your access experience by eliminating the need for passwords. Simply enter your email address, and we'll send a magic link directly to your inbox. Click on this link, and you're securely logged in—no password required. </p>
+            <p><strong>Forget the Hassle of Remembering Passwords</strong>
+            </p>
+            <p> With our system, the days of juggling multiple passwords or worrying about password strength are over. There's no need to remember any complex passwords or risk using the same one across different sites. Each login attempt generates a new, unique link that ensures only you can access your account at that moment. </p>
+            <p><strong>Enhanced Security You Can Trust</strong>
+            </p>
+            <p> Our email-only sign-in process is not just about convenience; it's also about providing robust security. By using one-time magic links, we significantly reduce the risks associated with stolen or weak passwords. Each link is valid for a single use and expires after a short duration, making any intercepted link useless to hackers. Additionally, all communication is encrypted, ensuring your data's integrity and confidentiality at every step. </p>
+            <p> Embrace the simplicity and security of our email-only sign-in system, where your access is just a click away. </p>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+</div>

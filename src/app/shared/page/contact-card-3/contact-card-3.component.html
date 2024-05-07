@@ -1,0 +1,36 @@
+<div class="card border-light  mb-3" *ngIf="contact">
+    <div class="card-header"><span *ngIf="contact.company && contact.company.name"><strong>{{contact.company.name}}</strong> </span></div>
+    <div class="card-body">
+        <h5 class="card-title">
+            <div>{{contact.profession}}</div>
+        </h5>
+        <div *ngIf="contact.emailAddresses && contact.emailAddresses.length">
+            <div *ngFor="let email of contact.emailAddresses; let i = index">
+                <span *ngIf="email.emailAddressType"><i>({{email.emailAddressType.slice(0,1)}})</i></span> {{email.emailAddress}} <br>
+            </div>
+        </div>
+        <div *ngIf="contact.phoneNumbers && contact.phoneNumbers.length">
+            <div *ngFor="let phone of contact.phoneNumbers; let i = index">
+                <span *ngIf="phone.phoneNumberType"><i>({{phone.phoneNumberType.slice(0,1)}})</i></span> {{phone.phoneNumber}} <br>
+            </div>
+        </div>
+        <div *ngIf="contact.addresses && contact.addresses.length">
+            <div *ngFor="let address of contact.addresses; let i = index">
+                <span *ngIf="address.addressType"><i>({{address.addressType.slice(0,1)}})</i></span> {{address.streetAddress}} {{address.city}} {{address.state}} {{address.zip}}
+                {{address.county}}
+                {{address.country}}
+            </div>
+        </div>
+        <div class="mt-2" *ngIf="contact.nickname">nickname: {{contact.nickname}}</div>
+        <div class="mt-2" *ngIf="contact.birthday">birthday: {{contact.birthday}}</div>
+        <div class="mt-2" *ngIf="contact.anniversary">anniversary: {{contact.anniversary}}</div>
+        <div class="mt-2" *ngIf="contact.gender">gender: {{contact.gender}}</div>
+        <div class="mt-2" *ngIf="contact.timezone">timezone: {{contact.timezone}}</div>
+        <br>
+        <div *ngIf="contact.profileTypes">
+            <span class="badge badge-info" style="font-size: 1.5em;" *ngFor="let category of contact.profileTypes; let i = index">
+                {{category}}
+            </span>
+        </div>
+    </div>
+</div>

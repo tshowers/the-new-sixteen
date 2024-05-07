@@ -1,0 +1,39 @@
+.social-media img {
+    width: 24px; /* Adjust size as needed */
+    height: 24px;
+    margin: 0 5px;
+  }
+  
+ 
+
+  .business-card {
+    font-family: Arial, sans-serif; /* Example font */
+    color: #000000;
+    border: 1px solid #ccc;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  #emailIcon {
+    background-color: #4CAF50; /* Green background */
+    border-radius: 50%; /* Circle shape */
+    padding: 10px; /* Padding around the icon */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Drop shadow */
+}
+
+#emailIcon i {
+    color: white; /* White icon */
+}
+
+#phoneIcon {
+  background-color: #4CAF50; /* Green background */
+  border-radius: 50%; /* Circle shape */
+  padding: 10px; /* Padding around the icon */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Drop shadow */
+}
+
+#phoneIcon i {
+  color: white; /* White icon */
+}

@@ -1,0 +1,53 @@
+<div class="card business-card" *ngIf="contact">
+    <img class="card-img-top" [src]="contact.images?.[0]?.src || 'assets/nophoto.jpg'" alt="Card image cap">
+    <div class="social-media" *ngIf="contact.socialMedia && contact.socialMedia.length" style="align-items: center;">
+        <span *ngFor="let sm of contact.socialMedia; let i = index">
+            <a href="{{sm.url}}" title="{{sm.platform}}"><i class="fa-brands fa-{{sm.platform.toLowerCase()}} fa-2x"></i></a>&nbsp; </span>
+    </div>
+    <div class="card-body text-center">
+        <h5 class="card-title">{{ contact.firstName }} {{ contact.middleName }} {{ contact.lastName }}</h5>
+        <div>
+            <span *ngIf="contact.emailAddresses && contact.emailAddresses.length">
+                <!-- <a href="{{contact.emailAddresses[0].emailAddress}}" title="{{contact.emailAddresses[0].emailAddress}}"><i class="fa-regular fa-envelope fa-2x"></i></a>  -->
+                <button class="btn" id="emailIcon">
+                    <i class="fa-regular fa-envelope"></i>
+                </button>
+            </span>
+            <span *ngIf="contact.phoneNumbers && contact.phoneNumbers.length">
+                <!-- <a href="tel:{{contact.phoneNumbers[0].phoneNumber}}" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#callLogModal" title="Log Call to {{contact.firstName}}">
+                        <i class="fa-solid fa-phone fa-2x"></i>
+                </a> -->
+                <button class="btn" (click)="handleCallAndModal(contact.phoneNumbers[0].phoneNumber, contact.firstName)" id="phoneIcon">
+                    <i class="fa-solid fa-phone"></i>
+                </button>
+            </span>
+        </div>
+        <span (click)="onView()" class="btn btn-theme">View Record</span>
+    </div>
+</div>
+<div class="modal fade" id="callLogModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="callLogModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="callLogModalLabel">Log Phone Call</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="callDuration" class="form-label">Duration (minutes)</label>
+                        <input type="number" class="form-control" id="callDuration" [(ngModel)]="callDetails.duration">
+                    </div>
+                    <div class="mb-3">
+                        <label for="callNotes" class="form-label">Notes</label>
+                        <textarea class="form-control" id="callNotes" rows="3" [(ngModel)]="callDetails.notes"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" (click)="saveInteraction()">Save Details</button>
+            </div>
+        </div>
+    </div>
+</div>
