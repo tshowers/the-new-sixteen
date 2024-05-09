@@ -4,8 +4,10 @@ import { FormsModule } from '@angular/forms';
 
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
+import { UserService } from '../../../services/user.service';
 import { Observable } from 'rxjs';
 import { LoggerService } from '../../../services/logger.service';
+import { Contact } from '../../../shared/data/interfaces/contact.model';
 
 @Component({
   selector: 'app-finish-sign-in',
@@ -21,7 +23,11 @@ export class FinishSignInComponent implements OnInit {
   public message = "Processing your sign-in, please wait...";
   isLoggedIn: boolean = false;
 
-  constructor(private authService: AuthService, private route: ActivatedRoute, private logger: LoggerService, private router:Router) {}
+  constructor(private authService: AuthService, 
+    private route: ActivatedRoute, 
+    private userService: UserService,
+    private logger: LoggerService, 
+    private router:Router) {}
 
   ngOnInit(): void {
     // Try to get email from local storage first
@@ -40,9 +46,31 @@ export class FinishSignInComponent implements OnInit {
           // Clear the email from localStorage and handle successful sign-in
           localStorage.removeItem('emailForSignIn');
           this.isLoggedIn = true;  // Update UI state
-          this.message = 'Sign-in successful. Welcome!';
-          // Redirect or update UI
-          this.router.navigate(['contact-dashboard']);  // Redirect to dashboard or another route
+          this.message = 'Checking user data...'; // Inform user of ongoing setup
+
+
+
+
+          const user = result.user;
+          this.userService.findOrCreateContact(user.email, user.uid).subscribe({
+            next: (contact) => {
+              this.userService.setLoggedInContactInfo(contact); // Store contact info
+              this.message = 'Sign-in successful. Welcome!';
+              this.router.navigate(['contact-dashboard']); // Redirect after setup
+            },
+            error: (err) => {
+              this.logger.error('Failed to setup user contact:', err);
+              this.error = 'Failed to initialize user data. Please contact support.';
+            }
+          });
+
+          
+          setTimeout(() => {
+            this.message = 'Sign-in successful. Welcome!';
+            // Redirect or update UI
+            this.router.navigate(['contact-dashboard']);  // Redirect to dashboard or another route
+            }, 2000);
+
         },
         error: (error) => {
           this.logger.error('Sign-in failed:', error);

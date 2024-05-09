@@ -134,6 +134,7 @@
                         <input [(ngModel)]="email.emailAddress" name="emailAddress{{i}}" placeholder="" class="form-control large-text" autocorrect="off" autocapitalize="off" spellcheck="off" autocomplete="off" type="email" required>
                         <select [(ngModel)]="email.emailAddressType" name="emailAddressType{{i}}" class="form-control large-text-select mt-2">
                             <option value="" selected>Select a Type</option>
+                            <option value="primary">Primary</option>
                             <option value="personal">Personal</option>
                             <option value="work">Work</option>
                             <option value="other">Other</option>
@@ -152,6 +153,7 @@
                         <input [(ngModel)]="phone.phoneNumber" name="phoneNumber{{i}}" placeholder="xxx.xxx.xxxx" class="form-control large-text" autocorrect="off" autocapitalize="off" spellcheck="off" autocomplete="off" type="text" required>
                         <select [(ngModel)]="phone.phoneNumberType" name="phoneNumberType{{i}}" class="form-control large-text-select mt-2">
                             <option value="" selected>Select a Type</option>
+                            <option value="mobile">Mobile</option>
                             <option value="personal">Personal</option>
                             <option value="work">Work</option>
                             <option value="fax">Fax</option>
@@ -263,6 +265,7 @@
                         <div class="mb-2">
                             <select [(ngModel)]="address.addressType" name="addressType{{i}}" class="form-control large-text-select">
                                 <option value="" selected>Select a Type</option>
+                                <option value="home">Home</option>
                                 <option value="personal">Personal</option>
                                 <option value="work">Work</option>
                                 <option value="other">Other</option>

@@ -36,11 +36,11 @@
                 <form>
                     <div class="mb-3">
                         <label for="callDuration" class="form-label">Duration (minutes)</label>
-                        <input type="number" class="form-control" id="callDuration" [(ngModel)]="callDetails.duration">
+                        <input type="number" class="form-control" id="callDuration" name="callDuration" [(ngModel)]="callDetails.duration">
                     </div>
                     <div class="mb-3">
                         <label for="callNotes" class="form-label">Notes</label>
-                        <textarea class="form-control" id="callNotes" rows="3" [(ngModel)]="callDetails.notes"></textarea>
+                        <textarea class="form-control" id="callNotes" name="callNotes" rows="3" [(ngModel)]="callDetails.notes"></textarea>
                     </div>
                 </form>
             </div>

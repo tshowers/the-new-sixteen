@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute, RouterModule, NavigationEnd } from '@angular/router';
 import { environment } from '../../../../environments/environment';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -17,16 +18,16 @@ export class HeaderComponent {
 
 
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private authService: AuthService) {
   }
 
   openHelp() : void {
-    
+    this.router.navigate(['help']);
   }
 
 
-  logout() : void {
-
+  onLogout(): void {
+    this.authService.logout();
   }
 
 }

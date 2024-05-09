@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Auth, signInWithEmailLink, sendSignInLinkToEmail, isSignInWithEmailLink, ActionCodeSettings } from '@angular/fire/auth';
+import { Auth, signInWithEmailLink, sendSignInLinkToEmail, isSignInWithEmailLink, ActionCodeSettings, authState, signOut } from '@angular/fire/auth';
 import { Observable, from } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { LoggerService } from './logger.service';
+import { catchError, map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -43,5 +44,37 @@ export class AuthService {
     } else {
       throw new Error('Invalid link');
     }
+  }
+
+  getUser(): Observable<any> {
+    return authState(this.auth);  // Observable of authentication state
+  }
+
+  getUserId(): Observable<string> {
+    return authState(this.auth).pipe(
+      map(user => user ? user.uid : 'user not logged in')
+    );
+  }
+
+  checkLogin(): Observable<boolean> {
+    return this.getUser().pipe(
+      map(user => !!user)  // Maps the user to a boolean, true if user exists, false if not
+    );
+  }
+
+  logout(): Observable<void> {
+    // Optionally, clear any stored information related to the user session
+    localStorage.removeItem('emailForSignIn');
+
+    // Perform the sign-out from Firebase
+    return from(signOut(this.auth)).pipe(
+      map(() => {
+        this.logger.log('User logged out successfully'); // Log the logout action
+      }),
+      catchError(error => {
+        this.logger.error('Logout failed:', error); // Log any errors during logout
+        throw error;
+      })
+    );
   }
 }

@@ -9,7 +9,8 @@ import { getDatabase, provideDatabase } from '@angular/fire/database';
 import { getStorage, provideStorage } from '@angular/fire/storage';
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes), importProvidersFrom(provideFirebaseApp(() => initializeApp({
+  providers: [provideRouter(routes), 
+    importProvidersFrom(provideFirebaseApp(() => initializeApp({
     "projectId": "taliferro-de66f",
     "appId": "1:353334442276:web:45b043204cc83aa7725bb1",
     "databaseURL": "https://taliferro-de66f.firebaseio.com",

@@ -6,6 +6,9 @@ import { Contact, Communication, Interaction } from '../../../shared/data/interf
 import { DataService } from '../../../services/data.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { ContactService } from '../../../services/contact.service';
+import { Subscription } from 'rxjs';
+import { AuthService } from '../../../services/auth.service';
+
 declare var bootstrap: any;
 
 @Component({
@@ -23,8 +26,9 @@ export class ContactCard1Component {
     duration: 0,
     notes: ''
   };
+  private userSubscription!: Subscription;
 
-  constructor(private cdr: ChangeDetectorRef, private contactService: ContactService, private router: Router, private dataService: DataService) { }
+  constructor(private cdr: ChangeDetectorRef, private contactService: ContactService, private router: Router, private dataService: DataService, private authService: AuthService) { }
 
 
   @Input() contact?: Contact;
@@ -43,6 +47,12 @@ export class ContactCard1Component {
   }
 
   saveInteraction(): void {
+    this.userSubscription = this.authService.getUserId().subscribe(userId => {
+      this.doSave(userId);
+    })
+  }
+
+  doSave(userId: string): void {
     if (this.contact && this.contact.id) {
       if (!this.contact.interactions) {
         this.contact.interactions = [];
@@ -53,7 +63,7 @@ export class ContactCard1Component {
       this.contact.interactions.push(this.callDetails);
 
       // Update the contact in the database
-      this.dataService.updateDocument('CONTACTS', this.contact.id, { interactions: this.contact.interactions })
+      this.dataService.updateDocument('CONTACTS', this.contact.id, { interactions: this.contact.interactions }, userId)
         .then(() => {
           // After successful database update, update the local state
           if (this.contact)

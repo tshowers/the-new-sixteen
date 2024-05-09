@@ -9,6 +9,7 @@ import { FilterContactsPipe } from '../../../shared/filters/contact-filter.pipe'
 import { ContactService } from '../../../services/contact.service';
 import { saveAs } from 'file-saver';
 import { Subscription } from 'rxjs';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-list',
@@ -27,24 +28,29 @@ export class ListComponent implements OnInit {
   ];
 
   private subscription!: Subscription;
+  private userSubscription!: Subscription;
 
   contacts$!: Observable<any[]>;
   selectedContact!: Contact;
   filteredContacts: Contact[] = [];
 
-  constructor(private dataService: DataService, private router: Router, private contactService: ContactService) { }
+  constructor(private dataService: DataService, private router: Router, private contactService: ContactService, private authService:AuthService) { }
 
 
   ngOnInit() {
-    this.readDatabase();
+    this.userSubscription = this.authService.getUserId().subscribe(userId => {
+      this.readDatabase(userId);
+    })
+
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    this.userSubscription.unsubscribe();
   }
 
-  readDatabase(): void {
-    this.contacts$ = this.dataService.getRealtimeData('CONTACTS');
+  readDatabase(userId:string): void {
+    this.contacts$ = this.dataService.getRealtimeData('CONTACTS', userId);
     this.subscription = this.contacts$.subscribe(data => {
       this.filteredContacts = data; // Assuming initial data without filter applied.
       this.print(data);

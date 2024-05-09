@@ -24,10 +24,17 @@ export class DataService {
      *   console.log(users);
      * });
      */
-    getRealtimeData(endpointKey: keyof typeof ENDPOINTS): Observable<any[]> {
+    // getRealtimeData(endpointKey: keyof typeof ENDPOINTS): Observable<any[]> {
+    //     const ref = collection(this.firestore, ENDPOINTS[endpointKey]);
+    //     return collectionData(ref, { idField: 'id' }) as Observable<any[]>;
+    // }
+    getRealtimeData(endpointKey: keyof typeof ENDPOINTS, user: string): Observable<any[]> {
         const ref = collection(this.firestore, ENDPOINTS[endpointKey]);
+        // Log the initiation of a real-time data subscription
+        this.logEvent(`${user} started a real-time data subscription to ${ENDPOINTS[endpointKey]}`, user);
         return collectionData(ref, { idField: 'id' }) as Observable<any[]>;
     }
+
 
 
     /**
@@ -48,34 +55,109 @@ export class DataService {
    *   console.error("Error fetching documents:", error);
    * });
    */
-    getCollectionData(endpointKey: keyof typeof ENDPOINTS) {
+    // getCollectionData(endpointKey: keyof typeof ENDPOINTS, user: string) {
+    //     const ref = collection(this.firestore, ENDPOINTS[endpointKey]);
+    //     return getDocs(ref)
+    //         .then(snapshot => snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })))
+    //         .catch(error => console.error("Error fetching documents:", error));
+    // }
+    getCollectionData(endpointKey: keyof typeof ENDPOINTS, user: string) {
         const ref = collection(this.firestore, ENDPOINTS[endpointKey]);
         return getDocs(ref)
-            .then(snapshot => snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })))
-            .catch(error => console.error("Error fetching documents:", error));
+            .then(snapshot => {
+                // Log the fetch action after successful data retrieval
+                this.logEvent(`${user} fetched documents from ${ENDPOINTS[endpointKey]}`, user);
+                return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            })
+            .catch(error => {
+                console.error("Error fetching documents:", error);
+                // Optionally, log the error event here as well
+                this.logEvent(`${user} failed to fetch documents from ${ENDPOINTS[endpointKey]} due to ${error}`, user);
+                throw new Error(error);
+            });
     }
 
 
-    addDocument(endpointKey: keyof typeof ENDPOINTS, data: any) {
+
+    addDocument(endpointKey: keyof typeof ENDPOINTS, data: any, user: string) {
         const ref = collection(this.firestore, ENDPOINTS[endpointKey]);
         return addDoc(ref, data)
-            .then(docRef => docRef.id)
-            .catch(error => console.error("Error adding document:", error));
+            .then(docRef => {
+                this.logEvent(`${user} added a new document to ${ENDPOINTS[endpointKey]}`, user);
+                return docRef.id
+            })
+            .catch(error => {
+                console.error("Error adding document:", error);
+                this.logEvent(`${user} failed to add document to ${ENDPOINTS[endpointKey]} due to ${error}`, user);
+
+            });
     }
 
-    updateDocument(endpointKey: keyof typeof ENDPOINTS, id: string, data: any) {
+    // updateDocument(endpointKey: keyof typeof ENDPOINTS, id: string, data: any, user: string) {
+    //     const docRef = doc(this.firestore, ENDPOINTS[endpointKey], id);
+    //     return updateDoc(docRef, data).then(addRef => {
+    //         this.logEvent(`${user} added a new document to ${ENDPOINTS[endpointKey]}`, user);
+    //     })
+    //         .catch(error => {
+    //             console.error("Error updating document:", error);
+    //             this.logEvent(`${user} failed to update document to ${ENDPOINTS[endpointKey]} due to ${error}`, user);
+    //         });
+    // }
+    updateDocument(endpointKey: keyof typeof ENDPOINTS, id: string, data: any, user: string) {
         const docRef = doc(this.firestore, ENDPOINTS[endpointKey], id);
-        return updateDoc(docRef, data)
-            .catch(error => console.error("Error updating document:", error));
+        return updateDoc(docRef, data).then(() => {
+            this.logEvent(`${user} updated a document in ${ENDPOINTS[endpointKey]}`, user);
+            // Optionally return some identifier or success message
+            return { success: true, id: id };
+        }).catch(error => {
+            console.error("Error updating document:", error);
+            this.logEvent(`${user} failed to update document in ${ENDPOINTS[endpointKey]} due to ${error}`, user);
+            // Optionally rethrow or handle the error for caller
+            throw new Error(`Update failed: ${error}`);
+        });
     }
 
-    deleteDocument(endpointKey: keyof typeof ENDPOINTS, id: string) {
+    // deleteDocument(endpointKey: keyof typeof ENDPOINTS, id: string, user: string) {
+    //     const docRef = doc(this.firestore, ENDPOINTS[endpointKey], id);
+    //     return deleteDoc(docRef).then(deleteRef => {
+    //         this.logEvent(`${user} deleted document in ${ENDPOINTS[endpointKey]}`, user);
+
+    //     })
+    //         .catch(error => console.error("Error deleting document:", error));
+    // }
+    deleteDocument(endpointKey: keyof typeof ENDPOINTS, id: string, user: string) {
         const docRef = doc(this.firestore, ENDPOINTS[endpointKey], id);
-        return deleteDoc(docRef)
-            .catch(error => console.error("Error deleting document:", error));
+        return deleteDoc(docRef).then(() => {
+            this.logEvent(`${user} deleted a document in ${ENDPOINTS[endpointKey]}`, user);
+            // Optionally return some identifier or success message
+            return { success: true, id: id };
+        }).catch(error => {
+            console.error("Error deleting document:", error);
+            this.logEvent(`${user} failed to delete document in ${ENDPOINTS[endpointKey]} due to ${error}`, user);
+            // Optionally rethrow or handle the error for caller
+            throw new Error(`Delete failed: ${error}`);
+        });
     }
 
 
 
-    
+    private logEvent(action: string, user: string) {
+        const logEntry = {
+            action: action,
+            user: user,
+            timestamp: new Date() // Use server timestamp for consistency
+        };
+        // Logging directly to the 'auditLogs' collection
+        // this.firestore.collection('auditLogs').add(logEntry);
+        const logRef = collection(this.firestore, 'auditLogs');
+        addDoc(logRef, logEntry)
+            .then(docRef => {
+                console.log(`Audit log recorded with ID: ${docRef.id}`);
+            })
+            .catch(error => {
+                console.error('Error logging event:', error);
+            });
+
+    }
+
 }

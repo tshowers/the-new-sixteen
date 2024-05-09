@@ -1,5 +1,6 @@
 // endpoints.ts
 export const ENDPOINTS = {
+    AUDITLOGS: '/auditLogs',
     APP_ACTIVITY: '/app-activity',
     BLOGS: '/blogs',
     ARTICLES: '/articles',

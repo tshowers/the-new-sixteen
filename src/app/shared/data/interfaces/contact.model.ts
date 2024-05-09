@@ -115,7 +115,7 @@ export interface Company {
 export interface SocialMedia {
   platform: string;  // Type of social media, e.g., 'Instagram', 'LinkedIn'
   url: string;       // URL to the social media profile
-  username?: string; // Optional username for the platform
+  username?: string | null;
   verified?: boolean; // Optional flag to indicate if the account is verified
 }
 

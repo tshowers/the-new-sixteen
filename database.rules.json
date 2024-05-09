@@ -6,14 +6,14 @@
       "blogId": {
         ".indexOn": ["blog_id", "name", "lastUpdated"]
 
-      },
+      }
     },
     "bookmarks": {
       "$userId": {
         ".read": "auth.uid == $userId",
         ".write": "auth.uid == $userId",
         ".indexOn": ["user_id", "name", "dataModel_id"]
-      },
+      }
 
     },
     "favorites": {
@@ -21,44 +21,44 @@
         ".read": "auth.uid == $userId",
         ".write": "auth.uid == $userId",
         ".indexOn": ["user_id", "name", "dataModel_id"]
-      },
+      }
     },
     "featurettes": {
       "blogId": {
         ".indexOn": ["blog_id", "name", "lastUpdated"]
 
-      },
+      }
     },
     "quotes": {
       "blogId": {
         ".indexOn": ["blog_id", "name", "lastUpdated"]
 
-      },
+      }
     },
     "stats": {
       "blogId": {
         ".indexOn": ["blog_id", "name", "lastUpdated"]
 
-      },
+      }
     },
     "parallaxs": {
       "blogId": {
         ".indexOn": ["blog_id", "name", "lastUpdated"]
 
-      },
+      }
     },
     "carousels": {
       "blogId": {
         ".indexOn": ["blog_id", "name", "lastUpdated"]
 
-      },
+      }
     },
     "settings": {
       "$userId": {
         ".read": "auth.uid == $userId",
         ".write": "auth.uid == $userId",
         ".indexOn": ["user_id"]
-      },
+      }
     },
     "alerts": {
       ".indexOn": ["user_id", "lastUpdated"]
@@ -85,37 +85,37 @@
       "blogId": {
         ".indexOn": ["blog_id", "name", "lastUpdated"]
 
-      },
+      }
     },
     "addresses": {
       "contactId": {
         ".indexOn": ["contact_id", "user_id"]
 
-      },
+      }
     },
     "fops": {
       "contactId": {
         ".indexOn": ["contact_id", "user_id"]
 
-      },
+      }
     },
     "email-addresses": {
       "contactId": {
         ".indexOn": ["contact_id", "user_id"]
 
-      },
+      }
     },
     "just-texts": {
       "dataId": {
         ".indexOn": ["contact_id", "store_id"]
 
-      },
+      }
     },
     "phone-numbers": {
       "contactId": {
         ".indexOn": ["contact_id", "user_id"]
 
-      },
+      }
     },
     "projects": {
       ".indexOn": ["status", "projectType", "name", "contact_id", "user_id", "lastUpdated"]
@@ -127,74 +127,74 @@
       "$projectId": {
         ".indexOn": ["project_id", "name", "user_id", "lastUpdated"]
 
-      },
+      }
     },
     "affected-systems": {
       "$projectId": {
         ".indexOn": ["project_id", "name", "user_id", "lastUpdated"]
 
-      },
+      }
     },
     "approvals": {
       "$projectId": {
         ".indexOn": ["project_id", "name", "user_id", "lastUpdated"]
 
-      },
+      }
     },
     "deliverables": {
       "$projectId": {
         ".indexOn": ["project_id", "name", "user_id", "lastUpdated"]
 
-      },
+      }
     },
     "bugs": {
       "$projectId": {
         ".indexOn": ["project_id", "name", "user_id", "lastUpdated"]
 
-      },
+      }
     },
     "implementation-plans": {
       "$projectId": {
         ".indexOn": ["project_id", "name", "user_id", "lastUpdated"]
 
-      },
+      }
     },
     "requirements": {
       "$projectId": {
         ".indexOn": ["project_id", "name", "user_id", "lastUpdated"]
 
-      },
+      }
     },
     "product-bundles": {
       "$storeId": {
         "$catalogId": {
           ".indexOn": ["project_id", "name", "user_id", "lastUpdated"]
-        },
-      },
+        }
+      }
     },
     "catalogs": {
       "$storeId": {
         ".indexOn": ["project_id", "name", "user_id", "lastUpdated"]
-      },
+      }
     },
     "feature-texts": {
       "$storeId": {
         ".indexOn": ["project_id", "name", "user_id", "lastUpdated"]
-      },
+      }
     },
     "offers": {
       "$storeId": {
         "$catalogId": {
           ".indexOn": ["project_id", "name", "user_id", "lastUpdated"]
-        },
-      },
+        }
+      }
     },
     "products": {
       "$storeId": {
         "$catalogId": {
           ".indexOn": ["project_id", "name", "user_id", "lastUpdated"]
-        },
-      },
+        }
+      }
     },
     "invoices": {
       ".indexOn": ["store_id", "user_id", "lastUpdated"]
@@ -216,26 +216,33 @@
         ".read": "auth.uid == $userId",
         ".write": "auth.uid == $userId",
         ".indexOn": ["user_id", "lastUpdated"]
-      },
+      }
     },
     "app-activity": {
       "$userId": {
         ".read": "auth.uid == $userId",
         ".write": "auth.uid == $userId",
         ".indexOn": ["user_id", "lastUpdated"]
-      },
+      }
+    },
+    "auditLogs": {
+      "$userId": {
+        ".read": "auth.uid == $userId",
+        ".write": "auth.uid == $userId",
+        ".indexOn": ["userId"]
+      }
     },
     "work-flows": {
       "$userId": {
         ".read": "auth.uid == $userId",
         ".write": "auth.uid == $userId"
-      },
+      }
     },
     "actions": {
       "$userId": {
         ".read": "auth.uid == $userId",
         ".write": "auth.uid == $userId"
-      },
+      }
     },
     "dropdowns": {
       ".indexOn": ["id"]

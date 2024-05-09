@@ -1,0 +1,121 @@
+<h1>Settings</h1>
+<div class="container mt-5">
+    <h2>Security</h2>
+    <div class="settings-container">
+        <div *ngFor="let feature of authenticationSecurityFeatures" class="setting-row">
+            <i class="{{ feature.icon }}"></i> <!-- Font Awesome icon -->
+            <span class="setting-text" data-bs-toggle="tooltip" data-bs-placement="right" title="{{ feature.extendedText }}">
+                {{ feature.shortDescription }}
+            </span>
+            <label class="switch">
+                <input type="checkbox" [(ngModel)]="feature.enabled" disabled>
+                <span class="slider round"></span>
+            </label>
+        </div>
+    </div>
+</div>
+<div class="container mt-5">
+    <h2>Collaboration</h2>
+    <div class="settings-container">
+        <div *ngFor="let feature of communicationCollaborationFeatures" class="setting-row">
+            <i class="{{ feature.icon }}"></i> <!-- Font Awesome icon -->
+            <span class="setting-text" data-bs-toggle="tooltip" data-bs-placement="right" title="{{ feature.extendedText }}">
+                {{ feature.shortDescription }}
+            </span>
+            <label class="switch">
+                <input type="checkbox" [(ngModel)]="feature.enabled" disabled>
+                <span class="slider round"></span>
+            </label>
+        </div>
+    </div>
+</div>
+<div class="container mt-5">
+    <h2>Data Management</h2>
+    <div class="settings-container">
+        <div *ngFor="let feature of dataManagementFeatures" class="setting-row">
+            <i class="{{ feature.icon }}"></i> <!-- Font Awesome icon -->
+            <span class="setting-text" data-bs-toggle="tooltip" data-bs-placement="right" title="{{ feature.extendedText }}">
+                {{ feature.shortDescription }}
+            </span>
+            <label class="switch">
+                <input type="checkbox" [(ngModel)]="feature.enabled" disabled>
+                <span class="slider round"></span>
+            </label>
+        </div>
+    </div>
+</div>
+<div class="container mt-5">
+    <h2>Project Management</h2>
+    <div class="settings-container">
+        <div *ngFor="let feature of projectVendorManagementFeatures" class="setting-row">
+            <i class="{{ feature.icon }}"></i> <!-- Font Awesome icon -->
+            <span class="setting-text" data-bs-toggle="tooltip" data-bs-placement="right" title="{{ feature.extendedText }}">
+                {{ feature.shortDescription }}
+            </span>
+            <label class="switch">
+                <input type="checkbox" [(ngModel)]="feature.enabled" disabled>
+                <span class="slider round"></span>
+            </label>
+        </div>
+    </div>
+</div>
+<div class="container mt-5">
+    <h2>Personalization</h2>
+    <div class="settings-container">
+        <div *ngFor="let feature of userInterfacePersonalizationFeatures" class="setting-row">
+            <i class="{{ feature.icon }}"></i> <!-- Font Awesome icon -->
+            <span class="setting-text" data-bs-toggle="tooltip" data-bs-placement="right" title="{{ feature.extendedText }}">
+                {{ feature.shortDescription }}
+            </span>
+            <label class="switch">
+                <input type="checkbox" [(ngModel)]="feature.enabled" disabled>
+                <span class="slider round"></span>
+            </label>
+        </div>
+    </div>
+</div>
+<div class="container mt-5">
+    <h2>Regulatory Compliance</h2>
+    <div class="settings-container">
+        <div *ngFor="let feature of regulatoryComplianceFeatures" class="setting-row">
+            <i class="{{ feature.icon }}"></i> <!-- Font Awesome icon -->
+            <span class="setting-text" data-bs-toggle="tooltip" data-bs-placement="right" title="{{ feature.extendedText }}">
+                {{ feature.shortDescription }}
+            </span>
+            <label class="switch">
+                <input type="checkbox" [(ngModel)]="feature.enabled" disabled>
+                <span class="slider round"></span>
+            </label>
+        </div>
+    </div>
+</div>
+<div class="container mt-5">
+    <h2>Education</h2>
+    <div class="settings-container">
+        <div *ngFor="let feature of educationalResourceManagementFeatures" class="setting-row">
+            <i class="{{ feature.icon }}"></i> <!-- Font Awesome icon -->
+            <span class="setting-text" data-bs-toggle="tooltip" data-bs-placement="right" title="{{ feature.extendedText }}">
+                {{ feature.shortDescription }}
+            </span>
+            <label class="switch">
+                <input type="checkbox" [(ngModel)]="feature.enabled" disabled>
+                <span class="slider round"></span>
+            </label>
+        </div>
+    </div>
+</div>
+<div class="container mt-5">
+    <h2>Accessibility</h2>
+    <div class="settings-container">
+        <div *ngFor="let feature of accessibilityLanguageSupportFeatures" class="setting-row">
+            <i class="{{ feature.icon }}"></i> <!-- Font Awesome icon -->
+            <span class="setting-text" data-bs-toggle="tooltip" data-bs-placement="right" title="{{ feature.extendedText }}">
+                {{ feature.shortDescription }}
+            </span>
+            <label class="switch">
+                <input type="checkbox" [(ngModel)]="feature.enabled" disabled>
+                <span class="slider round"></span>
+            </label>
+        </div>
+    </div>
+</div>

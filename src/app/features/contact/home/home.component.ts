@@ -12,10 +12,31 @@ import { LoggerService } from '../../../services/logger.service';
 import { ContactCard1Component } from '../../../shared/page/contact-card-1/contact-card-1.component';
 import { ContactCard3Component } from '../../../shared/page/contact-card-3/contact-card-3.component';
 import { WeeklyCalendarComponent } from '../../../shared/page/weekly-calendar/weekly-calendar.component';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { AuthService } from '../../../services/auth.service';
+
+
 
 // Register Chart.js components
 Chart.register(...registerables);
+
+
+const chartColors = [
+  { backgroundColor: 'rgba(255, 99, 132, 0.2)', borderColor: 'rgba(255, 99, 132, 1)' },
+  { backgroundColor: 'rgba(54, 162, 235, 0.2)', borderColor: 'rgba(54, 162, 235, 1)' },
+  { backgroundColor: 'rgba(255, 206, 86, 0.2)', borderColor: 'rgba(255, 206, 86, 1)' },
+  { backgroundColor: 'rgba(75, 192, 192, 0.2)', borderColor: 'rgba(75, 192, 192, 1)' },
+  { backgroundColor: 'rgba(153, 102, 255, 0.2)', borderColor: 'rgba(153, 102, 255, 1)' },
+  { backgroundColor: 'rgba(255, 159, 64, 0.2)', borderColor: 'rgba(255, 159, 64, 1)' },
+  { backgroundColor: 'rgba(233, 30, 99, 0.2)', borderColor: 'rgba(233, 30, 99, 1)' },
+  { backgroundColor: 'rgba(32, 76, 255, 0.2)', borderColor: 'rgba(32, 76, 255, 1)' },
+  { backgroundColor: 'rgba(165, 214, 167, 0.2)', borderColor: 'rgba(165, 214, 167, 1)' },
+  { backgroundColor: 'rgba(255, 87, 34, 0.2)', borderColor: 'rgba(255, 87, 34, 1)' },
+  { backgroundColor: 'rgba(176, 190, 197, 0.2)', borderColor: 'rgba(176, 190, 197, 1)' },
+  { backgroundColor: 'rgba(118, 255, 3, 0.2)', borderColor: 'rgba(118, 255, 3, 1)' },
+  { backgroundColor: 'rgba(0, 150, 136, 0.2)', borderColor: 'rgba(0, 150, 136, 1)' },
+  { backgroundColor: 'rgba(255, 235, 59, 0.2)', borderColor: 'rgba(255, 235, 59, 1)' }
+];
 
 @Component({
 
@@ -77,16 +98,27 @@ export class HomeComponent implements OnInit {
 
   private chartData: any[] = [];
 
-  constructor(private router: Router, private contactService: ContactService, private dataService: DataService, private logger: LoggerService) { }
+  private userSubsription!: Subscription;
+  private userId!: string;
+
+
+  constructor(private authService: AuthService, private router: Router, private contactService: ContactService, private dataService: DataService, private logger: LoggerService) { }
 
 
 
   ngOnInit(): void {
+    this.userSubsription = this.authService.getUserId().subscribe(userId => {
+      this.userId = userId;
+      this.startUp();
+    })
 
+  }
+
+  startUp(): void {
     const periodStartDate = new Date();
     periodStartDate.setDate(periodStartDate.getDate() - 30);
 
-    this.dataService.getCollectionData('CONTACTS').then(data => {
+    this.dataService.getCollectionData('CONTACTS', this.userId).then(data => {
       if (data && data.length > 0) {
         const contacts: Contact[] = data as Contact[];
         this.suggestedContact = contacts[0];
@@ -175,7 +207,7 @@ export class HomeComponent implements OnInit {
 
 
 
-        this.dataService.getCollectionData('COMMUNICATIONS').catch(err => {
+        this.dataService.getCollectionData('COMMUNICATIONS', this.userId).catch(err => {
           console.error("Failed to load communications:", err);
           return [] as Communication[];  // Ensure this matches the expected type in then()
         }).then(communicationsData => {
@@ -194,7 +226,8 @@ export class HomeComponent implements OnInit {
           if (this.priorityContactsChartData.length > 0) {
             console.log("Data for chart:", data);
             setTimeout(() => this.createPriorityContactsChart(this.priorityContactsChartData), 0);
-            this.weeklyChartData.next(this.priorityContactsChartData);
+            const sevenDayData = this.priorityContactsChartData.slice(0, 7);
+            this.weeklyChartData.next(sevenDayData);
           }
         })
 
@@ -210,6 +243,7 @@ export class HomeComponent implements OnInit {
       this.createAcquisitionSourceChart([]);
       this.createProfessionChart([]);
       this.createGenderChart([]);
+      this.createPriorityContactsChart([]);
     });
   }
 
@@ -357,20 +391,50 @@ export class HomeComponent implements OnInit {
   }
 
 
+  // processProfileTypes(contacts: any[]): any {
+  //   const typeCounts = new Map();
+  //   contacts.forEach(contact => {
+  //     contact.profileTypes.forEach((type: string) => {
+  //       if (typeCounts.has(type)) {
+  //         typeCounts.set(type, typeCounts.get(type) + 1);
+  //       } else {
+  //         typeCounts.set(type, 1);
+  //       }
+  //     });
+  //   });
+  //   console.log("Profile Type Counts:", Array.from(typeCounts.entries())); // For debugging
+  //   return Array.from(typeCounts, ([type, count]) => ({ type, count }));
+  // }
+
   processProfileTypes(contacts: any[]): any {
     const typeCounts = new Map();
-    contacts.forEach(contact => {
-      contact.profileTypes.forEach((type: string) => {
-        if (typeCounts.has(type)) {
-          typeCounts.set(type, typeCounts.get(type) + 1);
+
+    if (Array.isArray(contacts)) {
+      contacts.forEach(contact => {
+        // Check if profileTypes exists and is an array
+        if (Array.isArray(contact.profileTypes)) {
+          contact.profileTypes.forEach((type: string) => {
+            if (typeCounts.has(type)) {
+              typeCounts.set(type, typeCounts.get(type) + 1);
+            } else {
+              typeCounts.set(type, 1);
+            }
+          });
         } else {
-          typeCounts.set(type, 1);
+          // If profileTypes is undefined or not an array, handle gracefully
+          this.logger.warn('Warning: profileTypes is undefined or not an array for contact:', contact.id);
         }
       });
-    });
-    console.log("Profile Type Counts:", Array.from(typeCounts.entries())); // For debugging
+    } else {
+      this.logger.error('Error: contacts is undefined or not an array');
+      return []; // Return an empty array or handle the error as appropriate
+    }
+
+    this.logger.log("Profile Type Counts:", Array.from(typeCounts.entries())); // For debugging
     return Array.from(typeCounts, ([type, count]) => ({ type, count }));
   }
+
+
 
   processTimezoneData(contacts: any[]): any {
     const timezoneCounts = new Map();
@@ -739,7 +803,7 @@ export class HomeComponent implements OnInit {
           datasets: [{
             label: 'Communication Frequency',
             data: data.map(d => d.frequency),
-            backgroundColor: 'rgba(153, 102, 255, 0.6)',
+            backgroundColor: 'rgba(153, 102, 255, 0.2)',
             borderColor: 'rgba(153, 102, 255, 1)',
             borderWidth: 1
           }]
@@ -997,14 +1061,12 @@ export class HomeComponent implements OnInit {
 
   processContactPriorities(contacts: any[], communications: any[]): any {
     const today = new Date();
-    const oneWeekLater = new Date(today);
-    oneWeekLater.setDate(today.getDate() + 7);
 
     // Create a map to hold dates and their associated contacts
     const datesWithContacts = new Map();
 
-    // Initialize each day with an empty array
-    for (let day = 0; day < 7; day++) {
+    // Initialize each day for the next two weeks with an empty array
+    for (let day = 0; day < 14; day++) {
       const futureDate = new Date(today);
       futureDate.setDate(today.getDate() + day);
       const formattedDate = `${futureDate.getFullYear()}-${futureDate.getMonth() + 1}-${futureDate.getDate()}`;
@@ -1016,28 +1078,48 @@ export class HomeComponent implements OnInit {
     communications.forEach(communication => {
       const contactDate = new Date(communication.date);
       const contactId = communication.contactId;
-      // Update the latest communication date
       if (!lastCommunicationDates.has(contactId) || lastCommunicationDates.get(contactId) < contactDate) {
         lastCommunicationDates.set(contactId, contactDate);
       }
     });
 
-    // Sort contacts by their communication urgency
     contacts.forEach(contact => {
-      if (!lastCommunicationDates.has(contact.id)) {
-        // If no communication data, high priority
-        this.assignContactToEarliestAvailableDate(datesWithContacts, contact);
-      } else {
-        const lastContactDate = lastCommunicationDates.get(contact.id);
-        if (((today.getTime() - lastContactDate.getTime()) / (1000 * 60 * 60 * 24)) >= 7) {
-          // Contact them again if it's been 7+ days
-          this.assignContactToEarliestAvailableDate(datesWithContacts, contact);
+      const lastContactDate = lastCommunicationDates.get(contact.id);
+      const daysSinceLastContact = lastContactDate ? (today.getTime() - lastContactDate.getTime()) / (1000 * 60 * 60 * 24) : null;
+      let followUpDays = 14; // default follow-up period
+
+      switch (contact.acquisitionSource) {
+        case 'import':
+          followUpDays = 14;
+          break;
+        case 'upload':
+          followUpDays = 14;
+          break;
+        case 'web':
+          followUpDays = 1;
+          break;
+        case 'Unknown':
+          followUpDays = 3;
+          break;
+        default:
+          followUpDays = 14; // Default case for unspecified sources
+      }
+
+      // Calculate the follow-up date
+      if (daysSinceLastContact === null || daysSinceLastContact >= followUpDays) {
+        const followUpDate = new Date(today);
+        followUpDate.setDate(today.getDate() + followUpDays);
+        const formattedFollowUpDate = `${followUpDate.getFullYear()}-${followUpDate.getMonth() + 1}-${followUpDate.getDate()}`;
+        if (datesWithContacts.has(formattedFollowUpDate)) {
+          datesWithContacts.get(formattedFollowUpDate).push(contact);
         }
       }
     });
 
-    return Array.from(datesWithContacts, ([date, contacts]) => ({ date, contacts: contacts.slice(0, 10) })); // Limit to 10 contacts per day
+    return Array.from(datesWithContacts, ([date, contacts]) => ({ date, contacts: contacts.slice(0, 10) }));
   }
+
+
 
   assignContactToEarliestAvailableDate(datesWithContacts: Map<string, any[]>, contact: any) {
     for (let [date, contacts] of datesWithContacts) {
@@ -1064,8 +1146,8 @@ export class HomeComponent implements OnInit {
           datasets: [{
             label: 'Planned Contact Count',
             data: data.map(d => d.contacts ? d.contacts.length : 0),  // Ensuring contacts are defined
-            backgroundColor: 'rgba(153, 102, 255, 0.6)',
-            borderColor: 'rgba(153, 102, 255, 1)',
+            backgroundColor: chartColors.map(color => color.backgroundColor),
+            borderColor: chartColors.map(color => color.borderColor),
             borderWidth: 1
           }]
         },
@@ -1082,11 +1164,12 @@ export class HomeComponent implements OnInit {
           maintainAspectRatio: true,
           plugins: {
             legend: {
+              display: false,
               position: 'top',
             },
             title: {
               display: true,
-              text: 'Contact Prioritization for Next 7 Days'
+              text: 'Contact Prioritization for Next 14 Days'
             }
           }
         }
@@ -1101,16 +1184,28 @@ export class HomeComponent implements OnInit {
     let missingLastName = 0, missingFirstName = 0, missingCompany = 0, missingProfession = 0;
     let missingProfileTypes = 0, missingGender = 0, missingAddresses = 0, missingPhoneNumbers = 0;
     let missingEmailAddresses = 0, missingSocialMedia = 0, missingCompanyName = 0, missingCompanyCapabilities = 0;
+    let missingTimezone = 0; // Counter for missing timezones
 
     contacts.forEach(contact => {
-      if (!contact.lastName) missingLastName++;
       if (!contact.firstName) missingFirstName++;
+      // Check if lastName is either missing or set to the default placeholder
+      if (!contact.lastName || contact.lastName === "No Last Name") missingLastName++;
+      // Check if the company object exists; then check name and capabilities separately
       if (!contact.company) {
-        missingCompany++;
+        missingCompanyName++;
+        missingCompanyCapabilities++; // Assuming if there's no company object, capabilities are also missing
       } else {
-        if (!contact.company.name) missingCompanyName++;
-        if (!contact.company.capabilities) missingCompanyCapabilities++;
+        // Check for company name
+        if (!contact.company.name || contact.company.name === "Unknown Company") {
+          missingCompanyName++;
+        }
+        // Check for company capabilities independently
+        if (!contact.company.capabilities) {
+          missingCompanyCapabilities++;
+        }
       }
+
+
       if (!contact.profession) missingProfession++;
       if (!contact.profileTypes || contact.profileTypes.length === 0) missingProfileTypes++;
       if (!contact.gender) missingGender++;
@@ -1118,6 +1213,7 @@ export class HomeComponent implements OnInit {
       if (!contact.phoneNumbers || contact.phoneNumbers.length === 0) missingPhoneNumbers++;
       if (!contact.emailAddresses || contact.emailAddresses.length === 0) missingEmailAddresses++;
       if (!contact.socialMedia || contact.socialMedia.length === 0) missingSocialMedia++;
+      if (!contact.timezone) missingTimezone++; // Check for missing timezone
     });
 
     const missingData = new Map<string, number>([
@@ -1132,16 +1228,23 @@ export class HomeComponent implements OnInit {
       ['Addresses', missingAddresses],
       ['Phone Numbers', missingPhoneNumbers],
       ['Email Addresses', missingEmailAddresses],
-      ['Social Media Profiles', missingSocialMedia]
+      ['Social Media Profiles', missingSocialMedia],
+      ['Timezone', missingTimezone] // Include timezone in the missing data map
     ]);
 
-    // Calculate health score: (total fields - total missing) / total fields * 100
-    const totalFields = contacts.length * 12; // Total number of fields checked across all contacts
+    // Update the total fields count to include the timezone field
+    const totalFields = contacts.length * 13; // Now checking 13 fields per contact
     const totalMissing = Array.from(missingData.values()).reduce((sum, count) => sum + count, 0);
     const healthScore = ((totalFields - totalMissing) / totalFields) * 100;
+    // Convert the Map to an array of key-value pairs
+    const missingDataArray = Array.from(missingData.entries());
+
+    // Now log the array, which JSON.stringify can handle
+    this.logger.info("Missing Data", JSON.stringify(missingDataArray, null, 2));
 
     return { missingData, healthScore };
   }
+
 
   createMissingDataChart(missingData: Map<string, number>): void {
     const labels = Array.from(missingData.keys());
@@ -1207,6 +1310,29 @@ export class HomeComponent implements OnInit {
       });
     } else {
       this.logger.error('Failed to get canvas context');
+    }
+  }
+
+  assignContactToAvailableDate(datesWithContacts: Map<string, any[]>, contact: any) {
+    let availableDate = null;
+    let minContacts = Number.MAX_VALUE;
+
+    // Find the date with the least number of assigned contacts
+    datesWithContacts.forEach((contacts, date) => {
+      if (contacts.length < minContacts) {
+        minContacts = contacts.length;
+        availableDate = date;
+      }
+    });
+
+    // Check if a valid date was found and if the map actually has an entry for this date
+    if (availableDate && datesWithContacts.has(availableDate)) {
+      const contactsOnDate = datesWithContacts.get(availableDate);
+      if (contactsOnDate) {
+        contactsOnDate.push(contact);
+      }
+    } else {
+      console.error('No available date found or date is not in the map', availableDate);
     }
   }
 

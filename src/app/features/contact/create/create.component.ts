@@ -14,6 +14,7 @@ import { LoggerService } from '../../../services/logger.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { NaicsPipe } from '../../../shared/filters/naics.pipe';
 import { Subscription } from 'rxjs';
+import { AuthService } from '../../../services/auth.service';
 
 // Register Chart.js components
 Chart.register(...registerables);
@@ -43,8 +44,10 @@ export class CreateComponent implements OnInit, OnDestroy {
 
   naicsCodes: string[] = [];
   selectedNaicsCodes: string[] = [];
+  userId!: string;
 
   private subscription!: Subscription;
+  private userSubscription! : Subscription;
 
   contact: Contact = {
     firstName: '',
@@ -75,18 +78,24 @@ export class CreateComponent implements OnInit, OnDestroy {
     },
     engagements: [],
     interactions: [],
-    acquisitionSource: 'Web',
+    acquisitionSource: 'web',
     dateAdded: new Date().toISOString(),
     lastContacted: new Date().toISOString()
   };;
 
-  constructor(private http: HttpClient, private dataService: DataService, private router: Router, private contactService: ContactService, private logger: LoggerService) {
+  constructor(private authService: AuthService, private http: HttpClient, private dataService: DataService, private router: Router, private contactService: ContactService, private logger: LoggerService) {
     this.production = environment.production;
 
   }
 
   ngOnInit() {
+    this.userSubscription = this.authService.getUserId().subscribe(userId => {
+      this.userId = userId;
+      this.startUp()
+    })
+  }
 
+  startUp(): void {
     this.subscription = this.contactService.currentContact.subscribe(contact => {
       if (contact) {
         let periodStartDate = new Date();
@@ -106,9 +115,11 @@ export class CreateComponent implements OnInit, OnDestroy {
     this.logger.info("Create is using this contact", JSON.stringify(this.contact, null, 2));
 
     this.fetchNaicsCodes();
+
   }
 
   ngOnDestroy() {
+
     if (this.lastContactTimelineChart) {
       this.lastContactTimelineChart.destroy();
     }
@@ -117,6 +128,7 @@ export class CreateComponent implements OnInit, OnDestroy {
     }
 
     this.subscription.unsubscribe();
+    this.userSubscription.unsubscribe();
   }
 
   fetchNaicsCodes() {
@@ -248,7 +260,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 
     this.print(); // Assuming print() is a method in your component
 
-    this.dataService.addDocument('CONTACTS', this.contact)
+    this.dataService.addDocument('CONTACTS', this.contact, this.userId)
       .then(docId => {
         console.log('Document added with ID:', docId);
         // Navigate to the contact-list page on success
@@ -265,7 +277,7 @@ export class CreateComponent implements OnInit, OnDestroy {
     // Assuming this.contact is the data to update
     if (this.contact && this.contact.id) {
       this.setRecordState();
-      this.dataService.updateDocument('CONTACTS', this.contact.id, this.contact)
+      this.dataService.updateDocument('CONTACTS', this.contact.id, this.contact, this.userId)
         .then(() => {
           console.log('Contact updated successfully');
           this.router.navigate(['/contact-list']);
@@ -349,7 +361,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 
   // Function to fetch and process communication frequency for a single contact
   loadAndProcessSingleContactFrequency(contactId: string, periodStartDate: Date): void {
-    this.dataService.getCollectionData('COMMUNICATIONS')
+    this.dataService.getCollectionData('COMMUNICATIONS', this.userId)
       .then(communicationsData => {
         this.logger.info("Loaded communications data:", communicationsData);
         const communicationFrequencyData = this.processSingleContactFrequency(contactId, communicationsData as Communication[], periodStartDate, this.contact.firstName + ' ' + this.contact.lastName);

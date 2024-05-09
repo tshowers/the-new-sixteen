@@ -26,7 +26,7 @@ export interface State {
    id?: string;
    dateAdded?: string;
 
-   user_id?: string;
+   userId?: string;
    lastUpdated?: string;
    lastUpdatedBy?: string;
    creatorName?: string;

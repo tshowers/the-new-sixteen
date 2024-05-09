@@ -1,7 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Contact, Communication } from '../../../shared/data/interfaces/contact.model';
 import { DataService } from '../../../services/data.service';
+import { AuthService } from '../../../services/auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-read',
@@ -10,14 +12,26 @@ import { DataService } from '../../../services/data.service';
   templateUrl: './read.component.html',
   styleUrl: './read.component.css'
 })
-export class ReadComponent {
+export class ReadComponent implements OnInit {
 
   @Input() contact?: Contact;
+  userId!: string;
+  userSubscription!: Subscription;
 
   communicationLogged: { [key: string]: boolean } = {};
 
 
-  constructor(private dataService: DataService) { }
+  constructor(private dataService: DataService, private authService: AuthService) { }
+
+  ngOnInit(): void {
+    this.userSubscription = this.authService.getUserId().subscribe(userId => {
+      this.userId = userId
+    })
+  }
+
+  ngOnDestroy(): void {
+    this.userSubscription.unsubscribe();
+  }
 
 
   logCommunication(contactId: string): void {
@@ -26,7 +40,7 @@ export class ReadComponent {
       date: new Date().toISOString() // Use ISO string for consistent time formatting
     };
 
-    this.dataService.addDocument('COMMUNICATIONS', newCommunication)
+    this.dataService.addDocument('COMMUNICATIONS', newCommunication, this.userId)
       .then(() => {
         console.log('Communication logged successfully');
         this.communicationLogged[contactId] = true;  // Disable the button
@@ -35,7 +49,7 @@ export class ReadComponent {
         if (this.contact) {
           this.setRecordState();
           // Save this change to your backend
-          this.dataService.updateDocument('CONTACTS', contactId, this.contact)
+          this.dataService.updateDocument('CONTACTS', contactId, this.contact, this.userId)
             .then(() => console.log('Contact updated successfully', this.contact))
             .catch(error => console.error('Failed to update contact:', error));
         }
