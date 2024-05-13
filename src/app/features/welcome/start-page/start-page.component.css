@@ -1,0 +1,38 @@
+.welcome-container {
+    text-align: center;
+    margin-top: 50px;
+  }
+  
+  .welcome-message, .whats-new p, .whats-coming p {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .button-container a {
+    display: inline-block;
+    padding: 20px 40px;
+    margin: 10px;
+    font-size: 18px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: white;
+    background-color: #007bff; /* Bootstrap primary color */
+    transition: background-color 0.3s;
+  }
+  
+  .button-container a:hover {
+    background-color: #0056b3;
+  }
+  
+  .whats-new h2, .whats-coming h2 {
+    margin-top: 30px;
+    color: #333;
+  }
+  
+  .whats-new p, .whats-coming p {
+    color: #666;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: left;
+  }
+  

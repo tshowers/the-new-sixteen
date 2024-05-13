@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" *ngIf="!processing else spinner">
     <div class="row">
         <div class="col-11">
             <h1>Contact Import</h1>
@@ -15,6 +15,11 @@
             </div>
             
         </div>
+    </div>
+    <div class="row">
+        <div class="col text-center">
+            <h4>{{message}}</h4>
+            </div>
     </div>
     <div class="row mt-5">
         <div class="col">
@@ -77,3 +82,19 @@
         </div>
     </div>
 </div>
+<ng-template #spinner>
+    <div id="preloader">
+        <div id="ctn-preloader" class="ctn-preloader">
+            <div class="round_spinner">
+                <div class="spinner"></div>
+                <div class="text">
+                    <img src="assets/taliferro-website-logo.png" width="100" height="100" alt="Taliferro">
+                    <h4><span >Taliferro</span> </h4>
+                </div>
+            </div>
+            <h2 class="head">Hold Tight!</h2>
+            <p style="min-height: 120px;">{{ message | slice:0:255 }}</p>
+            <p></p>
+        </div>
+    </div>
+</ng-template>

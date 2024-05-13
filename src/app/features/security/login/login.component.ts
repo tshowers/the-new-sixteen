@@ -23,18 +23,19 @@ export class LoginComponent implements OnInit, OnDestroy {
   emailAddress: string = '';
   password: string = "";
   isLoggedIn = false;
+  tosAgreed = false;  // Track if the ToS is agreed
 
   message!: string;
 
-  constructor(private authService: AuthService, private router: Router, private logger: LoggerService) {}
+  constructor(private authService: AuthService, private router: Router, private logger: LoggerService) { }
 
   ngOnInit(): void {
     this.userSubscription = this.authService.getUser().subscribe(user => {
       if (user) {
         this.isLoggedIn = true;
-        this.logger.info("User is logged in " + this.isLoggedIn, JSON.stringify(user, null, 2) )
+        this.logger.info("User is logged in " + this.isLoggedIn, JSON.stringify(user, null, 2))
         // Optionally redirect the user
-        this.router.navigate(['contact-dashboard']);  // Update with your route
+        this.router.navigate(['start-page']);  // Update with your route
       } else {
         this.isLoggedIn = false;
       }
@@ -47,15 +48,29 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.subscription.unsubscribe();
   }
 
+  acceptTerms(): void {
+    this.tosAgreed = true;
+  }
+
   onSubmit(): void {
-    this.subscription = this.authService.sendLoginLink(this.emailAddress).subscribe({
-      next: () => {
-        this.message = 'Sign-in link sent! Check your email.';
-      },
-      error: (error) => {
-        this.message = `Failed to send link: ${error.message}`;
-      }
-    });
+    if (!this.tosAgreed) {
+      this.message = 'You must agree to the Terms of Service before proceeding.';
+      return;
+    }
+
+
+    if (environment.authorizedEmails.includes(this.emailAddress.toLowerCase())) {
+      this.subscription = this.authService.sendLoginLink(this.emailAddress).subscribe({
+        next: () => {
+          this.message = 'Sign-in link sent! Check your email.';
+        },
+        error: (error) => {
+          this.message = `Failed to send link: ${error.message}`;
+        }
+      });
+    } else {
+      this.message = 'Your email address is not authorized to access this application.';
+    }
   }
 
 

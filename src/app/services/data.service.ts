@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, collectionData, doc, addDoc, getDocs, updateDoc, deleteDoc } from '@angular/fire/firestore';
+import { Firestore, collection, collectionData, doc, addDoc, getDocs, updateDoc, deleteDoc, DocumentData, query, where, orderBy, startAfter, limit } from '@angular/fire/firestore';
 import { ENDPOINTS } from './endpoints';  // Make sure the path is correct
 import { Observable } from 'rxjs';
 
@@ -7,6 +7,10 @@ import { Observable } from 'rxjs';
     providedIn: 'root'
 })
 export class DataService {
+
+
+    private lastVisible: DocumentData | null = null;
+
     constructor(private firestore: Firestore) { }
 
     /**
@@ -93,16 +97,6 @@ export class DataService {
             });
     }
 
-    // updateDocument(endpointKey: keyof typeof ENDPOINTS, id: string, data: any, user: string) {
-    //     const docRef = doc(this.firestore, ENDPOINTS[endpointKey], id);
-    //     return updateDoc(docRef, data).then(addRef => {
-    //         this.logEvent(`${user} added a new document to ${ENDPOINTS[endpointKey]}`, user);
-    //     })
-    //         .catch(error => {
-    //             console.error("Error updating document:", error);
-    //             this.logEvent(`${user} failed to update document to ${ENDPOINTS[endpointKey]} due to ${error}`, user);
-    //         });
-    // }
     updateDocument(endpointKey: keyof typeof ENDPOINTS, id: string, data: any, user: string) {
         const docRef = doc(this.firestore, ENDPOINTS[endpointKey], id);
         return updateDoc(docRef, data).then(() => {
@@ -117,14 +111,6 @@ export class DataService {
         });
     }
 
-    // deleteDocument(endpointKey: keyof typeof ENDPOINTS, id: string, user: string) {
-    //     const docRef = doc(this.firestore, ENDPOINTS[endpointKey], id);
-    //     return deleteDoc(docRef).then(deleteRef => {
-    //         this.logEvent(`${user} deleted document in ${ENDPOINTS[endpointKey]}`, user);
-
-    //     })
-    //         .catch(error => console.error("Error deleting document:", error));
-    // }
     deleteDocument(endpointKey: keyof typeof ENDPOINTS, id: string, user: string) {
         const docRef = doc(this.firestore, ENDPOINTS[endpointKey], id);
         return deleteDoc(docRef).then(() => {
@@ -159,5 +145,23 @@ export class DataService {
             });
 
     }
+
+    async fetchData(pageSize: number, endpointKey: keyof typeof ENDPOINTS, id: string): Promise<any> {
+        const colRef = collection(this.firestore, ENDPOINTS[endpointKey]);
+        const q = this.lastVisible ? query(colRef, orderBy('lastName'), startAfter(this.lastVisible), limit(pageSize))
+                                   : query(colRef, orderBy('lastName'), limit(pageSize));
+    
+        const documentSnapshots = await getDocs(q);
+        
+        // Capture the last visible document
+        this.lastVisible = documentSnapshots.docs[documentSnapshots.docs.length - 1];
+    
+        // Map documents to data
+        return documentSnapshots.docs.map(doc => doc.data());
+      }
+
+      resetPagination() {
+        this.lastVisible = null;
+      }
 
 }

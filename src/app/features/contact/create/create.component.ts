@@ -47,12 +47,13 @@ export class CreateComponent implements OnInit, OnDestroy {
   userId!: string;
 
   private subscription!: Subscription;
-  private userSubscription! : Subscription;
+  private userSubscription!: Subscription;
 
   contact: Contact = {
     firstName: '',
     middleName: '',
     lastName: '',
+    email: '',
     images: [{
       src: 'assets/nophoto.jpg',
       alt: 'No photo available'
@@ -102,6 +103,11 @@ export class CreateComponent implements OnInit, OnDestroy {
         periodStartDate.setDate(periodStartDate.getDate() - 30); // Set to 30 days ago
 
         this.contact = contact;
+
+        if (this.contact && this.contact.company && !this.contact.company.capabilities) {
+          this.contact.company.capabilities = [];
+        }
+
         const lastContactData = this.processSingleContactData(contact);
         setTimeout(() => {
           this.createSingleContactTimelineChart(lastContactData);
@@ -155,8 +161,16 @@ export class CreateComponent implements OnInit, OnDestroy {
 
   // Function to add a NAICS code to the capabilities array
   addNaicsCode(naicsCode: string) {
-    // Check if the NAICS code already exists in the capabilities array
+    // Ensure contact and company objects exist
     if (this.contact && this.contact.company) {
+      // Check if capabilities array exists; if not, initialize it as an empty array
+      this.logger.info("Has company");
+      if (!this.contact.company.capabilities) {
+        this.logger.info("Does not have capabilities");
+        this.contact.company.capabilities = [];
+      }
+      this.logger.info("Should now have capabilities", this.contact.company);
+      // Check if the NAICS code already exists in the capabilities array
       if (!this.contact.company.capabilities.includes(naicsCode)) {
         // Add the NAICS code to the capabilities array
         this.contact.company.capabilities.push(naicsCode);
@@ -253,8 +267,13 @@ export class CreateComponent implements OnInit, OnDestroy {
     this.contact.timeStamp = new Date();
   }
 
+  updateEmailField(): void {
+    this.contact.email = (this.contact && this.contact.emailAddresses && this.contact.emailAddresses[0]) ? (this.contact.emailAddresses[0].emailAddress.toLowerCase()) : '';
+  }
+
   onSubmit() {
     this.isLoading = true;  // Show spinner
+    this.updateEmailField();
 
     this.setRecordState();
 
@@ -276,6 +295,7 @@ export class CreateComponent implements OnInit, OnDestroy {
   updateContact(): void {
     // Assuming this.contact is the data to update
     if (this.contact && this.contact.id) {
+      this.updateEmailField();
       this.setRecordState();
       this.dataService.updateDocument('CONTACTS', this.contact.id, this.contact, this.userId)
         .then(() => {

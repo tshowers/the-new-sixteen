@@ -50,10 +50,12 @@ export interface Contact extends State {
   birthday?: string;
   anniversary?: any;
   gender?: string;
+  email?: string;
 
   addresses?: Array<Address>;
   phoneNumbers?: Array<PhoneNumber>;
-  emailAddresses?: Array<EmailAddress>;
+  // emailAddresses?: Array<EmailAddress>;
+  emailAddresses?: EmailAddress[];
   socialMedia?: Array<SocialMedia>; // Array of social media profiles
   notes?: Array<JustText>;
 

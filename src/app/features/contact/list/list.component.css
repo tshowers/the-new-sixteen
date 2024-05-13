@@ -8,22 +8,33 @@
 #addContactIcon i {
     color: white; /* White icon */
 }
+#addContactIcon {
+    animation: flash 2.5s 5;
+}
+
 @keyframes flash {
     0%, 100% { opacity: 1; }
     50% { opacity: 0; }
 }
 
-#addContactIcon {
-    animation: flash 2.5s 5;
-}
 
 #exportContactsIcon {
-    background-color: #2d6a2f; /* Green background */
-    border-radius: 50%; /* Circle shape */
+    color: white; /* White icon */
+    background-color: #214f23; /* Green background */
     padding: 10px; /* Padding around the icon */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Drop shadow */
 }
 
-#addContactIcon i {
+#loadMoreIcon i {
     color: white; /* White icon */
+    background-color: #1f5c21; /* Green background */
+    padding: 10px; /* Padding around the icon */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Drop shadow */
+}
+
+#resetIcon i {
+    color: white; /* White icon */
+    background-color: #1f4d5c; /* Green background */
+    padding: 10px; /* Padding around the icon */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Drop shadow */
 }

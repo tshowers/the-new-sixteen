@@ -1,0 +1,23 @@
+<div class="welcome-container">
+    <h1>Welcome {{firstName}}!</h1>
+    <p class="welcome-message">
+      Get started by managing your contacts efficiently. You can either upload new contacts or explore your dashboard if you've already added contacts.
+    </p>
+  
+    <div class="button-container">
+      <a [routerLink]="['/contact-dashboard']" class="button-dashboard">Go to Dashboard</a>
+      <a [routerLink]="['/help']" class="button-help">Learn More</a>
+      <a [routerLink]="['/upload']"class="button-upload">Upload Contacts</a>
+    </div>
+  
+    <div class="whats-new">
+      <h2>What's New in Version 0.1.2</h2>
+      <p>We're thrilled to announce the latest update to our application! This version brings enhanced performance improvements and a smoother user experience. Although it might seem like small tweaks, these are big steps towards a more efficient and reliable tool for you.</p>
+    </div>
+  
+    <div class="whats-coming">
+      <h2>What's Coming</h2>
+      <p>Looking ahead, we're excited to be integrating Learning Management System (LMS) features into our platform. This will open up new possibilities for education and training directly within the app, helping you not only manage contacts but also empower them with knowledge and skills. Stay tuned for a transformative learning integration!</p>
+    </div>
+  </div>
+  

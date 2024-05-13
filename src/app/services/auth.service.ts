@@ -4,6 +4,8 @@ import { Observable, from } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { LoggerService } from './logger.service';
 import { catchError, map } from 'rxjs/operators';
+import { Router } from '@angular/router';
+
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +13,9 @@ import { catchError, map } from 'rxjs/operators';
 export class AuthService {
   url = environment.PLATFORM_URL;
 
-  constructor(private auth: Auth, private logger: LoggerService) {}
+  paid = environment.paid;
+
+  constructor(private auth: Auth, private logger: LoggerService, private router:Router) {}
 
   // Method to send a sign-in link to an email address
   sendLoginLink(email: string): Observable<void> {
@@ -56,13 +60,24 @@ export class AuthService {
     );
   }
 
+  isPaid(): boolean {
+    return this.paid;
+  }
+
+  checkPaid(): void {
+    if (!this.isPaid())
+      this.router.navigate(['payment-required']);
+  }
+
   checkLogin(): Observable<boolean> {
+    this.checkPaid();
     return this.getUser().pipe(
       map(user => !!user)  // Maps the user to a boolean, true if user exists, false if not
     );
   }
 
   logout(): Observable<void> {
+    this.logger.info("Instituting Logout")
     // Optionally, clear any stored information related to the user session
     localStorage.removeItem('emailForSignIn');
 
@@ -70,6 +85,7 @@ export class AuthService {
     return from(signOut(this.auth)).pipe(
       map(() => {
         this.logger.log('User logged out successfully'); // Log the logout action
+        this.router.navigate(['login'])
       }),
       catchError(error => {
         this.logger.error('Logout failed:', error); // Log any errors during logout

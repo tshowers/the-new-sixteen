@@ -1,8 +1,11 @@
 export const environment = {
     production: true,
-    COMPANY_NAME: "Taliferro",
-    PLATFORM_URL: "https://taliferro-platform.web.app",
+    COMPANY_NAME: "Maven",
+    paid: false,
+    authorizedEmails: ['ty.showers@taliferro.tech', 'jerea@maven-inc.com', 'don@maven-inc.com', 'mel@maven-inc.com'],
+    PLATFORM_URL: "https://maven-inc-pa.web.app",
     VERSION: require('../../package.json').version,
+
     firebaseConfig: {
         apiKey: "AIzaSyAC5LJoOG1hQWS-tHGbsizTnsNGSK7U1Ag",
         authDomain: "maven-inc-pa.firebaseapp.com",

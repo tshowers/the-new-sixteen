@@ -10,6 +10,7 @@ import { ContactService } from '../../../services/contact.service';
 import { saveAs } from 'file-saver';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../../services/auth.service';
+import { LoggerService } from '../../../services/logger.service';
 
 @Component({
   selector: 'app-list',
@@ -33,29 +34,54 @@ export class ListComponent implements OnInit {
   contacts$!: Observable<any[]>;
   selectedContact!: Contact;
   filteredContacts: Contact[] = [];
+  userId!: string
 
-  constructor(private dataService: DataService, private router: Router, private contactService: ContactService, private authService:AuthService) { }
+  data: any[] = [];
+  pageSize = 25; // Number of items per page
+
+  constructor(private logger: LoggerService, private dataService: DataService, private router: Router, private contactService: ContactService, private authService: AuthService) { 
+  }
 
 
   ngOnInit() {
-    this.userSubscription = this.authService.getUserId().subscribe(userId => {
-      this.readDatabase(userId);
-    })
+    this.userId = 'Unknown'
+    this.loadData();
 
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
-    this.userSubscription.unsubscribe();
+    if (this.subscription)
+      this.subscription.unsubscribe();
+    if (this.userSubscription)
+      this.userSubscription.unsubscribe();
   }
 
-  readDatabase(userId:string): void {
-    this.contacts$ = this.dataService.getRealtimeData('CONTACTS', userId);
-    this.subscription = this.contacts$.subscribe(data => {
-      this.filteredContacts = data; // Assuming initial data without filter applied.
-      this.print(data);
-    });
+  // readDatabase(userId:string): void {
+  //   this.contacts$ = this.dataService.getRealtimeData('CONTACTS', userId);
+  //   this.subscription = this.contacts$.subscribe(data => {
+  //     this.filteredContacts = data; // Assuming initial data without filter applied.
+  //     this.print(data);
+  //   });
+  // }
+
+  onNumberOfItemsChange(): void {
   }
+
+  async loadData() {
+    this.data = await this.dataService.fetchData(this.pageSize, 'CONTACTS', this.userId);
+  }
+
+  async loadMore() {
+    const moreData = await this.dataService.fetchData(this.pageSize, 'CONTACTS', this.userId);
+    this.data = [...this.data, ...moreData];
+  }
+
+  resetPagination() {
+    this.dataService.resetPagination();
+    this.loadData();
+  }
+
+
 
   exportToCSV() {
     let filteredData = this.applyFilter(this.filteredContacts, this.searchText);
@@ -143,7 +169,7 @@ export class ListComponent implements OnInit {
   }
 
   print(data: any): void {
-    console.log(JSON.stringify(data, null, 2));
+    this.logger.log(JSON.stringify(data, null, 2));
   }
 
 

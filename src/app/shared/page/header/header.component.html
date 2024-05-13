@@ -11,9 +11,9 @@
             Contacts
           </a>
           <ul class="dropdown-menu" aria-labelledby="contactsDropdown">
-            <li><a class="dropdown-item" [routerLink]="['contact-dashboard']">Dashboard</a></li>
-            <li><a class="dropdown-item" [routerLink]="['contact-import']">Import</a></li>
-            <li><a class="dropdown-item" [routerLink]="['contact-list']">Manage</a></li>
+            <li><a class="dropdown-item" [routerLink]="['/contact-dashboard']">Dashboard</a></li>
+            <li><a class="dropdown-item" [routerLink]="['/contact-import']">Import</a></li>
+            <li><a class="dropdown-item" [routerLink]="['/contact-list']">Manage</a></li>
           </ul>
         </li>
         <li class="nav-item">
@@ -26,22 +26,22 @@
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li class="nav-item">
-              <a class="nav-link" [routerLink]="['/calendar']">Calendar</a>
+              <a class="nav-link" (click)="onCalendar()" style="cursor: pointer;">Calendar</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" [routerLink]="['/email']">Email</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" [routerLink]="['/tasks']">Tasks</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" [routerLink]="['/notifications']">Notifications</a>
+              <a class="nav-link"  (click)="onEmail()" style="cursor: pointer;">Email</a>
             </li>
             <li>
               <hr class="dropdown-divider">
             </li>
             <li class="nav-item">
               <a class="nav-link" [routerLink]="['/settings']">Settings</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" [routerLink]="['/platform-activity']">Platform Log</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" [routerLink]="['/start-page']">Start Page</a>
             </li>
           </ul>
         </li>

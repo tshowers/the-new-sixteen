@@ -56,7 +56,7 @@ export class FinishSignInComponent implements OnInit {
             next: (contact) => {
               this.userService.setLoggedInContactInfo(contact); // Store contact info
               this.message = 'Sign-in successful. Welcome!';
-              this.router.navigate(['contact-dashboard']); // Redirect after setup
+              this.router.navigate(['start-page']); // Redirect after setup
             },
             error: (err) => {
               this.logger.error('Failed to setup user contact:', err);
@@ -68,7 +68,7 @@ export class FinishSignInComponent implements OnInit {
           setTimeout(() => {
             this.message = 'Sign-in successful. Welcome!';
             // Redirect or update UI
-            this.router.navigate(['contact-dashboard']);  // Redirect to dashboard or another route
+            this.router.navigate(['start-page']);  // Redirect to dashboard or another route
             }, 2000);
 
         },

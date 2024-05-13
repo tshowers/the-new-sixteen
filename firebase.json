@@ -8,8 +8,23 @@
   },
   "hosting": [
     {
-      "public": "dist/the-new-sixteen/browser",
       "site": "taliferro-platform",
+      "public": "dist/the-new-sixteen/browser",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    },
+    {
+      "site": "maven-inc-pa",
+      "public": "dist/the-new-sixteen/browser",
       "ignore": [
         "firebase.json",
         "**/.*",

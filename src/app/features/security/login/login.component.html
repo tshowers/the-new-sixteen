@@ -1,51 +1,136 @@
 <div class="container-fluid">
-    <div class="row mb-5">
-        <div class="col text-center"><a href="https://taliferro.tech">
-                <img src="assets/taliferro-website-logo.png" alt="Taliferro Tech, LLC">
-            </a>
-        </div>
+  <div class="row mb-5">
+    <div class="col text-center"><a href="https://taliferro.tech">
+        <img src="assets/taliferro-website-logo.png" alt="Taliferro Tech, LLC" style="z-index: 9000;">
+      </a>
     </div>
-    <div class="row mt-5">
-        <div class="col-md-12">
-            <p class="text-center blink-text" *ngIf="message" style="font-size: larger;"> {{message}}</p>
-            <div class="card pages-card" *ngIf="!message">
-                <div class="card-body">
-                    <div class="small text-center text-dark">Login</div>
-                    <form #userForm="ngForm" (ngSubmit)="onSubmit();userForm.reset();">
-                        <div class="form-group">
-                            <div class="input-group">
-                                <span class="input-group-addon text-theme"><i class="fa fa-user"></i></span>
-                                <input [(ngModel)]="emailAddress" #email="ngModel" type="email" id="emailAddress" name="email" autocomplete="off" class="form-control form-control-lg" placeholder="Email Address" required>
-                            </div>
-                            <div [hidden]="email.valid || email.pristine" class="alert alert-danger"> Email Address is required </div>
-                        </div>
-                        <div class="form-group form-actions">
-                            <button class="btn btn-theme login-btn" type="submit" [disabled]="!userForm.form.valid">Log In</button>
-                        </div>
-                    </form>
-                </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-md-12">
+      <p class="text-center blink-text" *ngIf="message" style="font-size: larger;"> {{message}}</p>
+      <div class="card pages-card" *ngIf="!message">
+        <div class="card-body">
+          <div class="small text-center text-dark">Login</div>
+          <form #userForm="ngForm" (ngSubmit)="onSubmit();userForm.reset();">
+            <div class="form-group">
+              <div class="input-group">
+                <span class="input-group-addon text-theme"><i class="fa fa-user"></i></span>
+                <input [(ngModel)]="emailAddress" #email="ngModel" type="email" id="emailAddress" name="email" autocomplete="off" class="form-control form-control-lg" placeholder="Email Address" required>
+              </div>
+              <div [hidden]="email.valid || email.pristine" class="alert alert-danger"> Email Address is required </div>
             </div>
+            <div class="form-group form-actions text-center">
+              <button type="button" class="btn btn-link mb-3" style="text-decoration: underline; color: #0d6efd;" data-bs-toggle="modal" data-bs-target="#tosModal"> Read and Accept Terms of Service </button>
+              <br>
+              <button class="btn btn-theme login-btn" type="submit" [disabled]="!tosAgreed || !userForm.form.valid">Log In</button>
+            </div>
+          </form>
         </div>
+      </div>
     </div>
-    <div class="row mt-5">
-        <div class="col-md-2"></div>
-        <div class="col-md-8 text-center" style="font-size: smaller;">
-            <h4>
-                Experience Simplicity with Email-Only Sign-In
-            </h4>
-            <p> Our innovative email-only sign-in system streamlines your access experience by eliminating the need for passwords. Simply enter your email address, and we'll send a magic link directly to your inbox. Click on this link, and you're securely logged in—no password required. </p>
-            <p><strong>Forget the Hassle of Remembering Passwords</strong>
-            </p>
-            <p> With our system, the days of juggling multiple passwords or worrying about password strength are over. There's no need to remember any complex passwords or risk using the same one across different sites. Each login attempt generates a new, unique link that ensures only you can access your account at that moment. </p>
-            <p><strong>Enhanced Security You Can Trust</strong>
-            </p>
-            <p> Our email-only sign-in process is not just about convenience; it's also about providing robust security. By using one-time magic links, we significantly reduce the risks associated with stolen or weak passwords. Each link is valid for a single use and expires after a short duration, making any intercepted link useless to hackers. Additionally, all communication is encrypted, ensuring your data's integrity and confidentiality at every step. </p>
-            <p> Embrace the simplicity and security of our email-only sign-in system, where your access is just a click away. </p>
-        </div>
-        <div class="col-md-2"></div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-md-3"></div>
+    <div class="col-md-6 text-center" style="font-size: smaller; z-index: 9999;">
+      <h4> Experience Simplicity with Email-Only Sign-In </h4>
+      <p> Our innovative email-only sign-in system streamlines your access experience by eliminating the need for passwords. Simply enter your email address, and we'll send a magic link directly to your inbox. Click on this link, and you're securely logged in—no password required. </p>
+      <p><strong>Forget the Hassle of Remembering Passwords</strong>
+      </p>
+      <p> With our system, the days of juggling multiple passwords or worrying about password strength are over. There's no need to remember any complex passwords or risk using the same one across different sites. Each login attempt generates a new, unique link that ensures only you can access your account at that moment. </p>
+      <p><strong>Enhanced Security You Can Trust</strong>
+      </p>
+      <p> Our email-only sign-in process is not just about convenience; it's also about providing robust security. By using one-time magic links, we significantly reduce the risks associated with stolen or weak passwords. Each link is valid for a single use and expires after a short duration, making any intercepted link useless to hackers. Additionally, all communication is encrypted, ensuring your data's integrity and confidentiality at every step. </p>
+      <p> Embrace the simplicity and security of our email-only sign-in system, where your access is just a click away. </p>
     </div>
+    <div class="col-md-3"></div>
+  </div>
 </div>
 <div class="half-circle"></div>
 <div class="small-circle"></div>
 <div class="half-circle-bottom"></div>
 <div class="small-circle-bottom"></div>
+<!-- Button to open ToS Modal -->
+<!-- Terms of Service Modal -->
+<div class="modal fade" id="tosModal" tabindex="-1" aria-labelledby="tosModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="tosModalLabel">Terms of Service</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Embedding external ToS using iframe -->
+        <div class="p-5">
+          <p> This page states the "Terms and Conditions" under which you may use "Taliferro Group". Please read this page carefully. If you do not accept the Terms and Conditions stated here, do not use this web site application service. By using this web site service, you are indicating your acceptance to be bound by the terms of these Terms and Conditions. Taliferro Group (the "Company") may revise these Terms and Conditions at any time by updating this posting. You should visit this page periodically to review the Terms and Conditions, because they are binding. The terms "You" and "User" as used herein to refer to all individuals and/or entities accessing this web site for any reason.</p>
+          <h3>Use of Web Site Content</h3>
+          <p> The Company authorizes you to view and access a single copy of the content available on or from Taliferro Group (the "Web Site") solely for your personal, and/or business use.</p>
+          <p><span><span><span><span> The contents of this Web Site, and all other websites under the Company's control, whether partial or otherwise (the </span></span></span><a href="https://blog.taliferro.com/oct2023/oct292023/why-your-website-should-be-more-than-a-fancy-business-card.html">website</a> and such other websites are sometimes collectively referred to as 'Taliferro Group Sites') such as text, graphics, images, logos, button icons, software and other Web Site content (collectively, 'Web Site Content'), are protected under both United States and foreign copyright, trademark and other laws. All Web Site software is the property of the Company. The compilation (meaning the collection, arrangement and assembly) of all content related to "Taliferro Group" on this Web Site is the exclusive property of the Company and protected by U.S. and international copyright laws. Unauthorized use of "Taliferro Group" Web Site Content may violate copyright, trademark, and other laws. You must retain all copyright, trademark, service-mark and other proprietary notices contained in the original Web Site Content on any copy you make of the Web Site Content. You may not sell or modify the "Taliferro Group" Web Site Content or reproduce, display, publicly perform, distribute, or otherwise use the Web Site Content in any way for any public or commercial purpose. The use of the "Taliferro Group" Web Site Content on any other web site or in a networked computer environment for any purpose is prohibited.</span></p>
+          <p> You shall not copy or adapt the HTML code that the Company creates to generate any Web Site Content or the pages making up any Taliferro Group Site. It is also protected by the Company's copyright.</p>
+          <h3>Acceptable Site Use</h3>
+          <p> General Rules: Users may not use any Taliferro Group Site in order to transmit, distribute, store or destroy material, including without limitation Web Site Content, (a) in violation of any applicable law or regulation, (b) in a manner that will infringe the copyright, trademark, trade secret or other intellectual property rights of others or violate the privacy, publicity or other personal rights of others, or (c) that is defamatory, obscene, threatening, abusive or hateful. </p>
+          <p><span> Taliferro Group Site <a href="https://blog.taliferro.com/nov2023/nov232023/the-exclusive-benefits-of-our-limited-api-certification.html">security</a> Rules. Users are prohibited from violating or attempting to violate the <a href="https://blog.taliferro.com/nov2023/nov232023/the-exclusive-benefits-of-our-limited-api-certification.html">security</a> of any Taliferro Group Site, including, without limitation, (a) accessing data not intended for such user or logging into a server or account which the user is not authorized to access, (b) attempting to probe, scan or test the vulnerability of a system or </span>network<span> or to breach <a href="https://blog.taliferro.com/oct2023/oct272023/rethinking-digital-security.html">security</a> or authentication measures without proper authorization, (c) attempting to interfere with service to any user, host or network, including, without limitation, via means of submitting a virus to any Taliferro Group Site, overloading, "flooding", "spamming", "mail-bombing" or "crashing", (d) sending unsolicited e-mail, including promotions and/or advertising of products or services, unless authorized, or (e) forging any TCP/IP packet header or any part of the header information in any e-mail or newsgroup posting. Violations of system or </span>network<span> security may result in civil or criminal liability. The Company will investigate occurrences which may involve such violations and may involve, and cooperate with, law enforcement authorities in prosecuting users who are involved in such violations. </span></p>
+          <h3>Inactivity</h3>
+          <p> If the users accounts is inactive for more than 30 consecutive days, The Company reserves the right to eliminate the account by deletion. All data entered from inception will be deleted. </p>
+          <h3>Specific Prohibited Uses</h3>
+          <p> Taliferro Group Sites may be used only for lawful purposes by individuals utilizing "Taliferro Group" to run their business. The Company specifically prohibits any use of the Web Site, and all users agree not to use the Web Site, for any of the following: </p>
+          <ul>
+            <li class="content_text">Deleting or revising any material posted by any other person or entity without authorization. </li>
+            <li class="content_text">Using any device, software or routine to interfere or attempt to interfere with the proper working of any Taliferro Group Site or any activity being conducted on this site. </li>
+            <li class="content_text">Taking any action which imposes an unreasonable or disproportionately large load on any Taliferro Group Site's infrastructure. </li>
+            <li class="content_text">If you have a password allowing access to the "Taliferro Group" Web Site, disclosing to or sharing your password with any third parties or using your password for any unauthorized purpose. </li>
+            <li class="content_text"><span>Notwithstanding anything to the contrary contained herein, using or attempting to use any engine, software, tool, agent or other device or mechanism (including without limitation browsers, spiders, robots, avatars or intelligent agents) to navigate or <a href="https://blog.taliferro.com/oct2023/oct262023/the-power-of-gesture-based-contextual-search.html">search</a> any Taliferro Group Site other than the <a href="https://blog.taliferro.com/oct2023/oct262023/the-power-of-gesture-based-contextual-search.html">search</a> engine and <a href="https://blog.taliferro.com/oct2023/oct262023/the-power-of-gesture-based-contextual-search.html">search</a> agents available from the Company on such Taliferro Group Site and other than generally available third party web browsers (e.g., Netscape Navigator, Microsoft Explorer). </span></li>
+            <li class="content_text">Attempting to decipher, decompile, disassemble or reverse engineer any of the software comprising or in any way making up a part of any Taliferro Group Site. </li>
+            <li class="content_text">Aggregating, copying or duplicating in any manner any of the Web Site Content or information available from any Taliferro Group Site. </li>
+            <li class="content_text">Framing of or linking to any of the Web Site Content or information available from any Taliferro Group Site without authorization. </li>
+          </ul>
+          <h3>User Information</h3>
+          <p> When you register for the "Taliferro Group" Web Site, you will be asked to provide the Company with certain information including, without limitation, a valid email address (your "Information"). In addition to the terms and conditions that may be set forth in any privacy policy on this Web Site, you understand and agree that the Company may disclose to third parties, on an anonymous basis, certain aggregate information contained in your registration application. The Company will not disclose to any third party your name, address, e-mail address or telephone number without your prior consent, except to the extent necessary or appropriate to comply with applicable laws or in legal proceedings where such information is relevant. &nbsp; </p>
+          <h3>User Submissions</h3>
+          <p> As a user, you are responsible for your own database and are responsible for the consequences of posting information to the database. By using any Taliferro Group Site you agree not to, do the following things: </p>
+          <ul>
+            <li class="content_text"> post material that is copyrighted, unless you are the copyright owner or have the permission of the copyright owner to post it;&nbsp; </li>
+            <li class="content_text"> post material that reveals trade secrets, unless you own them or have the permission of the owner;&nbsp; </li>
+            <li class="content_text"> post material that infringes on any other intellectual property rights of others or on the privacy or publicity rights of others;&nbsp; </li>
+            <li class="content_text"> post material that is obscene, defamatory, threatening, harassing, abusive, hateful, or embarrassing to another user or any other person or entity;&nbsp; </li>
+            <li class="content_text"> post a sexually-explicit image or statement;&nbsp; </li>
+            <li class="content_text"> post advertisements or solicitations of business, post chain letters or pyramid schemes;&nbsp; </li>
+            <li class="content_text"> impersonate another person;&nbsp; </li>
+            <li class="content_text"><span> or post material that contains viruses, Trojan horses, worms, time bombs, cancelbots or other computer <a href="https://blog.taliferro.com/jun2023/jun302023/memory-leaks-a-lingering-concern-or-an-issue-of-the-past.html">programming</a> routines or engines that are intended to damage, detrimentally interfere with, surreptitiously intercept or expropriate any system, data or information. </span></li>
+          </ul>
+          <p> The Company does not represent or guarantee the truthfulness, accuracy, or reliability of information posted by users or endorse any opinions expressed by users. You acknowledge that any reliance on material added to the database by other users will be at your own risk. </p>
+          <p> The Company acts as a passive conduit for the online distribution and publication of user-posted information and has no obligation to screen communications or information in advance and is not responsible for screening or monitoring material posted by users. If notified by a user of communications which allegedly do not conform to these Terms and Conditions, the Company may investigate the allegation and determine in good faith and its sole discretion whether to remove or request the removal of the communication. The Company has no liability or responsibility to users for performance or nonperformance of such activities. The Company reserves the right to expel users and prevent their further access to the Web Site for violating the Terms and Conditions or the law and the right to remove communications which are abusive, illegal, or disruptive. The Company may take any action with respect to user-submitted information that it deems necessary or appropriate in its sole discretion if it believes it may create liability for the Company or may cause the Company to lose (in whole or in part) the services of its ISPs or other suppliers. </p>
+          <p> We appreciate hearing from our customers and welcome your comments regarding our services and the Taliferro Group Sites. Please be advised, however, that our policy does not permit us to accept or consider creative ideas, suggestions, inventions or materials other than those which we have specifically requested. While we do value your feedback on our services, please be specific in your comments regarding our services and do not submit creative ideas, inventions, suggestions, or materials. If, despite our request, you send us creative suggestions, ideas, drawings, concepts, inventions, or other information (collectively the "Submission"), the Submission shall be the property of the Company. None of the Submission shall be subject to any obligation of confidence on our part and we shall not be liable for any use or disclosure of any Submission. The Company shall own exclusively all now known or later discovered rights to the Submission and shall be entitled to unrestricted use of the Submission for any purpose whatsoever, commercial or otherwise, without compensation to you or any other person who submitted the Submission. </p>
+          <h3>Registration and Password</h3>
+          <p> You are responsible for maintaining the confidentiality of your information and password. You shall be responsible for all uses of your registration, whether or not authorized by you. You agree to immediately notify the Company of any unauthorized use of your registration or password. </p>
+          <p> The Company is not involved in the actual transaction between companies and their employees. As a result, the Company has no control over the quality, safety or legality of the information posted to the database, or the validity of the information. &nbsp; </p>
+          <p> Because user authentication on the Internet is difficult, the Company cannot and does not confirm that each user is who they claim to be. Because we do not and cannot be involved in user-to-user dealings or control the behavior of participants on any "Taliferro Group" Site, in the event that you have a dispute with one or more users, you release the Company (and our agents and employees) from claims, demands and damages (actual and consequential, direct and indirect) of every kind and nature, known and unknown, suspected and unsuspected, disclosed and undisclosed, arising out of or in any way connected with such disputes. </p>
+          <p> We are under no legal obligation to, and generally do not, control the information posted by users which is made available through the "Taliferro Group" Web Site and/or the other Taliferro Group Sites. By its very nature, other people's information may be offensive, harmful or inaccurate, and in some cases will be mislabeled or deceptively labeled. </p>
+          <p> We expect that you will use caution and common sense when using the "Taliferro Group" Web Site and/or the other "Taliferro Group" Sites. </p>
+          <p> The Web Site Content may contain inaccuracies or typographical errors. The Company makes no representations about the accuracy, reliability, completeness, or timeliness of any "Taliferro Group" Site or the Web Site Content. The use of Taliferro Group Sites and the Web Site Content is at your own risk. Changes are periodically made to "Taliferro Group" Sites and may be made at any time. </p>
+          <p> You acknowledge and agree that you are solely responsible for the form, content and accuracy of any material contained within your database placed by you on the "Taliferro Group" Site. &nbsp; </p>
+          <p> The Company is not to be considered to be an employer with respect to your use of any "Taliferro Group" Site and the Company shall not be responsible for any business decisions, for whatever reason made, made by any entity posting information to the " Taliferro Group " database. </p>
+          <p><span><span><span> THE COMPANY DOES NOT WARRANT THAT ANY "Taliferro Group" SITE WILL OPERATE ERROR-FREE OR THAT ANY "Taliferro Group" SITE AND ITS SERVER ARE FREE OF COMPUTER VIRUSES OR OTHER HARMFUL MECHANISMS. IF YOUR USE OF ANY Taliferro Group SITE OR THE MATERIAL RESULTS IN THE NEED FOR SERVICING OR REPLACING EQUIPMENT OR DATA, THE COMPANY IS NOT RESPONSIBLE FOR THOSE COSTS. THE "Taliferro Group" SITES AND WEB SITE CONTENT ARE PROVIDED ON AN "AS IS" BASIS WITHOUT ANY WARRANTIES OF ANY KIND. THE COMPANY, TO THE FULLEST EXTENT PERMITTED BY LAW, DISCLAIMS ALL WARRANTIES, WHETHER EXPRESS OR IMPLIED, INCLUDING THE WARRANTY OF MERCHANTABILITY, FITNESS FOR PARTICULAR PURPOSE AND NON-INFRINGEMENT. THE COMPANY MAKES NO WARRANTIES ABOUT THE ACCURACY, RELIABILITY, COMPLETENESS, OR TIMELINESS OF THE MATERIAL, SERVICES, SOFTWARE, TEXT, GRAPHICS, AND LINKS. </span></span></span>
+          </p>
+          <h3> Disclaimer of Consequential Damages</h3>
+          <p> IN NO EVENT SHALL THE COMPANY, ITS SUPPLIERS, OR ANY THIRD PARTIES MENTIONED ON ANY "Taliferro Group" SITE BE LIABLE FOR ANY DAMAGES WHATSOEVER (INCLUDING, WITHOUT LIMITATION, INCIDENTAL AND CONSEQUENTIAL DAMAGES, LOST PROFITS, OR DAMAGES RESULTING FROM LOST DATA OR BUSINESS INTERRUPTION) RESULTING FROM THE USE OR INABILITY TO USE ANY "Taliferro Group" SITE AND THE MATERIAL, WHETHER BASED ON WARRANTY, CONTRACT, TORT, OR ANY OTHER LEGAL THEORY, AND WHETHER OR NOT THE COMPANY IS ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. </p>
+          <h3> No Resale or Unauthorized Commercial Use</h3>
+          <p> You agree not to resell or assign your rights or obligations under these Terms of Use. You also agree not to make any unauthorized commercial use of any "Taliferro Group" Site. </p>
+          <h3>Limitation of Liability</h3>
+          <p> The aggregate liability for the Company to you for all claims arising from the use of the Materials or any "Taliferro Group" Site is limited to $100. </p>
+          <h3>Termination</h3>
+          <p> The Company reserves the right, at its sole discretion, to pursue all of its legal remedies, including, but not limited to deletion of your database from the "Taliferro Group" Web Site and the other Taliferro Group Sites and immediate termination of your registration with or ability to access this Web Site and the other Taliferro Group Sites and/or any other service provided to you by the Company, upon any breach by you of these Terms and Conditions or if the Company is unable to verify or authenticate any information you submit to the Web Site or other Taliferro Group Site registration. </p>
+          <h3>Indemnity</h3>
+          <p> You agree to defend, indemnify, and hold harmless the Company, its officers, directors, employees and agents, from and against any claims, actions or demands, including without limitation reasonable legal and accounting fees, alleging or resulting from your use of the Material or your breach of the terms of these Terms and Conditions. The Company shall provide notice to you promptly of any such claim, suit, or proceeding and shall assist you, at your expense, in defending any such claim, suit or proceeding. </p>
+          <h3>General</h3>
+          <p> The Company makes no claims that the Materials may be lawfully viewed or accessed outside of the United States. Access to the Materials may not be legal by certain persons or in certain countries. If you access the Web Site from outside of the United States, you do so at your own risk and are responsible for compliance with the laws of your jurisdiction. These Terms and Conditions are governed by the internal substantive laws of the Commonwealth of Florida, without respect to its conflict of laws principles. Jurisdiction for any claims arising under this agreement shall lie exclusively with the state or federal courts within Miami, Florida. If any provision of these Terms and Conditions are found to be invalid by any court having competent jurisdiction, the invalidity of such provision shall not affect the validity of the remaining provisions of these Terms and Conditions, which shall remain in full force and effect. No waiver of any term of these Terms and Conditions shall be deemed a further or continuing waiver of such term or any other term. Except as expressly provided in additional terms of use for areas of the Web Site, a particular "Legal Notice," or Software License or material on particular Web pages, these Terms and Conditions constitute the entire agreement between you and the Company with respect to the use of Web Site. No changes to these Terms and Conditions shall be made except by a revised posting on this page. </p>
+          <h3>Additional Terms of Use</h3>
+          <p> Certain areas of this Web Site and the other "Taliferro Group Group" Sites are subject to additional terms of use. By using such areas, or any part thereof, you agree to be bound by the additional terms of use applicable to such areas.</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" (click)="acceptTerms()" data-bs-dismiss="modal">I Agree</button>
+      </div>
+    </div>
+  </div>
+</div>

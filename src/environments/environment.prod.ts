@@ -1,6 +1,8 @@
 export const environment = {
   production: true,
   COMPANY_NAME: "Taliferro",
+  paid: true,
+  authorizedEmails: ['ty.showers@taliferro.tech', 'bookert921@gmail.com', 'vikki.owens@taliferro.com', 'ty.showers@taliferro.com'],
   PLATFORM_URL: "https://taliferro-platform.web.app",
   VERSION: require('../../package.json').version,
   firebaseConfig: {
