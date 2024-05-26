@@ -1,18 +1,26 @@
 export const environment = {
     production: true,
+    multiTenant: false,
     COMPANY_NAME: "Maven",
-    paid: false,
-    authorizedEmails: ['ty.showers@taliferro.tech', 'jerea@maven-inc.com', 'don@maven-inc.com', 'mel@maven-inc.com'],
-    PLATFORM_URL: "https://maven-inc-pa.web.app",
+    paid: true,
+    authorizedEmails: ['ty.showers@taliferro.tech', 'jerea@maven-inc.com', 'don@maven-inc.com', 'mel@maven-inc.com', 'ty.showers@gmail.com', 'ty.showers@taliferro.com'],
+    PLATFORM_URL: "https://maven-nlp.web.app",
     VERSION: require('../../package.json').version,
-
     firebaseConfig: {
-        apiKey: "AIzaSyAC5LJoOG1hQWS-tHGbsizTnsNGSK7U1Ag",
-        authDomain: "maven-inc-pa.firebaseapp.com",
-        projectId: "maven-inc-pa",
-        storageBucket: "maven-inc-pa.appspot.com",
-        messagingSenderId: "823268638819",
-        appId: "1:823268638819:web:b35c1a71db5051a39b7856",
-        measurementId: "G-7MR812XN3Y"
-    }
+        apiKey: "AIzaSyCQAnM7RAPQyGU_7PCAxFvv_EaNSFb0Yus",
+        authDomain: "maven-nlp.firebaseapp.com",
+        projectId: "maven-nlp",
+        storageBucket: "maven-nlp.appspot.com",
+        messagingSenderId: "519400325469",
+        appId: "1:519400325469:web:29058a713b3cc3d49728b4",
+        measurementId: "G-GG16550C21"
+    },
+    begin: "BellWeather",
+    stripeKey: '',
+    stripeTestMode: true, 
+    linkPreview: '37bd4a175494ee23afba7d8a117c5f77',
+    googleMapsApiKey: 'AIzaSyAb8PrnCpeyihFdvhd-mnM0qkLQ-VSna9M',
+    backendURL: 'http://localhost:3000'
+
+
 };

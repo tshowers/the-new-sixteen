@@ -1,0 +1,66 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col">
+      <h1> Update Profile </h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col text-center">
+      <div class="alert alert-info alert-dismissible fade show" role="alert">
+        <h4 class="alert-heading">Please use this form to update your profile information. </h4>
+        <p><strong>Note that changing your email will affect your account globally, including all Google services.</strong>
+        </p>
+        <p> For the photo URL, ensure that the photo already exists on the internet and provide the URL to that image. </p>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="update-profile-container" style="z-index: 9999;">
+        <form [formGroup]="updateProfileForm" (ngSubmit)="onSubmit()">
+          <div>
+            <label for="displayName">Display Name</label>
+            <input id="displayName" formControlName="displayName" type="text" />
+          </div>
+          <div>
+            <label for="email">Email</label>
+            <input id="email" formControlName="email" type="email" />
+            <small class="instructions"> Changing your email here will update it globally across all Google services. </small>
+          </div>
+          <div>
+            <label for="photoURL">Photo URL</label>
+            <input id="photoURL" formControlName="photoURL" type="url" />
+            <small class="instructions"> The photo must already exist on the internet. Please provide the URL to that image. </small>
+          </div>
+          <div>
+            <label for="firstName">First Name</label>
+            <input id="firstName" formControlName="firstName" type="text" />
+          </div>
+          <div>
+            <label for="lastName">Last Name</label>
+            <input id="lastName" formControlName="lastName" type="text" />
+          </div>
+          <div>
+            <label for="phone">Phone</label>
+            <input id="phone" formControlName="phone" type="text" />
+          </div>
+          <div>
+            <div class="row">
+              <div class="col">
+                <button type="submit" [disabled]="updateProfileForm.invalid">Update Profile</button>
+              </div>
+              <div class="col">
+                <app-subscription></app-subscription>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="half-circle" style="z-index: -1;"></div>
+<div class="small-circle" style="z-index: -1;"></div>
+<div class="half-circle-bottom" style="z-index: -1;"></div>
+<div class="small-circle-bottom" style="z-index: -1;"></div>

@@ -31,7 +31,7 @@ export class AppActivityComponent implements OnInit, OnDestroy {
   @ViewChild('barChart') private barChartCanvasRef!: ElementRef<HTMLCanvasElement>;
   private barChart!: Chart;
 
-
+ isLoading = true; // Add this property to control the spinner
 
   constructor(private authService: AuthService, private router: Router, private contactService: ContactService, private dataService: DataService, private logger: LoggerService) { }
 

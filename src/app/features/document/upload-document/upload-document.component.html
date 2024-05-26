@@ -1,1 +1,81 @@
-<p>upload-document works!</p>
+<div class="container" *ngIf="!processing else spinner">
+  <div class="row">
+    <div class="col-11">
+      <h1><i class="fa-solid fa-upload"></i>  Files for <span *ngIf="contact && contact.id">{{contact.firstName}} {{contact.lastName}} </span></h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="drop-zone" (drop)="onDrop($event)" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)">
+        <p>Drag and drop your file here or <span style="cursor: pointer;" class="file-browse-link" (click)="fileInput.click()">browse</span>
+        </p>
+        <input type="file" #fileInput (change)="onFileSelect($event)" hidden>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col">
+      <p> You can upload an image or other files related to a contact. Here's how you can use this feature: </p>
+      <ul>
+        <li><strong>Avatar Image:</strong> Upload an image file (e.g., .jpg, .png) to be used as the contact's avatar. This image will visually represent the contact in the system.</li>
+        <li><strong>Associated Files:</strong> Upload any other files (e.g., PDFs, Word documents) that you want to associate with the contact. These files will be stored and linked to the contact for easy reference.</li>
+      </ul>
+      <p> To upload a file, simply drag and drop it into the area below, or click the "browse" link to select a file from your computer. </p>
+    </div>
+  </div>
+  <div class="row mt-3" *ngIf="uploadProgress !== null">
+    <div class="col">
+      <div class="progress">
+        <div class="progress-bar" role="progressbar" [style.width.%]="uploadProgress" [attr.aria-valuenow]="uploadProgress" aria-valuemin="0" aria-valuemax="100">{{uploadProgress}}%</div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-3" *ngIf="downloadURL">
+    <div class="col">
+      <p>File available at: <a [href]="downloadURL">{{downloadURL}}</a></p>
+    </div>
+  </div>
+  <div class="row mt-3" *ngIf="error">
+    <div class="col">
+      <p>Error: {{error}}</p>
+    </div>
+  </div>
+  
+  <div class="row mt-5">
+    <div class="col">
+      <h2>Uploaded Files</h2>
+      <div class="card-deck">
+        <!-- Display images -->
+        <div class="card" *ngFor="let image of contact.images">
+          <img class="card-img-top" [src]="image.src" [alt]="image.alt">
+          <div class="card-body">
+            <p class="card-text">{{image.alt}}</p>
+          </div>
+        </div>
+        <!-- Display documents -->
+        <div class="card" *ngFor="let document of contact.documents">
+          <div class="card-body text-center">
+            <i class="fa fa-file-pdf-o fa-5x"></i>
+            <p class="card-text">{{document.name}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #spinner>
+  <div id="preloader">
+    <div id="ctn-preloader" class="ctn-preloader">
+      <div class="round_spinner">
+        <div class="spinner"></div>
+        <div class="text">
+          <img src="assets/taliferro-website-logo.png" width="100" height="100" alt="Taliferro">
+          <h4><span>Taliferro</span></h4>
+        </div>
+      </div>
+      <h2 class="head">Hold Tight!</h2>
+      <p style="min-height: 120px;">{{ message | slice:0:255 }}</p>
+    </div>
+  </div>
+</ng-template>

@@ -52,6 +52,16 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.tosAgreed = true;
   }
 
+  signInWithGoogle(): void {
+    if (!this.tosAgreed) {
+      this.message = 'You must agree to the Terms of Service before proceeding.';
+      return;
+    }
+
+    this.authService.sendLoginWithGoogle();
+
+  }
+
   onSubmit(): void {
     if (!this.tosAgreed) {
       this.message = 'You must agree to the Terms of Service before proceeding.';
@@ -68,6 +78,23 @@ export class LoginComponent implements OnInit, OnDestroy {
           this.message = `Failed to send link: ${error.message}`;
         }
       });
+    } else {
+      this.message = 'Your email address is not authorized to access this application.';
+    }
+  }
+
+
+  useBegin(): void {
+
+    if (!this.tosAgreed) {
+      this.message = 'You must agree to the Terms of Service before proceeding.';
+      return;
+    }
+
+    if (environment.authorizedEmails.includes(this.emailAddress.toLowerCase())) {
+
+
+    this.router.navigate(['/start-page']);
     } else {
       this.message = 'Your email address is not authorized to access this application.';
     }

@@ -1,0 +1,40 @@
+<div *ngFor="let address of contact.addresses; let i = index">
+    <div class="mb-2">
+        <input id="autocomplete{{i}}" class="form-control large-text" type="text" placeholder="Street Address" autocorrect="off" autocapitalize="off" spellcheck="off" autocomplete="off">
+    </div>
+    <div class="mb-2">
+        <input [(ngModel)]="address.city" name="city{{i}}" placeholder="City" class="form-control large-text" type="text" autocorrect="off" autocapitalize="off" spellcheck="off" autocomplete="off">
+    </div>
+    <div class="mb-2">
+        <select [(ngModel)]="address.state" name="state{{i}}" id="state{{i}}" class="form-control large-text-select" autocorrect="off" autocapitalize="off" spellcheck="off" autocomplete="off">
+            <option value="">Select State</option>
+            <option *ngIf="dropdownData['STATES']?.length === 0" disabled>No options available</option>
+            <option *ngFor="let state of dropdownData['STATES']" [value]="state.name">{{ state.name }}</option>
+        </select>
+    </div>
+    <div class="mb-2">
+        <input [(ngModel)]="address.zip" name="zip{{i}}" placeholder="Zip" class="form-control large-text" type="text" autocorrect="off" autocapitalize="off" spellcheck="off" autocomplete="off">
+    </div>
+    <div class="mb-2">
+        <input [(ngModel)]="address.county" name="county{{i}}" placeholder="County" class="form-control large-text" type="text" autocorrect="off" autocapitalize="off" spellcheck="off" autocomplete="off">
+    </div>
+    <div class="mb-2">
+        <input [(ngModel)]="address.country" name="country{{i}}" placeholder="Country" class="form-control large-text" type="text" autocorrect="off" autocapitalize="off" spellcheck="off" autocomplete="off">
+    </div>
+    <div class="mb-2">
+        <select [(ngModel)]="address.addressType" name="addressType{{i}}" class="form-control large-text-select">
+            <option value="" selected>Select a Type</option>
+            <option *ngIf="dropdownData['ADDRESS_TYPES']?.length === 0" disabled>No options available</option>
+            <option *ngFor="let type of dropdownData['ADDRESS_TYPES']" [value]="type.name">{{ type.name }}</option>
+        </select>
+    </div>
+    <button type="button" (click)="removeAddress(i)" class="mt-2 btn btn-danger btn-lg btn-round btn-width">Remove</button>
+</div>
+<div class="mt-4 mb-4">
+    <button type="button" (click)="addAddress()" class="btn btn-primary btn-lg btn-round">Add Address</button>
+</div>
+<div class="d-flex justify-content-between mt-2 card-footer">
+    <button type="button" (click)="previousStep()" class="btn btn-primary btn-lg btn-round btn-width"><i class="fa-solid fa-circle-chevron-left"></i>Previous</button>
+    <button *ngIf="contact.id" type="button" (click)="updateContact()" class="btn btn-primary btn-lg btn-round btn-width">Update</button>
+    <button type="button" (click)="nextStep()" class="btn btn-primary btn-lg btn-round btn-width">Next<i class="fa-solid fa-circle-chevron-right"></i></button>
+</div>

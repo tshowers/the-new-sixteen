@@ -1,0 +1,35 @@
+<div class="container-fluid">
+    <div class="row mb-5">
+        <div class="col text-center"><a href="https://taliferro.tech">
+                <img src="assets/taliferro-website-logo.png" alt="Taliferro Tech, LLC" style="z-index: 9000;">
+            </a>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <p class="text-center blink-text" *ngIf="message" style="font-size: larger;z-index: 9000;"> {{message}}</p>
+            <div class="card pages-card" *ngIf="!message">
+                <div class="card-body">
+                    <div class="text-center text-dark">{{COMPANY_NAME}} Sign Up</div>
+                    <div class="sign-up-container">
+                        <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" formControlName="email" class="form-control" placeholder="Enter your email" [ngClass]="{'is-invalid': email?.invalid && email?.touched}" />
+                                <div *ngIf="email?.invalid && email?.touched" class="invalid-feedback">
+                                    <div *ngIf="email?.errors?.['required']">Email is required.</div>
+                                    <div *ngIf="email?.errors?.['email']">Please enter a valid email address.</div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary" [disabled]="signupForm.invalid">Sign Up</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="half-circle"></div>
+<div class="small-circle"></div>
+<div class="half-circle-bottom"></div>
+<div class="small-circle-bottom"></div>

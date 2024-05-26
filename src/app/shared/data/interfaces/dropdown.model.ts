@@ -20,5 +20,6 @@
 *  0.2      04/23/2024  Upgrade to 17 and adhere to Typescript Naming 
 *****************************************************************************/
 export interface Dropdown {
+  id: string;
   name: string;
 }

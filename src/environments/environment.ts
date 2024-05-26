@@ -1,5 +1,6 @@
 export const environment = {
   production: false,
+  multiTenant: true,
   COMPANY_NAME: "Taliferro",
   paid: true,
   authorizedEmails: ['ty.showers@taliferro.tech', 'bookert921@gmail.com', 'vikki.owens@taliferro.com', 'ty.showers@taliferro.com', 'ty.showers@gmail.com'],
@@ -14,5 +15,12 @@ export const environment = {
     messagingSenderId: "353334442276",
     appId: "1:353334442276:web:45b043204cc83aa7725bb1",
     measurementId: "G-ZH2TKFHVZ7"
-  }
+  },
+  begin: "BellWeather",
+  stripeKey: 'pk_live_51Lcw5wDNMbtry5hWTRFBeBWYfW1XMz701tXdYOoUrgwm42YnQs0x2cSv8VFTMm33IIpiS787o6knKAihfZXO4xQl00sVyXvbUz',
+  stripeTestMode: true, 
+  linkPreview: '37bd4a175494ee23afba7d8a117c5f77',
+  googleMapsApiKey: 'AIzaSyAb8PrnCpeyihFdvhd-mnM0qkLQ-VSna9M',
+  backendURL: 'http://localhost:3000'
+
 };

@@ -48,29 +48,30 @@ export class FinishSignInComponent implements OnInit {
           this.isLoggedIn = true;  // Update UI state
           this.message = 'Checking user data...'; // Inform user of ongoing setup
 
-
-
-
           const user = result.user;
-          this.userService.findOrCreateContact(user.email, user.uid).subscribe({
-            next: (contact) => {
-              this.userService.setLoggedInContactInfo(contact); // Store contact info
-              this.message = 'Sign-in successful. Welcome!';
-              this.router.navigate(['start-page']); // Redirect after setup
-            },
-            error: (err) => {
-              this.logger.error('Failed to setup user contact:', err);
-              this.error = 'Failed to initialize user data. Please contact support.';
+          this.authService.getUser().subscribe(firebaseUser => {
+            if (firebaseUser) {
+              this.userService.findOrCreateContact(firebaseUser.uid, firebaseUser.email).subscribe({
+                next: (contact) => {
+                  this.userService.setLoggedInContactInfo(contact); // Store contact info
+                  this.message = 'Sign-in successful. Welcome!';
+                  this.router.navigate(['start-page']); // Redirect after setup
+                },
+                error: (err) => {
+                  this.logger.error('Failed to setup user contact:', err);
+                  this.error = 'Failed to initialize user data. Please contact support.';
+                }
+              });
+
+              setTimeout(() => {
+                this.message = 'Sign-in successful. Welcome!';
+                // Redirect or update UI
+                this.router.navigate(['start-page']);  // Redirect to dashboard or another route
+              }, 2000);
+            } else {
+              this.error = 'User not logged in.';
             }
           });
-
-          
-          setTimeout(() => {
-            this.message = 'Sign-in successful. Welcome!';
-            // Redirect or update UI
-            this.router.navigate(['start-page']);  // Redirect to dashboard or another route
-            }, 2000);
-
         },
         error: (error) => {
           this.logger.error('Sign-in failed:', error);

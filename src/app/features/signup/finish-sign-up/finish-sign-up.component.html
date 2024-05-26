@@ -1,0 +1,39 @@
+
+
+<div class="container-fluid">
+    <div class="row mb-5">
+        <div class="col text-center"><a href="https://taliferro.tech">
+                <img src="assets/taliferro-website-logo.png" alt="Taliferro Tech, LLC">
+            </a>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <div *ngIf="email && !error" class="text-center">
+                <p>{{message}}</p>
+                <!-- Optionally show some loading indicator -->
+              </div>
+            <div class="card pages-card"  *ngIf="!email">
+                <div class="card-body">
+                    <div class="small text-center text-dark">Please re-enter your email address to complete the sign-in process:</div>
+                    <form #userForm="ngForm" (ngSubmit)="completeSignUp();userForm.reset();">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon text-theme"><i class="fa fa-user"></i></span>
+                                <input [(ngModel)]="email" #email="ngModel" type="email" id="emailAddress" name="email" autocomplete="off" class="form-control form-control-lg" placeholder="Email Address" required>
+                            </div>
+                            <div [hidden]="email.valid || email.pristine" class="alert alert-danger"> Email Address is required </div>
+                        </div>
+                        <div class="form-group form-actions">
+                            <button class="btn btn-theme login-btn" type="submit" [disabled]="!userForm.form.valid">Log In</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="half-circle"></div>
+<div class="small-circle"></div>
+<div class="half-circle-bottom"></div>
+<div class="small-circle-bottom"></div>

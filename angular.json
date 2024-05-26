@@ -114,7 +114,11 @@
             },
             "development": {
               "buildTarget": "the-new-sixteen:build:development"
+            },
+            "maven": {
+              "buildTarget": "the-new-sixteen:build:maven"
             }
+
           },
           "defaultConfiguration": "development"
         },

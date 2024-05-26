@@ -7,10 +7,20 @@ export const ENDPOINTS = {
     ALERTS: '/alerts',
     BOOKMARKS: '/bookmarks',
     CAROUSELS: '/carousels',
+    COURSES: '/courses',
+    PHONE_TYPES: '/phone-types',
+    ADDRESS_TYPES: '/address-types',
+    EMAIL_ADDRESS_TYPES: '/email-address-types',
+    STATES: '/states',
+    GENDERS: '/genders',
+    TIMEZONES: '/timezones',
     CATEGORIES: '/categories',
     COMMUNICATIONS: '/communications',
     FEATURETTES: '/featurettes',
     PARALLAXS: '/parallaxs',
+    PROFILE_TYPES: '/profile-types',
+    PRODUCT_TYPES: '/product-types',
+    STATUS: '/status',
     FAVORITES: '/favorites',
     SERVICE_BOXES: '/service-boxes',
     CONTACTS: '/contacts',
@@ -22,7 +32,7 @@ export const ENDPOINTS = {
     HELP_PROGRESS: '/help-progress',
     PROPERTIES: '/properties',
     GROUPS: '/groups',
-
+    POSTS: 'posts',
     MESSAGES: '/messages',
     OPPORTUNITES: '/opportunities',
     ADDRESSES: '/addresses',
@@ -60,4 +70,9 @@ export const ENDPOINTS = {
     PROJECT_REPORTS: '/project-reports',
     WORK_FLOWS: '/work-flows',
     ACTION_FLOWS: '/actions',
-};
+} as const;
+
+export const DROPDOWN_ENDPOINTS = ['CATEGORIES', 'STATES', 'STATUS', 'PROFILE_TYPES', 'PRODUCT_TYPES', 'PHONE_TYPES', 'ADDRESS_TYPES', 'EMAIL_ADDRESS_TYPES', 'GENDERS', 'TIMEZONES'] as const;
+
+export type EndpointKeys = keyof typeof ENDPOINTS;
+export type DropdownEndpointKeys = typeof DROPDOWN_ENDPOINTS[number];

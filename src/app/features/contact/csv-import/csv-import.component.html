@@ -23,62 +23,67 @@
     </div>
     <div class="row mt-5">
         <div class="col">
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
 
-            <section>
-                <h2>User Instructions for CSV File Import</h2>
-                <p>To facilitate a seamless import of your contact data into our system, please follow the guidelines below to format your CSV file correctly. These guidelines are designed to accommodate various CSV header formats. Incorrectly formatted files may lead to unsuccessful imports or incomplete data uploads.</p>
-        
-                <h3>CSV File Format:</h3>
-                <p>Your CSV file should include headers that correspond directly to the fields in our contact management system. The system is designed to recognize various header names for each field, enhancing the flexibility of the import process.</p>
-        
-                <h3>Recognized Headers:</h3>
-                <ul>
-                    <li><strong>First Name</strong>: 'First Name', 'firstName', 'first_name'</li>
-                    <li><strong>Last Name</strong>: 'Last Name', 'lastName', 'last_name'</li>
-                    <li><strong>Company Name</strong>: 'Company Name', 'companyName', 'Company'</li>
-                    <li><strong>Email</strong>: 'Email', 'email'</li>
-                    <li><strong>Phone Number</strong>: 'Phone Number', 'phone'</li>
-                    <li><strong>LinkedIn URL</strong>: 'linkedinUrl', 'LinkedIn URL'</li>
-                </ul>
-        
-                <h3>Required and Optional Fields:</h3>
-                <p><strong>Required Fields</strong>: At a minimum, each CSV file must include:</p>
-                <ul>
-                    <li>First Name</li>
-                    <li>Last Name</li>
-                    <li>Email</li>
-                </ul>
-                <p><strong>Optional Fields</strong>: Additional information can be provided to enrich the contact data:</p>
-                <ul>
-                    <li>Company Name</li>
-                    <li>Phone Number</li>
-                    <li>LinkedIn URL (will be added to the social media profiles)</li>
-                </ul>
-        
-                <h3>Nested Objects and Repeated Fields:</h3>
-                <p>The utility will handle fields like phone numbers and email addresses and will default to setting types as 'Mobile' for phone numbers and 'Primary' for emails unless specified otherwise.</p>
-        
-                <h3>Boolean Fields:</h3>
-                <p>For boolean fields like <code>emailAddresses_blocked</code>, use 'true' or 'false'.</p>
-        
-                <h3>File Encoding:</h3>
-                <p>Please ensure your CSV file is encoded in UTF-8 to avoid any issues with special characters.</p>
-        
-                <h3>Template Download:</h3>
-                <p>For your convenience, you can download a <a href="#">CSV template here</a> that includes all the necessary headers. Simply fill in your data in the appropriate columns.</p>
-        
-                <h3>Import Process:</h3>
-                <ol>
-                    <li>Prepare your CSV file following the guidelines above.</li>
-                    <li>Navigate to the CSV Import page.</li>
-                    <li>Click on 'Choose File' and select your prepared CSV file.</li>
-                    <li>Click 'Upload' to start the import process.</li>
-                    <li>You will receive a notification once the import is complete or if there are any errors during the import.</li>
-                </ol>
-        
-                <h3>Error Handling:</h3>
-                <p>If errors occur, the system will provide a detailed message regarding the issue. Common errors include missing required fields, incorrect data format, or issues with file encoding.</p>
-            </section>
+                <section>
+                    <h2>User Instructions for CSV File Import</h2>
+                    <p>To facilitate a seamless import of your contact data into our system, please follow the guidelines below to format your CSV file correctly. These guidelines are designed to accommodate various CSV header formats. Incorrectly formatted files may lead to unsuccessful imports or incomplete data uploads.</p>
+            
+                    <h3>CSV File Format:</h3>
+                    <p>Your CSV file should include headers that correspond directly to the fields in our contact management system. The system is designed to recognize various header names for each field, enhancing the flexibility of the import process.</p>
+            
+                    <h3>Recognized Headers:</h3>
+                    <ul>
+                        <li><strong>First Name</strong>: 'First Name', 'firstName', 'first_name'</li>
+                        <li><strong>Last Name</strong>: 'Last Name', 'lastName', 'last_name'</li>
+                        <li><strong>Company Name</strong>: 'Company Name', 'companyName', 'Company'</li>
+                        <li><strong>Email</strong>: 'Email', 'email'</li>
+                        <li><strong>Phone Number</strong>: 'Phone Number', 'phone'</li>
+                        <li><strong>LinkedIn URL</strong>: 'linkedinUrl', 'LinkedIn URL'</li>
+                    </ul>
+            
+                    <h3>Required and Optional Fields:</h3>
+                    <p><strong>Required Fields</strong>: At a minimum, each CSV file must include:</p>
+                    <ul>
+                        <li>First Name</li>
+                        <li>Last Name</li>
+                        <li>Email</li>
+                    </ul>
+                    <p><strong>Optional Fields</strong>: Additional information can be provided to enrich the contact data:</p>
+                    <ul>
+                        <li>Company Name</li>
+                        <li>Phone Number</li>
+                        <li>LinkedIn URL (will be added to the social media profiles)</li>
+                    </ul>
+            
+                    <h3>Nested Objects and Repeated Fields:</h3>
+                    <p>The utility will handle fields like phone numbers and email addresses and will default to setting types as 'Mobile' for phone numbers and 'Primary' for emails unless specified otherwise.</p>
+            
+                    <h3>Boolean Fields:</h3>
+                    <p>For boolean fields like <code>emailAddresses_blocked</code>, use 'true' or 'false'.</p>
+            
+                    <h3>File Encoding:</h3>
+                    <p>Please ensure your CSV file is encoded in UTF-8 to avoid any issues with special characters.</p>
+            
+                    <h3>Template Download:</h3>
+                    <p>For your convenience, you can download a <a href="#">CSV template here</a> that includes all the necessary headers. Simply fill in your data in the appropriate columns.</p>
+            
+                    <h3>Import Process:</h3>
+                    <ol>
+                        <li>Prepare your CSV file following the guidelines above.</li>
+                        <li>Navigate to the CSV Import page.</li>
+                        <li>Click on 'Choose File' and select your prepared CSV file.</li>
+                        <li>Click 'Upload' to start the import process.</li>
+                        <li>You will receive a notification once the import is complete or if there are any errors during the import.</li>
+                    </ol>
+            
+                    <h3>Error Handling:</h3>
+                    <p>If errors occur, the system will provide a detailed message regarding the issue. Common errors include missing required fields, incorrect data format, or issues with file encoding.</p>
+                </section>
+    
+
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
         </div>
     </div>
 </div>

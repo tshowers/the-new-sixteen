@@ -1,0 +1,13 @@
+<div class="confirmation-container">
+    <h1>Payment Confirmation</h1>
+    <p *ngIf="paymentStatus === 'success'">Thank you for your purchase! Your payment was successful.</p>
+    <p *ngIf="paymentStatus === 'failed'">Unfortunately, your payment failed. Please try again.</p>
+  
+    <div *ngIf="sessionDetails">
+      <h2>Session Details</h2>
+      <pre>{{ sessionDetails | json }}</pre>
+    </div>
+  
+    <button routerLink="/">Go to Home</button>
+  </div>
+  

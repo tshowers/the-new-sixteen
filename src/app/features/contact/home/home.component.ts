@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterOutlet } from '@angular/router';
 
 import { Chart, registerables } from 'chart.js';
-import { Contact, Interaction, ConnectionDetail, Engagement, Communication } from '../../../shared/data/interfaces/contact.model';
+import { Contact, Interaction, ConnectionDetail, Engagement, Communication, SuggestedContact } from '../../../shared/data/interfaces/contact.model';
 import { ReadComponent } from '../read/read.component';
 import { ContactService } from '../../../services/contact.service';
 import { DataService } from '../../../services/data.service';
@@ -15,8 +15,11 @@ import { WeeklyCalendarComponent } from '../../../shared/page/weekly-calendar/we
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { AuthService } from '../../../services/auth.service';
 
-
-
+import { ContentInteractionChartComponent } from '../../../shared/page/content-interaction-chart/content-interaction-chart.component';
+import { EngagementChartComponent } from '../../../shared/page/engagement-chart/engagement-chart.component';
+import { InfluenceAnalysisChartComponent } from '../../../shared/page/influence-analysis-chart/influence-analysis-chart.component';
+import { SentimentAnalysisChartComponent } from '../../../shared/page/sentiment-analysis-chart/sentiment-analysis-chart.component';
+import { ChatWidgetComponent } from '../../../shared/page/chat-widget/chat-widget.component';
 // Register Chart.js components
 Chart.register(...registerables);
 
@@ -42,7 +45,8 @@ const chartColors = [
 
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterOutlet, ReadComponent, ContactCard1Component, ContactCard3Component, WeeklyCalendarComponent],
+  imports: [CommonModule, FormsModule, RouterOutlet, ReadComponent, ContactCard1Component, ContactCard3Component, WeeklyCalendarComponent,
+    ContentInteractionChartComponent, InfluenceAnalysisChartComponent, SentimentAnalysisChartComponent, EngagementChartComponent, ChatWidgetComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -50,7 +54,7 @@ export class HomeComponent implements OnInit {
 
   @ViewChild('queryInput') queryInput!: ElementRef<HTMLInputElement>;
 
-  suggestedContact!: Contact;
+  suggestedContact!: SuggestedContact;
 
   @ViewChild('contactsOverTimeChart') private contactsOverTimeChartRef!: ElementRef<HTMLCanvasElement>;
   contactsOverTimeChart!: Chart;
@@ -87,10 +91,9 @@ export class HomeComponent implements OnInit {
   missingDataChart!: Chart;
 
 
-  @ViewChild('priorityContactsChart') private priorityContactsChartRef!: ElementRef<HTMLCanvasElement>;
-  priorityContactsChart!: Chart;
+  // @ViewChild('priorityContactsChart') private priorityContactsChartRef!: ElementRef<HTMLCanvasElement>;
+  // priorityContactsChart!: Chart;
 
-  priorityContactsChartData!: any;
   month!: any;
   weeklyChartData = new BehaviorSubject<any[]>([]);
 
@@ -100,7 +103,10 @@ export class HomeComponent implements OnInit {
 
   private userSubsription!: Subscription;
   private userId!: string;
-
+  dashboardCounts: any;
+  isContacts: boolean = false;
+  contacts!: Contact[];
+  communication!: Communication[];
 
   constructor(private authService: AuthService, private router: Router, private contactService: ContactService, private dataService: DataService, private logger: LoggerService) { }
 
@@ -118,159 +124,139 @@ export class HomeComponent implements OnInit {
     const periodStartDate = new Date();
     periodStartDate.setDate(periodStartDate.getDate() - 30);
 
-    this.dataService.getCollectionData('CONTACTS', this.userId).then(data => {
-      if (data && data.length > 0) {
-        const contacts: Contact[] = data as Contact[];
-        this.suggestedContact = contacts[0];
-
-        this.logger.info("suggestedContact", this.suggestedContact)
-
-        // Process data for the bar chart
-        this.chartData = this.processData(data);
-        // Initialize the bar chart if data is available
-        if (this.chartData.length > 0) {
-          setTimeout(() => {
-            this.createBarChart(this.chartData);
-          }, 0);
-        }
-
-
-        //Process missing data
-        const { missingData, healthScore } = this.calculateDataHealth(contacts);
-        this.healthScore = healthScore; // Set this value after calculating the health score
-        // Check if there is any missing data before creating the chart
-        if (missingData.size > 0) {
-          setTimeout(() => {
-            this.createMissingDataChart(missingData);
-            console.log(`Data Health Score: ${healthScore.toFixed(2)}`);
-          }, 0); // setTimeout with delay of 0 ms
-        } else {
-          console.log("No missing data to display.");
-        }
-
-
-        // Process data for the pie chart
-        const pieChartData = this.processProfileTypes(data);
-        // Initialize the pie chart if data is available
-        if (pieChartData.length > 0) {
-          setTimeout(() => {
-            this.createProfileTypeChart(pieChartData);
-          }, 0);
-        }
-
-        // Process Time Zone Data
-        const timezoneData = this.processTimezoneData(data);
-        if (timezoneData.length > 0) {
-          setTimeout(() => {
-            this.createTimezoneChart(timezoneData);
-          }, 0);
-        }
-
-        const healthScoreData = this.processNetworkHealthData(this.generateRandomSample(data));
-        if (healthScoreData.length > 0) {
-          setTimeout(() => {
-            this.createNetworkHealthChart(healthScoreData);
-          }, 0);
-        }
-
-
-        const lastContactData = this.processLastContactData(data);
-        if (lastContactData.length > 0) {
-          setTimeout(() => {
-            this.createLastContactTimelineChart(lastContactData);
-          }, 0);
-        }
-
-
-        const acquisitionSourceData = this.processContactAcquisitionData(data);
-        if (acquisitionSourceData.length > 0) {
-          setTimeout(() => {
-            this.createAcquisitionSourceChart(acquisitionSourceData);
-          }, 0);
-        }
-
-
-        const genderChartData = this.processGenderData(data);
-        if (genderChartData.length > 0) {
-          setTimeout(() => {
-            this.createGenderChart(genderChartData);
-          }, 0);
-        }
-
-        const professionChartData = this.processProfessionData(data);
-        if (professionChartData.length > 0) {
-          setTimeout(() => {
-            this.logger.info("professionChartData", data)
-            this.createProfessionChart(professionChartData);
-          }, 0);
-        }
-
-
-
-        this.dataService.getCollectionData('COMMUNICATIONS', this.userId).catch(err => {
-          console.error("Failed to load communications:", err);
-          return [] as Communication[];  // Ensure this matches the expected type in then()
-        }).then(communicationsData => {
-          this.logger.info("getCollectionData('COMMUNICATIONS')", communicationsData)
-          // TypeScript should now understand that communicationsData is always Communication[]
-          communicationsData = communicationsData as Communication[]; // This assertion may now be redundant
-          const communicationFrequencyData = this.processCommunicationFrequency(data, communicationsData, periodStartDate);
-
-
-          if (communicationFrequencyData.length > 0) {
-            setTimeout(() => this.createCommunicationFrequencyChart(communicationFrequencyData), 0);
-          }
-
-          this.priorityContactsChartData = this.processContactPriorities(data, communicationsData);
-
-          if (this.priorityContactsChartData.length > 0) {
-            console.log("Data for chart:", data);
-            setTimeout(() => this.createPriorityContactsChart(this.priorityContactsChartData), 0);
-            const sevenDayData = this.priorityContactsChartData.slice(0, 7);
-            this.weeklyChartData.next(sevenDayData);
-          }
-        })
-
-      }
-    }).catch(error => {
-      this.logger.error("Failed to load contact data:", error);
-      this.createBarChart([]); // Handle bar chart errors gracefully
-      this.createProfileTypeChart([]); // Handle pie chart errors gracefully
-      this.createTimezoneChart([]);
-      this.createNetworkHealthChart([]);
-      this.createLastContactTimelineChart([]);
-      this.createCommunicationFrequencyChart([]);
-      this.createAcquisitionSourceChart([]);
-      this.createProfessionChart([]);
-      this.createGenderChart([]);
-      this.createPriorityContactsChart([]);
-    });
+    this.dataService.getCollectionData('CONTACTS', this.userId)
+      .then(data => this.initializeContactsData(data, periodStartDate))
+      .catch(error => this.handleError(error));
   }
 
-  determineReason(): string {
-    if (!this.suggestedContact) return 'Contact data is not available';
+  private initializeContactsData(data: any, periodStartDate: Date): void {
+    if (data && data.length > 0) {
+      const contacts: Contact[] = (data as Contact[]).filter(contact => contact.userId !== this.userId);
+      this.contacts = contacts;      
 
-    // Example of determining reason based on lastContacted
-    const today = new Date();
-    if (this.suggestedContact.lastContacted) {
-      const lastContactDate = new Date(this.suggestedContact.lastContacted);
-      const diffDays = Math.floor((today.getTime() - lastContactDate.getTime()) / (1000 * 3600 * 24));
+      if (contacts && contacts.length > 0) {
 
-      if (diffDays > 30) return 'No contact in the last month';
-      if (diffDays > 7) return 'It has been more than a week since last contact';
+        this.dataService.getCollectionData('COMMUNICATIONS', this.userId)
+          .then(communicationsData =>{ 
+            this.communication = communicationsData as Communication[];
+            this.initializeCommunicationsData(contacts, communicationsData as Communication[], periodStartDate)})
+          .catch(err => this.logger.error("Failed to load communications:", err));
+        }
+
+        this.dashboardCounts = this.getDashboardCounts(contacts);
+        this.isContacts = true;
+        this.initializeBarChart(contacts);
+        this.initializeMissingData(contacts);
+        this.initializePieChart(contacts);
+        this.initializeTimezoneData(contacts);
+        this.initializeNetworkHealthData(contacts);
+        this.initializeLastContactData(contacts);
+        this.initializeAcquisitionSourceData(contacts);
+        this.initializeGenderChartData(contacts);
+        this.initializeProfessionChartData(contacts);
+    }
+  }
+
+  private initializeCommunicationsData(contacts: Contact[], communicationsData: any[], periodStartDate: Date): void {
+    // Ensure the data conforms to the Communication interface
+    const validCommunicationsData: Communication[] = communicationsData.filter(data =>
+      data.contactId && data.date
+    );
+
+    const communicationFrequencyData = this.processCommunicationFrequency(contacts, validCommunicationsData, periodStartDate);
+    if (communicationFrequencyData.length > 0) {
+      setTimeout(() => this.createCommunicationFrequencyChart(communicationFrequencyData), 0);
     }
 
-    // Add more reasons based on your business logic
-    // Example: Checking interaction types, activity levels, etc.
+    if (contacts && contacts.length > 0)
+      this.suggestedContact = this.contactService.getSuggestedContact(contacts, validCommunicationsData, []);
+  }
 
-    return 'Regular follow-up'; // Default reason
+  private initializeBarChart(contacts: Contact[]): void {
+    this.chartData = this.processData(contacts);
+    if (this.chartData.length > 0) {
+      setTimeout(() => this.createBarChart(this.chartData), 0);
+    }
+  }
+
+  private initializeMissingData(contacts: Contact[]): void {
+    const { missingData, healthScore } = this.calculateDataHealth(contacts);
+    this.healthScore = healthScore;
+    if (missingData.size > 0) {
+      setTimeout(() => this.createMissingDataChart(missingData), 0);
+    } else {
+      this.logger.log("No missing data to display.");
+    }
+  }
+
+  private initializePieChart(contacts: Contact[]): void {
+    const pieChartData = this.processProfileTypes(contacts);
+    if (pieChartData.length > 0) {
+      setTimeout(() => this.createProfileTypeChart(pieChartData), 0);
+    }
+  }
+
+  private initializeTimezoneData(contacts: Contact[]): void {
+    const timezoneData = this.processTimezoneData(contacts);
+    if (timezoneData.length > 0) {
+      setTimeout(() => this.createTimezoneChart(timezoneData), 0);
+    }
+  }
+
+  private initializeNetworkHealthData(contacts: Contact[]): void {
+    const healthScoreData = this.processNetworkHealthData(this.generateRandomSample(contacts));
+    if (healthScoreData.length > 0) {
+      setTimeout(() => this.createNetworkHealthChart(healthScoreData), 0);
+    }
+  }
+
+  private initializeLastContactData(contacts: Contact[]): void {
+    const lastContactData = this.processLastContactData(contacts);
+    this.logger.info("Data prepared for createLastContactTimelineChart", contacts);
+    if (lastContactData.length > 0) {
+      setTimeout(() => this.createLastContactTimelineChart(lastContactData), 0);
+    }
+  }
+
+  private initializeAcquisitionSourceData(contacts: Contact[]): void {
+    const acquisitionSourceData = this.processContactAcquisitionData(contacts);
+    if (acquisitionSourceData.length > 0) {
+      setTimeout(() => this.createAcquisitionSourceChart(acquisitionSourceData), 0);
+    }
+  }
+
+  private initializeGenderChartData(contacts: Contact[]): void {
+    const genderChartData = this.processGenderData(contacts);
+    if (genderChartData.length > 0) {
+      setTimeout(() => this.createGenderChart(genderChartData), 0);
+    }
+  }
+
+  private initializeProfessionChartData(contacts: Contact[]): void {
+    const professionChartData = this.processProfessionData(contacts);
+    if (professionChartData.length > 0) {
+      setTimeout(() => this.createProfessionChart(professionChartData), 0);
+    }
+  }
+
+  private handleError(error: any): void {
+    this.logger.error("Failed to load contact data:", error);
+    this.createBarChart([]);
+    this.createProfileTypeChart([]);
+    this.createTimezoneChart([]);
+    this.createNetworkHealthChart([]);
+    this.createLastContactTimelineChart([]);
+    this.createCommunicationFrequencyChart([]);
+    this.createAcquisitionSourceChart([]);
+    this.createProfessionChart([]);
+    this.createGenderChart([]);
   }
 
   submitQuery(): void {
 
     try {
       const query = this.queryInput.nativeElement.value.trim();  // Use trim() to remove any leading or trailing whitespace
-      this.logger.log('Submitting query:', query);
+      // this.logger.log('Submitting query:', query);
       if (!query) {  // Check if the query is empty
         this.router.navigate(['/contact-list']);
       } else {
@@ -316,9 +302,9 @@ export class HomeComponent implements OnInit {
     if (this.responseTimeChart) {
       this.responseTimeChart.destroy();
     }
-    if (this.priorityContactsChart) {
-      this.priorityContactsChart.destroy();
-    }
+    // if (this.priorityContactsChart) {
+    //   this.priorityContactsChart.destroy();
+    // }
 
     if (this.missingDataChart) {
       this.missingDataChart.destroy();
@@ -341,26 +327,9 @@ export class HomeComponent implements OnInit {
   }
 
 
-  // processData(contacts: any[]): any {
-  //   this.logger.log("Received contacts:", contacts);
-  //   const dateCounts = new Map();
-  //   contacts.forEach(contact => {
-  //     // Check if the dateAdded field and its seconds property exist before proceeding
-  //     if (contact.dateAdded && contact.dateAdded.seconds) {
-  //       const date = new Date(contact.dateAdded.seconds * 1000);
-  //       const formattedDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-  //       dateCounts.set(formattedDate, (dateCounts.get(formattedDate) || 0) + 1);
-  //     } else {
-  //       // Log an error or handle the case where dateAdded is missing
-  //       this.logger.error('Missing or invalid dateAdded field for contact:', contact);
-  //     }
-  //   });
-  //   this.logger.log("Date counts:", Array.from(dateCounts.entries()));
-  //   return Array.from(dateCounts, ([date, count]) => ({ date, count }));
-  // }
 
   processData(contacts: any[]): any {
-    this.logger.log("Received contacts:", contacts);
+    // this.logger.log("Received contacts:", contacts);
     const dateCounts = new Map();
 
     contacts.forEach(contact => {
@@ -386,7 +355,7 @@ export class HomeComponent implements OnInit {
       dateCounts.set(formattedDate, (dateCounts.get(formattedDate) || 0) + 1);
     });
 
-    this.logger.log("Date counts:", Array.from(dateCounts.entries()));
+    // this.logger.log("Date counts:", Array.from(dateCounts.entries()));
     return Array.from(dateCounts, ([date, count]) => ({ date, count }));
   }
 
@@ -402,7 +371,7 @@ export class HomeComponent implements OnInit {
   //       }
   //     });
   //   });
-  //   console.log("Profile Type Counts:", Array.from(typeCounts.entries())); // For debugging
+  //   this.logger.log("Profile Type Counts:", Array.from(typeCounts.entries())); // For debugging
   //   return Array.from(typeCounts, ([type, count]) => ({ type, count }));
   // }
 
@@ -422,7 +391,7 @@ export class HomeComponent implements OnInit {
           });
         } else {
           // If profileTypes is undefined or not an array, handle gracefully
-          this.logger.warn('Warning: profileTypes is undefined or not an array for contact:', contact.id);
+          // this.logger.warn('Warning: profileTypes is undefined or not an array for contact:', contact.id);
         }
       });
     } else {
@@ -430,7 +399,7 @@ export class HomeComponent implements OnInit {
       return []; // Return an empty array or handle the error as appropriate
     }
 
-    this.logger.log("Profile Type Counts:", Array.from(typeCounts.entries())); // For debugging
+    // this.logger.log("Profile Type Counts:", Array.from(typeCounts.entries())); // For debugging
     return Array.from(typeCounts, ([type, count]) => ({ type, count }));
   }
 
@@ -438,22 +407,30 @@ export class HomeComponent implements OnInit {
 
   processTimezoneData(contacts: any[]): any {
     const timezoneCounts = new Map();
+    
     contacts.forEach(contact => {
       const timezone = contact.timezone;
-      if (timezoneCounts.has(timezone)) {
-        timezoneCounts.set(timezone, timezoneCounts.get(timezone) + 1);
-      } else {
-        timezoneCounts.set(timezone, 1);
+      if (timezone) {
+        // Extract the abbreviation inside parentheses
+        const matches = timezone.match(/\(([^)]+)\)/);
+        const abbreviation = matches ? matches[1] : 'Unknown';
+  
+        if (timezoneCounts.has(abbreviation)) {
+          timezoneCounts.set(abbreviation, timezoneCounts.get(abbreviation) + 1);
+        } else {
+          timezoneCounts.set(abbreviation, 1);
+        }
       }
     });
+  
     return Array.from(timezoneCounts, ([timezone, count]) => ({ timezone, count }));
   }
-
+  
 
 
 
   createBarChart(data: any[]): void {
-    this.logger.log("createBarChart Chart data:", data);
+    // this.logger.log("createBarChart Chart data:", data);
     const canvas = this.contactsOverTimeChartRef.nativeElement;
 
 
@@ -542,7 +519,7 @@ export class HomeComponent implements OnInit {
         }
       });
     } else {
-      console.error('Failed to get canvas context');
+      this.logger.error('Failed to get canvas context');
     }
   }
 
@@ -595,7 +572,7 @@ export class HomeComponent implements OnInit {
         }
       });
     } else {
-      console.error('Failed to get canvas context');
+      this.logger.error('Failed to get canvas context');
     }
   }
 
@@ -685,7 +662,7 @@ export class HomeComponent implements OnInit {
         }
       });
     } else {
-      console.error('Failed to get canvas context for Network Strenth Chart');
+      this.logger.error('Failed to get canvas context for Network Strenth Chart');
     }
   }
 
@@ -696,61 +673,81 @@ export class HomeComponent implements OnInit {
 
 
 
-  processLastContactData(contacts: any[]): any {
+  processLastContactData(contacts: any[]): any[] {
+    const today = new Date();
     return contacts.map(contact => {
-      const lastContactDate = contact.lastContacted ? new Date(contact.lastContacted) : (contact.dateAdded ? new Date(contact.dateAdded.seconds * 1000) : new Date());
-      return {
+      let lastContactDate: Date;
+      if (contact.lastContacted) {
+        lastContactDate = new Date(contact.lastContacted);
+      } else if (contact.dateAdded) {
+        lastContactDate = new Date(contact.dateAdded);
+      } else {
+        lastContactDate = new Date(); // Default to current date if neither is available
+      }
+  
+      const daysSinceLastContact = Math.floor((today.getTime() - lastContactDate.getTime()) / (1000 * 60 * 60 * 24));
+  
+      const result = {
         name: `${contact.firstName} ${contact.lastName}`,
-        lastContacted: lastContactDate
+        daysSinceLastContact: daysSinceLastContact,
       };
-    }).sort((a, b) => b.lastContacted.getTime() - a.lastContacted.getTime()) // Sort by most recently contacted
+  
+      // console.log('Processed Contact:', result, 'Raw dateAdded:', contact.dateAdded);
+      return result;
+    }).sort((a, b) => b.daysSinceLastContact - a.daysSinceLastContact) // Sort by days since last contact
       .slice(0, 25); // Take only the top 25
   }
-
-
-
+  
+  
+  
+  
   createLastContactTimelineChart(data: any[]): void {
+    // console.log('Data prepared for createLastContactTimelineChart', data);
+    // data.forEach(d => {
+    //   console.log('Name:', d.name, 'Days Since Last Contact:', d.daysSinceLastContact);
+    // });
+  
     const canvas = this.lastContactTimelineChartRef.nativeElement;
     const ctx = canvas.getContext('2d');
-
-    if (this.lastContactTimelineChart)
+  
+    if (this.lastContactTimelineChart) {
       this.lastContactTimelineChart.destroy();
-
+    }
+  
     if (ctx) {
       this.lastContactTimelineChart = new Chart(ctx, {
         type: 'bar',
         data: {
           labels: data.map(d => d.name),
           datasets: [{
-            label: 'Days since last contact',
-            data: data.map(d => {
-              const today = new Date();
-              const lastContacted = d.lastContacted;
-              const timeDiff = today.getTime() - lastContacted.getTime();
-              return Math.floor(timeDiff / (1000 * 60 * 60 * 24)); // Converts time difference to days
-            }),
-            backgroundColor: 'rgba(54, 162, 235, 0.5)',
-            borderColor: 'rgba(54, 162, 235, 1)',
+            label: 'Days Since Last Contact',
+            data: data.map(d => d.daysSinceLastContact),
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
             borderWidth: 1
           }]
         },
         options: {
-          indexAxis: 'y',
           scales: {
             x: {
+              type: 'category'
+            },
+            y: {
               beginAtZero: true,
               ticks: {
                 stepSize: 1,
-                callback: function (value) {
-                  return value + ' day' + (value !== 1 ? 's' : ''); // Append 'day' or 'days' correctly
+                callback: function(value) {
+                  return `${value} days`; // Label in days
                 }
               }
             }
           },
           responsive: true,
+          maintainAspectRatio: true,
           plugins: {
             legend: {
-              display: false
+              display: false,
+              position: 'top',
             },
             title: {
               display: true,
@@ -760,9 +757,15 @@ export class HomeComponent implements OnInit {
         }
       });
     } else {
-      console.error('Failed to get canvas context for Last Contact Timeline Chart');
+      console.error('Failed to get canvas context');
     }
   }
+  
+  
+  
+  
+  
+  
 
 
   processCommunicationFrequency(contacts: any[], communications: Communication[], periodStartDate: Date): any[] {
@@ -834,7 +837,7 @@ export class HomeComponent implements OnInit {
         }
       });
     } else {
-      console.error('Failed to get canvas context for Communication Frequency Chart');
+      this.logger.error('Failed to get canvas context for Communication Frequency Chart');
     }
   }
 
@@ -920,7 +923,7 @@ export class HomeComponent implements OnInit {
         }
       });
     } else {
-      console.error('Failed to get canvas context for Acquisition Source Chart');
+      this.logger.error('Failed to get canvas context for Acquisition Source Chart');
     }
   }
 
@@ -936,7 +939,7 @@ export class HomeComponent implements OnInit {
       }
     });
 
-    console.log("Profession Counts:", Array.from(professionCounts.entries())); // For debugging
+    // this.logger.log("Profession Counts:", Array.from(professionCounts.entries())); // For debugging
     return Array.from(professionCounts, ([profession, count]) => ({ profession, count }));
   }
 
@@ -952,7 +955,7 @@ export class HomeComponent implements OnInit {
       }
     });
 
-    console.log("Gender Counts:", Array.from(genderCounts.entries())); // For debugging
+    // this.logger.log("Gender Counts:", Array.from(genderCounts.entries())); // For debugging
     return Array.from(genderCounts, ([gender, count]) => ({ gender, count }));
   }
 
@@ -1004,7 +1007,7 @@ export class HomeComponent implements OnInit {
         }
       });
     } else {
-      console.error('Failed to get canvas context');
+      this.logger.error('Failed to get canvas context');
     }
   }
 
@@ -1054,70 +1057,21 @@ export class HomeComponent implements OnInit {
         }
       });
     } else {
-      console.error('Failed to get canvas context');
+      this.logger.error('Failed to get canvas context');
     }
   }
 
 
-  processContactPriorities(contacts: any[], communications: any[]): any {
-    const today = new Date();
 
-    // Create a map to hold dates and their associated contacts
-    const datesWithContacts = new Map();
 
-    // Initialize each day for the next two weeks with an empty array
-    for (let day = 0; day < 14; day++) {
-      const futureDate = new Date(today);
-      futureDate.setDate(today.getDate() + day);
-      const formattedDate = `${futureDate.getFullYear()}-${futureDate.getMonth() + 1}-${futureDate.getDate()}`;
-      datesWithContacts.set(formattedDate, []);  // Ensure it's always an array
-    }
 
-    // Map to keep track of last communication date for each contact
-    const lastCommunicationDates = new Map();
-    communications.forEach(communication => {
-      const contactDate = new Date(communication.date);
-      const contactId = communication.contactId;
-      if (!lastCommunicationDates.has(contactId) || lastCommunicationDates.get(contactId) < contactDate) {
-        lastCommunicationDates.set(contactId, contactDate);
-      }
-    });
+  
+  
+  
+  
 
-    contacts.forEach(contact => {
-      const lastContactDate = lastCommunicationDates.get(contact.id);
-      const daysSinceLastContact = lastContactDate ? (today.getTime() - lastContactDate.getTime()) / (1000 * 60 * 60 * 24) : null;
-      let followUpDays = 14; // default follow-up period
 
-      switch (contact.acquisitionSource) {
-        case 'import':
-          followUpDays = 14;
-          break;
-        case 'upload':
-          followUpDays = 14;
-          break;
-        case 'web':
-          followUpDays = 1;
-          break;
-        case 'Unknown':
-          followUpDays = 3;
-          break;
-        default:
-          followUpDays = 14; // Default case for unspecified sources
-      }
 
-      // Calculate the follow-up date
-      if (daysSinceLastContact === null || daysSinceLastContact >= followUpDays) {
-        const followUpDate = new Date(today);
-        followUpDate.setDate(today.getDate() + followUpDays);
-        const formattedFollowUpDate = `${followUpDate.getFullYear()}-${followUpDate.getMonth() + 1}-${followUpDate.getDate()}`;
-        if (datesWithContacts.has(formattedFollowUpDate)) {
-          datesWithContacts.get(formattedFollowUpDate).push(contact);
-        }
-      }
-    });
-
-    return Array.from(datesWithContacts, ([date, contacts]) => ({ date, contacts: contacts.slice(0, 10) }));
-  }
 
 
 
@@ -1130,54 +1084,56 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  createPriorityContactsChart(data: any[]): void {
-    this.logger.info("Beginniing createPriorityContactsChart ", data)
-    const canvas = this.priorityContactsChartRef.nativeElement;
-    const ctx = canvas.getContext('2d');
+  // createPriorityContactsChart(data: any[]): void {
+  //   this.logger.log('Chart Labels:', data.map(d => d.date));
+  //   this.logger.log('Chart Data:', data.map(d => d.contacts ? d.contacts.length : 0));
+  //       const canvas = this.priorityContactsChartRef.nativeElement;
+  //   const ctx = canvas.getContext('2d');
 
-    if (this.priorityContactsChart)
-      this.priorityContactsChart.destroy();
+  //   if (this.priorityContactsChart)
+  //     this.priorityContactsChart.destroy();
 
-    if (ctx) {
-      this.priorityContactsChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: data.map(d => d.date),
-          datasets: [{
-            label: 'Planned Contact Count',
-            data: data.map(d => d.contacts ? d.contacts.length : 0),  // Ensuring contacts are defined
-            backgroundColor: chartColors.map(color => color.backgroundColor),
-            borderColor: chartColors.map(color => color.borderColor),
-            borderWidth: 1
-          }]
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: {
-                stepSize: 1  // Since we are counting contacts
-              }
-            }
-          },
-          responsive: true,
-          maintainAspectRatio: true,
-          plugins: {
-            legend: {
-              display: false,
-              position: 'top',
-            },
-            title: {
-              display: true,
-              text: 'Contact Prioritization for Next 14 Days'
-            }
-          }
-        }
-      });
-    } else {
-      console.error('Failed to get canvas context');
-    }
-  }
+  //   if (ctx) {
+  //     this.priorityContactsChart = new Chart(ctx, {
+  //       type: 'bar',
+  //       data: {
+  //         labels: data.map(d => d.date),
+  //         datasets: [{
+  //           label: 'Planned Contact Count',
+  //           data: data.map(d => d.contacts ? d.contacts.length : 0),  // Ensuring contacts are defined
+  //           backgroundColor: chartColors.map(color => color.backgroundColor),
+  //           borderColor: chartColors.map(color => color.borderColor),
+  //           borderWidth: 1
+  //         }]
+  //       },
+  //       options: {
+  //         scales: {
+  //           y: {
+  //             beginAtZero: true,
+  //             ticks: {
+  //               stepSize: 1  // Since we are counting contacts
+  //             }
+  //           }
+  //         },
+  //         responsive: true,
+  //         maintainAspectRatio: true,
+  //         plugins: {
+  //           legend: {
+  //             display: false,
+  //             position: 'top',
+  //           },
+  //           title: {
+  //             display: true,
+  //             text: 'Contact Prioritization for Next 14 Days'
+  //           }
+  //         }
+  //       }
+  //     });
+  //   } else {
+  //     console.error('Failed to get canvas context');
+  //   }
+  // }
+
 
 
   calculateDataHealth(contacts: Contact[]): { missingData: Map<string, number>, healthScore: number } {
@@ -1240,7 +1196,7 @@ export class HomeComponent implements OnInit {
     const missingDataArray = Array.from(missingData.entries());
 
     // Now log the array, which JSON.stringify can handle
-    this.logger.info("Missing Data", JSON.stringify(missingDataArray, null, 2));
+    // this.logger.info("Missing Data", JSON.stringify(missingDataArray, null, 2));
 
     return { missingData, healthScore };
   }
@@ -1332,9 +1288,98 @@ export class HomeComponent implements OnInit {
         contactsOnDate.push(contact);
       }
     } else {
-      console.error('No available date found or date is not in the map', availableDate);
+      this.logger.error('No available date found or date is not in the map', availableDate);
     }
   }
+
+  getDashboardCounts(contacts: Contact[]): any {
+    const totalContacts = contacts?.length || 0;
+    const today = new Date().toISOString().split('T')[0];
+
+    const contactsAddedToday = contacts?.filter(contact => {
+      let dateAdded: Date;
+      if (contact?.dateAdded && typeof contact.dateAdded === 'object' && 'seconds' in contact.dateAdded) {
+        dateAdded = new Date((contact.dateAdded as { seconds: number }).seconds * 1000);
+      } else if (typeof contact?.dateAdded === 'string') {
+        dateAdded = new Date(contact.dateAdded);
+      } else {
+        return false; // Handle missing or invalid dateAdded
+      }
+      return dateAdded.toISOString().split('T')[0] === today;
+    }).length || 0;
+
+    const importantContacts = contacts?.filter(contact => contact?.important).length || 0;
+    const contactsWithSocialMedia = contacts?.filter(contact => contact?.socialMedia && contact?.socialMedia.length > 0).length || 0;
+    const documentsUploaded = contacts?.reduce((count, contact) => count + (contact?.documents?.length || 0), 0) || 0;
+    const birthdaysThisMonth = contacts?.filter(contact => {
+      const birthday = contact?.birthday ? new Date(contact.birthday) : null;
+      return birthday && birthday.getMonth() === new Date().getMonth();
+    }).length || 0;
+
+    const profileTypeCounts = this.processProfileTypesCount(contacts) || [];
+    const timezoneCounts = this.processTimezoneCount(contacts) || [];
+
+    //TODO
+    // const contactsNeedingFollowUp = this.processContactPriorities(contacts, []).length || 0;
+    const contactsNeedingFollowUp = 0;
+    const missingData = this.calculateDataHealth(contacts)?.missingData || new Map();
+    const missingDataCounts = Array.from(missingData.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 3) || [];
+
+    // this.logger.info("profileTypeCounts", profileTypeCounts);
+    // this.logger.info("missingDataCounts", missingDataCounts);
+
+    return {
+      totalContacts,
+      contactsAddedToday,
+      importantContacts,
+      contactsWithSocialMedia,
+      documentsUploaded,
+      birthdaysThisMonth,
+      profileTypeCounts,
+      timezoneCounts,
+      contactsNeedingFollowUp,
+      missingDataCounts
+    };
+  }
+
+
+
+  processProfileTypesCount(contacts: Contact[]): any {
+    const typeCounts = new Map();
+
+    if (Array.isArray(contacts)) {
+      contacts.forEach(contact => {
+        if (Array.isArray(contact.profileTypes)) {
+          contact.profileTypes.forEach((type: string) => {
+            if (typeCounts.has(type)) {
+              typeCounts.set(type, typeCounts.get(type) + 1);
+            } else {
+              typeCounts.set(type, 1);
+            }
+          });
+        }
+      });
+    }
+
+    return Array.from(typeCounts, ([type, count]) => ({ type, count }));
+  }
+
+  processTimezoneCount(contacts: Contact[]): any {
+    const timezoneCounts = new Map();
+    contacts.forEach(contact => {
+      const timezone = contact.timezone;
+      if (timezoneCounts.has(timezone)) {
+        timezoneCounts.set(timezone, timezoneCounts.get(timezone) + 1);
+      } else {
+        timezoneCounts.set(timezone, 1);
+      }
+    });
+    return Array.from(timezoneCounts, ([timezone, count]) => ({ timezone, count }));
+  }
+
+
 
 
 

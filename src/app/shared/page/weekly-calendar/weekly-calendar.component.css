@@ -1,53 +1,54 @@
-.weekly-calendar {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    background-color: #f9f9f9;
+.calendar-container {
+  margin: 0 auto;
 }
 
 .month-header {
-    text-align: center;
-    font-size: 24px;
-    font-weight: bold;
-    padding: 20px;
-    background-color: #e8e8e8;
+  text-align: center;
+  font-size: 1.5em;
+  margin-bottom: 10px;
 }
 
-.week-row {
-    display: flex;
-    margin: 5px;
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* 5 columns for weekdays */
+  gap: 10px;
 }
 
-.day {
-    flex: 1;
-    border: 1px solid #ccc;
-    margin: 2px;
-    padding: 10px;
-    background-color: #ffffff;
-    display: flex;
-    flex-direction: column;
+.day-cell {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  height: 150px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
 }
 
-.date-header {
-    font-weight: bold;
-    color: #333;
+.date-number {
+  font-weight: bold;
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  font-size: 1.2em;
 }
 
 .contacts-list {
-    list-style-type: none;
-    padding: 0;
-    margin-top: 5px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex-grow: 1;
+  overflow-y: auto;
+  margin-top: 20px; /* To provide some space below the date number */
 }
 
 .contact-item {
-    cursor: pointer; /* Shows a pointer cursor on hover, indicating an interactive element */
-    color: #007bff; /* Typical link color */
-    padding: 2px 5px; /* Padding for better visual spacing */
-    border-radius: 4px; /* Optional: rounds the corners for a softer look */
+  padding: 5px;
+  border-radius: 3px;
+  background-color: #e0f7fa;
+  margin-bottom: 5px;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-
-.contact-item:hover {
-    background-color: #f8f9fa; /* Light background on hover for feedback */
-    text-decoration: underline; /* Underline to mimic typical link behavior */
-}
-

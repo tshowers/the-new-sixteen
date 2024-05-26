@@ -1,0 +1,127 @@
+<h1>Match Maker</h1>
+<div class="container mt-5" *ngIf="step === 1">
+  <div class="card p-4 shadow-sm">
+    <h3 class="mb-4">Enter Interested Party Information</h3>
+    <div class="mb-3">
+      <label for="contractorName" class="form-label">Name</label>
+      <input type="text" class="form-control" id="contractorName" [(ngModel)]="contractorName">
+    </div>
+    <div class="mb-3">
+      <label for="contractorURL" class="form-label">Homepage URL</label>
+      <input type="text" class="form-control" id="contractorURL" [(ngModel)]="contractorURL">
+    </div>
+    <button class="btn btn-primary btn-lg btn-round btn-width" (click)="fetchLinkPreview()">Submit</button>
+  </div>
+</div>
+<div class="container mt-5" *ngIf="step === 2">
+  <div class="row">
+    <div class="col-5">
+      <div class="card p-4 shadow-sm">
+        <h3 class="mb-4">Interested Party</h3>
+        <div *ngIf="previewData">
+          <img [src]="previewData.image" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">{{previewData.title}}</h5>
+            <p class="card-text">{{previewData.description}}</p>
+            <a [href]="previewData.url" class="btn btn-primary">Go to site</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-1 d-flex align-items-center justify-content-center">
+      <div class="arrow-right"></div>
+    </div>
+    <div class="col-6">
+      <div class="card p-4 shadow-sm">
+        <h3 class="mb-4">Candidate Location</h3>
+        <div id="map" style="height: 400px; border-radius: 12px;"></div>
+        <button class="btn btn-primary mt-4" (click)="nextStep()">Next</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container mt-5" *ngIf="step === 3">
+  <div class="row">
+    <div class="col">
+      <div class="card p-4 shadow-sm settings-container">
+        <h3 class="mb-4">Status</h3>
+        <div class="setting-row">
+          <span class="setting-text">Active</span>
+          <label class="switch">
+            <input type="checkbox" [(ngModel)]="criteria.activeStatus">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="card p-4 shadow-sm settings-container">
+        <h3 class="mb-4">Profile Types</h3>
+        <div *ngFor="let profileType of profileTypes" class="setting-row">
+          <span class="setting-text">{{profileType}}</span>
+          <label class="switch">
+            <input type="checkbox" [(ngModel)]="criteria.profileTypes[profileType]">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="card p-4 shadow-sm settings-container">
+        <h3 class="mb-4">Category</h3>
+        <div *ngFor="let category of businessCategories" class="setting-row">
+          <span class="setting-text">{{category}}</span>
+          <label class="switch">
+            <input type="checkbox" [(ngModel)]="criteria.categories[category]">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <h3 class="mb-4">NAICS Capabilities</h3>
+      <app-naics-type-ahead [(selectedNaicsCodes)]="criteria.capabilities"></app-naics-type-ahead>
+    </div>
+  </div>
+  <button class="btn btn-primary mt-4" (click)="nextStep()">Next</button>
+</div>
+<div class="container-fluid mt-5" *ngIf="step === 4">
+  <div class="row mb-5">
+    <div class="col">
+      <div class="card p-4 shadow-sm">
+        <h3 class="mb-4"> Interested Party</h3>
+        <div *ngIf="previewData" class="d-flex align-items-center">
+          <img [src]="previewData.image" class="prime-img me-3" alt="...">
+          <div>
+            <h5 class="card-title">{{previewData.title}}</h5>
+            <p class="card-text">{{previewData.description}}</p>
+            <a [href]="previewData.url" class="btn btn-primary">Go to site</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="card p-4 shadow-sm">
+        <h3 class="mb-4">Matching Candidates</h3>
+        <div *ngIf="noResults">
+          <p>No matching candidates found.</p>
+        </div>
+        <div *ngIf="!noResults">
+          <div class="row">
+            <div *ngFor="let contractor of matchingContractors" class="col-md-4">
+              <app-contact-card-3 [contact]="contractor"></app-contact-card-3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

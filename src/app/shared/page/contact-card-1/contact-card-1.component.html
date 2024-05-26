@@ -9,9 +9,10 @@
         <div>
             <span *ngIf="contact.emailAddresses && contact.emailAddresses.length">
                 <!-- <a href="{{contact.emailAddresses[0].emailAddress}}" title="{{contact.emailAddresses[0].emailAddress}}"><i class="fa-regular fa-envelope fa-2x"></i></a>  -->
-                <button class="btn" id="emailIcon">
+                
+                <a *ngFor="let email of contact.emailAddresses" class="btn" id="emailIcon" href="mailto:{{email.emailAddress}}">
                     <i class="fa-regular fa-envelope"></i>
-                </button>
+                </a>
             </span>
             <span *ngIf="contact.phoneNumbers && contact.phoneNumbers.length">
                 <!-- <a href="tel:{{contact.phoneNumbers[0].phoneNumber}}" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#callLogModal" title="Log Call to {{contact.firstName}}">

@@ -1,0 +1,25 @@
+<h1 class="mb-0">Inbox</h1>
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div *ngIf="loading" class="text-center">
+        <div class="spinner-border" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
+      <div *ngIf="!loading && emails.length === 0" class="alert alert-info" role="alert">
+        No emails to display.
+      </div>
+      <div *ngFor="let email of emails" class="card mb-3 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">{{ email.subject }}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">{{ email.from }} - {{ email.date }}</h6>
+          <p class="card-text">{{ email.body }}</p>
+          <a href="#" class="card-link">Reply</a>
+          <a href="#" class="card-link">Forward</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

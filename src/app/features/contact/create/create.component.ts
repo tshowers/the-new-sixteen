@@ -2,19 +2,28 @@ import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/co
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { Contact, Communication } from '../../../shared/data/interfaces/contact.model';
-import { ReadComponent } from '../read/read.component';
-import { DataService } from '../../../services/data.service';
-import { Router, ActivatedRoute, NavigationEnd } from '@angular/router'; // Import Router from Angular's router package
-import { filter } from 'rxjs/operators';
-import { ContactService } from '../../../services/contact.service';
-import { environment } from '../../../../environments/environment';
-import { Chart, registerables } from 'chart.js';
-import { LoggerService } from '../../../services/logger.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { NaicsPipe } from '../../../shared/filters/naics.pipe';
+import { Router, ActivatedRoute, NavigationEnd } from '@angular/router'; // Import Router from Angular's router package
+
+import { Contact, Communication } from '../../../shared/data/interfaces/contact.model';
+import { ENDPOINTS } from '../../../services/endpoints';
+
+import { environment } from '../../../../environments/environment';
+
+import { Chart, registerables } from 'chart.js';
+
 import { Subscription } from 'rxjs';
+
+import { DataService } from '../../../services/data.service';
+import { ContactService } from '../../../services/contact.service';
 import { AuthService } from '../../../services/auth.service';
+import { LoggerService } from '../../../services/logger.service';
+
+import { ReadComponent } from '../read/read.component';
+import { NaicsTypeAheadComponent } from '../../../shared/page/naics-type-ahead/naics-type-ahead.component';
+import { AddressAutoCompleteComponent } from '../../../shared/page/address-auto-complete/address-auto-complete.component';
+
+import { NaicsPipe } from '../../../shared/filters/naics.pipe';
 
 // Register Chart.js components
 Chart.register(...registerables);
@@ -22,7 +31,7 @@ Chart.register(...registerables);
 @Component({
   selector: 'app-create',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule, RouterOutlet, ReadComponent, NaicsPipe],
+  imports: [CommonModule, FormsModule, HttpClientModule, RouterOutlet, ReadComponent, NaicsPipe, NaicsTypeAheadComponent, AddressAutoCompleteComponent],
   templateUrl: './create.component.html',
   styleUrl: './create.component.css'
 })
@@ -82,7 +91,10 @@ export class CreateComponent implements OnInit, OnDestroy {
     acquisitionSource: 'web',
     dateAdded: new Date().toISOString(),
     lastContacted: new Date().toISOString()
-  };;
+  };
+
+  missingMessage!: string;
+  dropdownData: { [key: string]: any[] } = {}; // To store the fetched dropdown data
 
   constructor(private authService: AuthService, private http: HttpClient, private dataService: DataService, private router: Router, private contactService: ContactService, private logger: LoggerService) {
     this.production = environment.production;
@@ -92,8 +104,34 @@ export class CreateComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.userSubscription = this.authService.getUserId().subscribe(userId => {
       this.userId = userId;
-      this.startUp()
+      this.startUp();
     })
+    this.initializeContactCompany();
+    this.fetchDropdownData(); // Fetch dropdown data on initialization
+  }
+
+  fetchDropdownData() {
+    const endpoints: (keyof typeof ENDPOINTS)[] = ['CATEGORIES', 'STATES', 'STATUS', 'PROFILE_TYPES', 'PRODUCT_TYPES', 'PHONE_TYPES', 'ADDRESS_TYPES', 'EMAIL_ADDRESS_TYPES', 'GENDERS', 'TIMEZONES'];
+    endpoints.forEach(endpoint => {
+        this.dataService.getDropdownData(endpoint).subscribe(
+            data => {
+                this.dropdownData[endpoint] = data;
+            },
+            error => {
+                console.error(`Error fetching data for endpoint ${endpoint}:`, error);
+            }
+        );
+    });
+}
+
+
+  initializeContactCompany() {
+    // Ensure company and capabilities are always initialized
+    if (!this.contact.company) {
+      this.contact.company = { name: '', capabilities: [] };
+    } else if (!this.contact.company.capabilities) {
+      this.contact.company.capabilities = [];
+    }
   }
 
   startUp(): void {
@@ -103,6 +141,7 @@ export class CreateComponent implements OnInit, OnDestroy {
         periodStartDate.setDate(periodStartDate.getDate() - 30); // Set to 30 days ago
 
         this.contact = contact;
+        this.missingMessage = this.contactService.getMissingInfo(contact);
 
         if (this.contact && this.contact.company && !this.contact.company.capabilities) {
           this.contact.company.capabilities = [];
@@ -120,7 +159,6 @@ export class CreateComponent implements OnInit, OnDestroy {
 
     this.logger.info("Create is using this contact", JSON.stringify(this.contact, null, 2));
 
-    this.fetchNaicsCodes();
 
   }
 
@@ -137,63 +175,6 @@ export class CreateComponent implements OnInit, OnDestroy {
     this.userSubscription.unsubscribe();
   }
 
-  fetchNaicsCodes() {
-    // Assuming the NAICS CSV file is served at '/assets/naics.csv'
-    this.http.get('/assets/naics.csv', { responseType: 'text' }).subscribe(data => {
-      // Parse the CSV data and extract NAICS codes
-      const lines = data.split('\n');
-      // Iterate over each line
-      lines.forEach(line => {
-        // Split the line into columns
-        const columns = line.split(',');
-        // Extract the code and title from the columns, and trim double quotes
-        const code = columns[0].trim().replace(/"/g, '');
-        let title = columns[1].trim().replace(/"/g, '');
-        // Strip off the trailing 'T' from the title, if present
-        if (title.endsWith('T')) {
-          title = title.substring(0, title.length - 1);
-        }
-        // Concatenate the code and title and push to the naicsCodes array
-        this.naicsCodes.push(code + ' - ' + title);
-      });
-    });
-  }
-
-  // Function to add a NAICS code to the capabilities array
-  addNaicsCode(naicsCode: string) {
-    // Ensure contact and company objects exist
-    if (this.contact && this.contact.company) {
-      // Check if capabilities array exists; if not, initialize it as an empty array
-      this.logger.info("Has company");
-      if (!this.contact.company.capabilities) {
-        this.logger.info("Does not have capabilities");
-        this.contact.company.capabilities = [];
-      }
-      this.logger.info("Should now have capabilities", this.contact.company);
-      // Check if the NAICS code already exists in the capabilities array
-      if (!this.contact.company.capabilities.includes(naicsCode)) {
-        // Add the NAICS code to the capabilities array
-        this.contact.company.capabilities.push(naicsCode);
-      }
-    }
-  }
-
-  // Function to remove a NAICS code from the capabilities array
-  removeNaicsCode(naicsCode: string) {
-    // Filter out the NAICS code from the capabilities array
-    if (this.contact && this.contact.company) {
-      this.contact.company.capabilities = this.contact.company.capabilities.filter((code: string) => code !== naicsCode);
-    }
-  }
-
-  addSelectedNaicsCodes() {
-    if (this.selectedNaicsCodes.length > 0) {
-      if (this.contact && this.contact.company) {
-        this.contact.company.capabilities.push(...this.selectedNaicsCodes);
-        this.selectedNaicsCodes = []; // Clear selected NAICS codes after adding
-      }
-    }
-  }
 
 
 
@@ -318,17 +299,26 @@ export class CreateComponent implements OnInit, OnDestroy {
 
 
   processSingleContactData(contact: any): any {
-    const lastContactDate = contact.lastContacted ? new Date(contact.lastContacted) : (contact.dateAdded ? new Date(contact.dateAdded.seconds * 1000) : new Date());
+    const lastContactDate = contact.lastContacted 
+      ? new Date(contact.lastContacted) 
+      : (contact.dateAdded 
+        ? new Date(contact.dateAdded) 
+        : (contact.timeStamp 
+          ? new Date(contact.timeStamp.seconds * 1000) 
+          : new Date()));
+    
     return {
       name: `${contact.firstName} ${contact.lastName}`,
       lastContacted: lastContactDate
     };
   }
+  
 
 
 
 
   createSingleContactTimelineChart(contactData: any): void {
+    this.logger.info("createSingleContactTimelineChart", contactData)
     const canvas = this.lastContactTimelineChartRef.nativeElement;
     const ctx = canvas.getContext('2d');
 

@@ -5,33 +5,92 @@
         </div>
         <div class="col-md-5">
             <button *ngIf="contact && contact.id" class="btn" (click)="navigateToNote()" id="noteIcon" title="Take Notes">
-                <i class="fa-regular fa-note-sticky"></i>
-            </button>
-            <button *ngIf="contact && contact.id" class="btn" (click)="navigateToUpload()" id="uploadIcon" title="Upload Documents">
-                <i class="fa-solid fa-upload"></i>
-            </button>
-
+                <i class="fa-regular fa-note-sticky"></i> Add a Note </button>
+            <button *ngIf="contact && contact.id" class="btn" (click)="navigateToUpload()" id="uploadIcon" title="Upload Documents or Avatar">
+                <i class="fa-solid fa-upload"></i> Upload Document or Avatar </button>
         </div>
         <div class="col-1 text-right">
             <div *ngIf="!production">
-                <i class="fa fa-toggle-off" aria-hidden="true" [hidden]="toggleDisplay" (click)="toggleDiagnostic()" style="cursor: pointer"></i>
-                <i class="fa fa-toggle-on" aria-hidden="true" [hidden]="!toggleDisplay" (click)="toggleDiagnostic()" style="cursor: pointer"></i>
-
+                <label class="switch">
+                    <input type="checkbox" [checked]="toggleDisplay" (change)="toggleDiagnostic()">
+                    <span class="slider"></span>
+                </label>
             </div>
         </div>
     </div>
-    <div class="row">
+    <div class="row mt-2 mb-3">
         <div class="col">
-            <hr>
-            <div class="progress" style="height: 20px;">
-                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" [style.width]="(currentStep / totalSteps * 100) + '%'" [attr.aria-valuenow]="currentStep" aria-valuemin="0" [attr.aria-valuemax]="totalSteps"> Step {{currentStep}} of {{totalSteps}}
+            <div class="stepper">
+                <div class="step" [class.active]="currentStep >= 1">
+                    <div class="circle">1</div>
+                    <div class="label">First</div>
+                </div>
+                <div class="step" [class.active]="currentStep >= 2">
+                    <div class="circle">2</div>
+                    <div class="label">Middle</div>
+                </div>
+                <div class="step" [class.active]="currentStep >= 3">
+                    <div class="circle">3</div>
+                    <div class="label">Last</div>
+                </div>
+                <div class="step" [class.active]="currentStep >= 4">
+                    <div class="circle">4</div>
+                    <div class="label">Profession</div>
+                </div>
+                <div class="step" [class.active]="currentStep >= 5">
+                    <div class="circle">5</div>
+                    <div class="label">Email</div>
+                </div>
+                <div class="step" [class.active]="currentStep >= 6">
+                    <div class="circle">6</div>
+                    <div class="label">Phone</div>
+                </div>
+                <div class="step" [class.active]="currentStep >= 7">
+                    <div class="circle">7</div>
+                    <div class="label">Address</div>
+                </div>
+                <div class="step" [class.active]="currentStep >= 8">
+                    <div class="circle">8</div>
+                    <div class="label">Online</div>
+                </div>
+                <div class="step" [class.active]="currentStep >= 9">
+                    <div class="circle">9</div>
+                    <div class="label">Nickname</div>
+                </div>
+                <div class="step" [class.active]="currentStep >= 10">
+                    <div class="circle">10</div>
+                    <div class="label">Birthday</div>
+                </div>
+                <div class="step" [class.active]="currentStep >= 11">
+                    <div class="circle">11</div>
+                    <div class="label">Anniversary</div>
+                </div>
+                <div class="step" [class.active]="currentStep >= 12">
+                    <div class="circle">12</div>
+                    <div class="label">Gender</div>
+                </div>
+                <div class="step" [class.active]="currentStep >= 13">
+                    <div class="circle">13</div>
+                    <div class="label">Timezone</div>
+                </div>
+                <!-- Repeat for each step up to 14 -->
+                <div class="step" [class.active]="currentStep >= 14">
+                    <div class="circle">14</div>
+                    <div class="label">Type</div>
                 </div>
             </div>
         </div>
     </div>
+    <div class="row mt-3" *ngIf="missingMessage">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <h4 class="alert-heading">Missing Information</h4>
+            {{missingMessage}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
     <div class="row mt-3">
         <div class="col-md-7">
-            <form #dataForm="ngForm" class="form-horizontal">
+            <form #dataForm="ngForm" class="custom-wizard">
                 <div *ngIf="currentStep === 0" class="form-group">
                     <label for="firstName">First Name</label>
                     <input [(ngModel)]="contact.firstName" #firstName="ngModel" id="firstName" name="firstName" placeholder="" autocorrect="off" autocapitalize="off" spellcheck="off" autocomplete="off" class="form-control large-text" type="text" required>
@@ -50,7 +109,7 @@
                     <div class="d-flex justify-content-between mt-2 card-footer">
                         <button type="button" (click)="previousStep()" class="btn btn-primary btn-lg btn-round btn-width"><i class="fa-solid fa-circle-chevron-left"></i>Previous</button>
                         <button *ngIf="contact.id" type="button" (click)="updateContact()" class="btn btn-primary btn-lg btn-round btn-width">Update</button>
-                        <button type="button" (click)="nextStep()" class="btn btn-primary btn-lg btn-round btn-width">Next</button>
+                        <button type="button" (click)="nextStep()" class="btn btn-primary btn-lg btn-round btn-width">Next<i class="fa-solid fa-circle-chevron-right"></i></button>
                     </div>
                 </div>
                 <div *ngIf="currentStep === 2" class="form-group">
@@ -89,28 +148,10 @@
                         <!-- NAICS Codes-->
                         <div class="row mb-2">
                             <div class="col">
-                              <label>Capabilities</label>
-                              <input type="text" [(ngModel)]="searchText" placeholder="Search NAICS codes" id="naicsCode" name="naicsCode" class="form-control large-text">
-                              <select multiple [(ngModel)]="selectedNaicsCodes" id="naicsCodes" name="naicsCodes" class="form-control large-text-select multi-select" size="8">
-                                <option *ngFor="let naicsCode of naicsCodes | naics: searchText" [value]="naicsCode">{{ naicsCode }}</option>
-                              </select>
-                              <button (click)="addSelectedNaicsCodes()" class="mt-2 btn btn-primary btn-lg btn-round btn-width">Add Selected</button>
-                            </div>
-                          </div>
-                        <!-- <div class="row mb-2">
-                            <div class="col">
                                 <label>Capabilities</label>
-                                <input type="text" [(ngModel)]="searchText" id="naicsCode" name="naicsCode" placeholder="Search NAICS codes">
-                                <div>
-                                    <ul>
-                                        <li *ngFor="let naicsCode of naicsCodes | naics: searchText">
-                                            {{ naicsCode }}
-                                            <button (click)="addNaicsCode(naicsCode)">Add</button>
-                                        </li>
-                                    </ul>
-                                </div>
+                                <app-naics-type-ahead *ngIf="(contact && contact.company)" [(selectedNaicsCodes)]="contact.company.capabilities"></app-naics-type-ahead>
                             </div>
-                        </div> -->
+                        </div>
                     </div>
                     <div class="d-flex justify-content-between  mt-2">
                         <button type="button" (click)="previousStep()" class="btn btn-primary btn-lg btn-round btn-width"><i class="fa-solid fa-circle-chevron-left"></i>Previous</button>
@@ -118,166 +159,114 @@
                         <button type="button" (click)="nextStep()" class="btn btn-primary btn-lg btn-round btn-width">Next<i class="fa-solid fa-circle-chevron-right"></i></button>
                     </div>
                 </div>
-                <div *ngIf="currentStep === 4" class="form-group">
-                    <label for="lastName">Title or Profession</label>
+                <div *ngIf="currentStep === 4" class="form-group settings-container">
+                    <label for="profession">Title or Profession</label>
                     <input [(ngModel)]="contact.profession" #profession="ngModel" id="profession" name="profession" placeholder="" autocorrect="off" autocapitalize="off" spellcheck="off" autocomplete="off" class="form-control large-text" type="text">
+                    <div class="setting-row">
+                        <span class="setting-text">Important</span>
+                        <label class="switch">
+                            <input type="checkbox" [(ngModel)]="contact.important" id="important" name="important">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-text">Status (Inactive or Active)</span>
+                        <label class="switch">
+                            <input type="checkbox" [(ngModel)]="contact.status" id="status" name="status" (change)="contact.status = contact.status === 'active' ? 'inactive' : 'active'">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
                     <div class="d-flex justify-content-between mt-2 card-footer">
                         <button type="button" (click)="previousStep()" class="btn btn-primary btn-lg btn-round btn-width"><i class="fa-solid fa-circle-chevron-left"></i>Previous</button>
                         <button *ngIf="contact.id" type="button" (click)="updateContact()" class="btn btn-primary btn-lg btn-round btn-width">Update</button>
                         <button type="button" (click)="nextStep()" class="btn btn-primary btn-lg btn-round btn-width">Next<i class="fa-solid fa-circle-chevron-right"></i></button>
                     </div>
                 </div>
-                <!-- Contact Information -->
                 <div *ngIf="currentStep === 5" class="form-group">
                     <label>Email Address</label>
                     <div *ngFor="let email of contact.emailAddresses; let i = index">
                         <input [(ngModel)]="email.emailAddress" name="emailAddress{{i}}" placeholder="" class="form-control large-text" autocorrect="off" autocapitalize="off" spellcheck="off" autocomplete="off" type="email" required>
                         <select [(ngModel)]="email.emailAddressType" name="emailAddressType{{i}}" class="form-control large-text-select mt-2">
                             <option value="" selected>Select a Type</option>
-                            <option value="primary">Primary</option>
-                            <option value="personal">Personal</option>
-                            <option value="work">Work</option>
-                            <option value="other">Other</option>
+                            <option *ngIf="dropdownData['EMAIL_ADDRESS_TYPES']?.length === 0" disabled>No options available</option>
+                            <option *ngFor="let type of dropdownData['EMAIL_ADDRESS_TYPES']" [value]="type.name">{{ type.name }}</option>
                         </select>
                         <button type="button" (click)="removeEmailAddress(i)" class="mt-2 btn btn-danger btn-lg btn-round btn-width">Remove</button>
                     </div>
-                    <div class="d-flex justify-content-between mt-2 card-footer">
+                    <div class="mt-4 mb-4">
                         <button type="button" (click)="addEmailAddress()" class="btn btn-primary btn-lg btn-round">Add Email Address</button>
+                    </div>
+                    <div class="d-flex justify-content-between mt-2 card-footer">
+                        <button type="button" (click)="previousStep()" class="btn btn-primary btn-lg btn-round btn-width"><i class="fa-solid fa-circle-chevron-left"></i>Previous</button>
                         <button *ngIf="contact.id" type="button" (click)="updateContact()" class="btn btn-primary btn-lg btn-round btn-width">Update</button>
                         <button type="button" (click)="nextStepAfterEmail()" class="btn btn-primary btn-lg btn-round btn-width">Next<i class="fa-solid fa-circle-chevron-right"></i></button>
                     </div>
                 </div>
+                <!-- Phone Section -->
                 <div *ngIf="currentStep === 6" class="form-group">
                     <label>Phone Number</label>
                     <div *ngFor="let phone of contact.phoneNumbers; let i = index">
                         <input [(ngModel)]="phone.phoneNumber" name="phoneNumber{{i}}" placeholder="xxx.xxx.xxxx" class="form-control large-text" autocorrect="off" autocapitalize="off" spellcheck="off" autocomplete="off" type="text" required>
                         <select [(ngModel)]="phone.phoneNumberType" name="phoneNumberType{{i}}" class="form-control large-text-select mt-2">
                             <option value="" selected>Select a Type</option>
-                            <option value="mobile">Mobile</option>
-                            <option value="personal">Personal</option>
-                            <option value="work">Work</option>
-                            <option value="fax">Fax</option>
-                            <option value="other">Other</option>
+                            <option *ngIf="dropdownData['PHONE_TYPES']?.length === 0" disabled>No options available</option>
+                            <option *ngFor="let type of dropdownData['PHONE_TYPES']" [value]="type.name">{{ type.name }}</option>
                         </select>
                         <button type="button" (click)="removePhoneNumber(i)" class="mt-2 btn btn-danger btn-lg btn-round btn-width">Remove</button>
                     </div>
-                    <div class="d-flex justify-content-between mt-2 card-footer">
+                    <div class="mt-4 mb-4">
                         <button type="button" (click)="addPhoneNumber()" class="btn btn-primary btn-lg btn-round">Add Phone Number</button>
+                    </div>
+                    <div class="d-flex justify-content-between mt-2 card-footer">
+                        <button type="button" (click)="previousStep()" class="btn btn-primary btn-lg btn-round btn-width"><i class="fa-solid fa-circle-chevron-left"></i>Previous</button>
                         <button *ngIf="contact.id" type="button" (click)="updateContact()" class="btn btn-primary btn-lg btn-round btn-width">Update</button>
                         <button type="button" (click)="nextStep()" class="btn btn-primary btn-lg btn-round btn-width">Next<i class="fa-solid fa-circle-chevron-right"></i></button>
                     </div>
                 </div>
+                <!-- Address Section -->
                 <div *ngIf="currentStep === 7" class="form-group">
-                    <label>Address</label>
-                    <div *ngFor="let address of contact.addresses; let i = index">
-                        <div class="mb-2">
-                            <input [(ngModel)]="address.streetAddress" name="streetAddress{{i}}" placeholder="Street Address" class="form-control large-text" type="text" autocorrect="off" autocapitalize="off" spellcheck="off" autocomplete="off">
+                    <app-address-auto-complete [contact]="contact" [dropdownData]="dropdownData" (nextStepAction)="nextStep()" (previousStepAction)="previousStep()" (updateContactAction)="updateContact()"></app-address-auto-complete>
+                    <!-- <label>Address</label>
+                        <div *ngFor="let address of contact.addresses; let i = index">
+                            <div class="mb-2">
+                                <input [(ngModel)]="address.streetAddress" name="streetAddress{{i}}" placeholder="Street Address" class="form-control large-text" type="text" autocorrect="off" autocapitalize="off" spellcheck="off" autocomplete="off">
+                            </div>
+                            <div class="mb-2">
+                                <input [(ngModel)]="address.city" name="city{{i}}" placeholder="City" class="form-control large-text" type="text" autocorrect="off" autocapitalize="off" spellcheck="off" autocomplete="off">
+                            </div>
+                            <div class="mb-2">
+                                <select [(ngModel)]="address.state" name="state{{i}}" id="state{{i}}" class="form-control large-text-select" autocorrect="off" autocapitalize="off" spellcheck="off" autocomplete="off">
+                                    <option value="">Select State</option>
+                                    <option *ngIf="dropdownData['STATES']?.length === 0" disabled>No options available</option>
+                                    <option *ngFor="let state of dropdownData['STATES']" [value]="state.name">{{ state.name }}</option>
+                                </select>
+                            </div>
+                            <div class="mb-2">
+                                <input [(ngModel)]="address.zip" name="zip{{i}}" placeholder="Zip" class="form-control large-text" type="text" autocorrect="off" autocapitalize="off" spellcheck="off" autocomplete="off">
+                            </div>
+                            <div class="mb-2">
+                                <input [(ngModel)]="address.county" name="county{{i}}" placeholder="County" class="form-control large-text" type="text" autocorrect="off" autocapitalize="off" spellcheck="off" autocomplete="off">
+                            </div>
+                            <div class="mb-2">
+                                <input [(ngModel)]="address.country" name="country{{i}}" placeholder="Country" class="form-control large-text" type="text" autocorrect="off" autocapitalize="off" spellcheck="off" autocomplete="off">
+                            </div>
+                            <div class="mb-2">
+                                <select [(ngModel)]="address.addressType" name="addressType{{i}}" class="form-control large-text-select">
+                                    <option value="" selected>Select a Type</option>
+                                    <option *ngIf="dropdownData['ADDRESS_TYPES']?.length === 0" disabled>No options available</option>
+                                    <option *ngFor="let type of dropdownData['ADDRESS_TYPES']" [value]="type.name">{{ type.name }}</option>
+                                </select>
+                            </div>
+                            <button type="button" (click)="removeAddress(i)" class="mt-2 btn btn-danger btn-lg btn-round btn-width">Remove</button>
                         </div>
-                        <div class="mb-2">
-                            <input [(ngModel)]="address.city" name="city{{i}}" placeholder="City" class="form-control large-text" type="text" autocorrect="off" autocapitalize="off" spellcheck="off" autocomplete="off">
+                        <div class="mt-4 mb-4">
+                            <button type="button" (click)="addAddress()" class="btn btn-primary btn-lg btn-round">Add Address</button>
                         </div>
-                        <div class="mb-2">
-                            <select [(ngModel)]="address.state" name="state{{i}}" id="state{{i}}" class="form-control large-text-select" autocorrect="off" autocapitalize="off" spellcheck="off" autocomplete="off">
-                                <option value="">Select State</option>
-                                <option value="AL">Alabama [AL]</option>
-                                <option value="AK">Alaska [AK]</option>
-                                <option value="AS">American Samoa [AS]</option>
-                                <option value="AZ">Arizona [AZ]</option>
-                                <option value="AR">Arkansas [AR]</option>
-                                <option value="CA">California [CA]</option>
-                                <option value="CO">Colorado [CO]</option>
-                                <option value="CT">Connecticut [CT]</option>
-                                <option value="DE">Delaware [DE]</option>
-                                <option value="DC">District of Columbia [DC]</option>
-                                <option value="FM">Federated States Of Micronesia [FM]</option>
-                                <option value="FL">Florida [FL]</option>
-                                <option value="GA">Georgia [GA]</option>
-                                <option value="GU">Guam [GU]</option>
-                                <option value="HI">Hawaii [HI]</option>
-                                <option value="ID">Idaho [ID]</option>
-                                <option value="IL">Illinois [IL]</option>
-                                <option value="IN">Indiana [IN]</option>
-                                <option value="IA">Iowa [IA]</option>
-                                <option value="KS">Kansas [KS]</option>
-                                <option value="KY">Kentucky [KY]</option>
-                                <option value="LA">Louisiana [LA]</option>
-                                <option value="ME">Maine [ME]</option>
-                                <option value="MH">Marshall Islands [MH]</option>
-                                <option value="MD">Maryland [MD]</option>
-                                <option value="MA">Massachusetts [MA]</option>
-                                <option value="MI">Michigan [MI]</option>
-                                <option value="MN">Minnesota [MN]</option>
-                                <option value="MS">Mississippi [MS]</option>
-                                <option value="MO">Missouri [MO]</option>
-                                <option value="MT">Montana [MT]</option>
-                                <option value="NE">Nebraska [NE]</option>
-                                <option value="NV">Nevada [NV]</option>
-                                <option value="NH">New Hampshire [NH]</option>
-                                <option value="NJ">New Jersey [NJ]</option>
-                                <option value="NM">New Mexico [NM]</option>
-                                <option value="NY">New York [NY]</option>
-                                <option value="NC">North Carolina [NC]</option>
-                                <option value="ND">North Dakota [ND]</option>
-                                <option value="OH">Ohio [OH]</option>
-                                <option value="OK">Oklahoma [OK]</option>
-                                <option value="OR">Oregon [OR]</option>
-                                <option value="PW">Palau [PW]</option>
-                                <option value="PA">Pennsylvania [PA]</option>
-                                <option value="PR">Puerto Rico [PR]</option>
-                                <option value="RI">Rhode Island [RI]</option>
-                                <option value="SC">South Carolina [SC]</option>
-                                <option value="SD">South Dakota [SD]</option>
-                                <option value="TN">Tennessee [TN]</option>
-                                <option value="TX">Texas [TX]</option>
-                                <option value="UT">Utah [UT]</option>
-                                <option value="VT">Vermont [VT]</option>
-                                <option value="VI">Virgin Islands [VI]</option>
-                                <option value="VA">Virginia [VA]</option>
-                                <option value="WA">Washington [WA]</option>
-                                <option value="WV">West Virginia [WV]</option>
-                                <option value="WI">Wisconsin [WI]</option>
-                                <option value="WY">Wyoming [WY]</option>
-                                <option value="">---------------------------------------------</option>
-                                <option value="AB">Alberta [AB]</option>
-                                <option value="BC">British Columbia [BC]</option>
-                                <option value="MB">Manitoba [MB]</option>
-                                <option value="NB">New Brunswick [NB]</option>
-                                <option value="NF">Newfoundland and Labrador [NF]</option>
-                                <option value="NT">Northwest Territories [NT]</option>
-                                <option value="NS">Nova Scotia [NS]</option>
-                                <option value="NU">Nunavut [NU]</option>
-                                <option value="ON">Ontario [ON]</option>
-                                <option value="PE">Prince Edward Island [PE]</option>
-                                <option value="QC">Quebec [QC]</option>
-                                <option value="SK">Saskatchewan [SK]</option>
-                                <option value="YT">Yukon Territory [YT]</option>
-                            </select>
-                        </div>
-                        <div class="mb-2">
-                            <input [(ngModel)]="address.zip" name="zip{{i}}" placeholder="Zip" class="form-control large-text" type="text" autocorrect="off" autocapitalize="off" spellcheck="off" autocomplete="off">
-                        </div>
-                        <div class="mb-2">
-                            <input [(ngModel)]="address.county" name="county{{i}}" placeholder="County" class="form-control large-text" type="text" autocorrect="off" autocapitalize="off" spellcheck="off" autocomplete="off">
-                        </div>
-                        <div class="mb-2">
-                            <input [(ngModel)]="address.country" name="country{{i}}" placeholder="Country" class="form-control large-text" type="text" autocorrect="off" autocapitalize="off" spellcheck="off" autocomplete="off">
-                        </div>
-                        <div class="mb-2">
-                            <select [(ngModel)]="address.addressType" name="addressType{{i}}" class="form-control large-text-select">
-                                <option value="" selected>Select a Type</option>
-                                <option value="home">Home</option>
-                                <option value="personal">Personal</option>
-                                <option value="work">Work</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-                        <button type="button" (click)="removeAddress(i)" class="mt-2 btn btn-danger btn-lg btn-round btn-width">Remove</button>
-                    </div>
-                    <div class="d-flex justify-content-between mt-2 card-footer">
-                        <button type="button" (click)="addAddress()" class="btn btn-primary btn-lg btn-round">Add Address</button>
-                        <button *ngIf="contact.id" type="button" (click)="updateContact()" class="btn btn-primary btn-lg btn-round btn-width">Update</button>
-                        <button type="button" (click)="nextStep()" class="btn btn-primary btn-lg btn-round btn-width">Next<i class="fa-solid fa-circle-chevron-right"></i></button>
-                    </div>
+                        <div class="d-flex justify-content-between mt-2 card-footer">
+                            <button type="button" (click)="previousStep()" class="btn btn-primary btn-lg btn-round btn-width"><i class="fa-solid fa-circle-chevron-left"></i>Previous</button>
+                            <button *ngIf="contact.id" type="button" (click)="updateContact()" class="btn btn-primary btn-lg btn-round btn-width">Update</button>
+                            <button type="button" (click)="nextStep()" class="btn btn-primary btn-lg btn-round btn-width">Next<i class="fa-solid fa-circle-chevron-right"></i></button>
+                        </div> -->
                 </div>
                 <div *ngIf="currentStep === 8" class="form-group">
                     <label>Online Presence</label>
@@ -305,8 +294,11 @@
                         </div>
                         <button type="button" (click)="removeSocialMedia(i)" class="mt-2 btn btn-danger btn-lg btn-round btn-width">Remove</button>
                     </div>
-                    <div class="d-flex justify-content-between mt-2 card-footer">
+                    <div class="mt-4 mb-4">
                         <button type="button" (click)="addSocialMedia()" class="btn btn-primary btn-lg btn-round">Add Social Media Account</button>
+                    </div>
+                    <div class="d-flex justify-content-between mt-2 card-footer">
+                        <button type="button" (click)="previousStep()" class="btn btn-primary btn-lg btn-round btn-width"><i class="fa-solid fa-circle-chevron-left"></i>Previous</button>
                         <button *ngIf="contact.id" type="button" (click)="updateContact()" class="btn btn-primary btn-lg btn-round btn-width">Update</button>
                         <button type="button" (click)="nextStep()" class="btn btn-primary btn-lg btn-round btn-width">Next<i class="fa-solid fa-circle-chevron-right"></i></button>
                     </div>
@@ -341,12 +333,8 @@
                 <div *ngIf="currentStep === 12" class="form-group">
                     <label for="gender">Gender</label>
                     <select [(ngModel)]="contact.gender" #gender="ngModel" id="gender" name="gender" class="form-control large-text-select">
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="non-binary">Non-binary</option>
-                        <option value="transgender">Transgender</option>
-                        <option value="intersex">Intersex</option>
-                        <option value="not specified">Prefer not to specify</option>
+                        <option *ngIf="dropdownData['GENDERS']?.length === 0" disabled>No options available</option>
+                        <option *ngFor="let genderOption of dropdownData['GENDERS']" [value]="genderOption.name">{{ genderOption.name }}</option>
                     </select>
                     <div class="d-flex justify-content-between mt-2 card-footer">
                         <button type="button" (click)="previousStep()" class="btn btn-primary btn-lg btn-round btn-width"><i class="fa-solid fa-circle-chevron-left"></i> Previous</button>
@@ -357,40 +345,8 @@
                 <div *ngIf="currentStep === 13" class="form-group">
                     <label for="timezone">Timezone</label>
                     <select [(ngModel)]="contact.timezone" #timezone="ngModel" id="timezone" name="timezone" class="form-control large-text-select">
-                        <!-- Populate with timezone options -->
-                        <option value="" disabled selected>Select your timezone</option>
-                        <option value="UTC">Coordinated Universal Time (UTC)</option>
-                        <option value="GMT">Greenwich Mean Time (GMT)</option>
-                        <option value="BST">British Summer Time (BST)</option>
-                        <option value="IST">Ireland Standard Time (IST)</option>
-                        <option value="CET">Central European Time (CET)</option>
-                        <option value="CEST">Central European Summer Time (CEST)</option>
-                        <option value="EET">Eastern European Time (EET)</option>
-                        <option value="EEST">Eastern European Summer Time (EEST)</option>
-                        <option value="MSK">Moscow Standard Time (MSK)</option>
-                        <option value="AST">Atlantic Standard Time (AST)</option>
-                        <option value="ADT">Atlantic Daylight Time (ADT)</option>
-                        <option value="EST">Eastern Standard Time (EST)</option>
-                        <option value="EDT">Eastern Daylight Time (EDT)</option>
-                        <option value="CST">Central Standard Time (CST)</option>
-                        <option value="CDT">Central Daylight Time (CDT)</option>
-                        <option value="MST">Mountain Standard Time (MST)</option>
-                        <option value="MDT">Mountain Daylight Time (MDT)</option>
-                        <option value="PST">Pacific Standard Time (PST)</option>
-                        <option value="PDT">Pacific Daylight Time (PDT)</option>
-                        <option value="AKST">Alaska Standard Time (AKST)</option>
-                        <option value="AKDT">Alaska Daylight Time (AKDT)</option>
-                        <option value="HAST">Hawaii-Aleutian Standard Time (HAST)</option>
-                        <option value="HADT">Hawaii-Aleutian Daylight Time (HADT)</option>
-                        <option value="SST">Samoa Standard Time (SST)</option>
-                        <option value="SDT">Samoa Daylight Time (SDT)</option>
-                        <option value="AEST">Australian Eastern Standard Time (AEST)</option>
-                        <option value="AEDT">Australian Eastern Daylight Time (AEDT)</option>
-                        <option value="ACST">Australian Central Standard Time (ACST)</option>
-                        <option value="ACDT">Australian Central Daylight Time (ACDT)</option>
-                        <option value="AWST">Australian Western Standard Time (AWST)</option>
-                        <option value="NZST">New Zealand Standard Time (NZST)</option>
-                        <option value="NZDT">New Zealand Daylight Time (NZDT)</option> <!-- Additional timezone options here -->
+                        <option *ngIf="dropdownData['TIMEZONES']?.length === 0" disabled>No options available</option>
+                        <option *ngFor="let timezoneOption of dropdownData['TIMEZONES']" [value]="timezoneOption.name">{{ timezoneOption.name }}</option>
                     </select>
                     <div class="d-flex justify-content-between mt-2 card-footer">
                         <button type="button" (click)="previousStep()" class="btn btn-primary btn-lg btn-round btn-width"><i class="fa-solid fa-circle-chevron-left"></i> Previous</button>
@@ -401,16 +357,8 @@
                 <div *ngIf="currentStep === 14" class="form-group">
                     <label for="profileType">Business Type</label>
                     <select [(ngModel)]="contact.profileTypes" #profileType="ngModel" id="profileType" name="profileType" multiple class="form-control large-text-select multi-select" size="8">
-                        <option value="DBE">Disadvantaged Business Enterprise (DBE)</option>
-                        <option value="MBE">Minority Business Enterprise (MBE)</option>
-                        <option value="WBE">Women's Business Enterprise (WBE)</option>
-                        <option value="SBE">Small Business Enterprise (SBE)</option>
-                        <option value="LGBTBE">LGBTQ Business Enterprise (LGBTBE)</option>
-                        <option value="VBE">Veteran-Owned Business Enterprise (VBE)</option>
-                        <option value="DOBE">Disability-Owned Business Enterprise (DOBE)</option>
-                        <option value="HUBZone">Historically Underutilized Business (HUBZone)</option>
-                        <option value="8a">SBA 8(a) Business Development Program Participant</option>
-                        <!-- Additional business types can be added here -->
+                        <option *ngIf="dropdownData['PROFILE_TYPES']?.length === 0" disabled>No options available</option>
+                        <option *ngFor="let profileTypeOption of dropdownData['PROFILE_TYPES']" [value]="profileTypeOption.name">{{ profileTypeOption.name }}</option>
                     </select>
                     <div class="d-flex justify-content-between mt-2 card-footer">
                         <button type="button" (click)="previousStep()" class="btn btn-primary btn-lg btn-round btn-width"><i class="fa-solid fa-circle-chevron-left"></i> Previous</button>
@@ -421,6 +369,10 @@
             </form>
         </div>
         <div class="col-md-5">
+            <div id="diagnostic" [ngStyle]="{'display': diagDisplay}" *ngIf="!production">
+                <h4>JSON View</h4>
+                <pre class="text-light bg-dark p-4">{{this.contact | json}}</pre>
+            </div>
             <app-read [contact]="contact"></app-read>
         </div>
     </div>
@@ -432,13 +384,9 @@
             <canvas #communicationFrequencyChart id="communicationFrequencyChart"></canvas>
         </div>
     </div>
-    <div class="row">
-        <div class="col">
-            <div id="diagnostic" [ngStyle]="{'display': diagDisplay}" *ngIf="!production">
-                <h4>JSON View</h4>
-                <pre class="text-light bg-dark p-4">{{this.contact | json}}</pre>
-            </div>
-        </div>
+    <div id="diagnostic" [ngStyle]="{'display': diagDisplay}" *ngIf="!production">
+        <h4>JSON View</h4>
+        <pre class="text-light bg-dark p-4">{{this.contact | json}}</pre>
     </div>
 </div>
 <ng-container *ngIf="isLoading">

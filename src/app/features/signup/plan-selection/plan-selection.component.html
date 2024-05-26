@@ -1,0 +1,84 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col text-center">
+      <a href="https://taliferro.tech">
+          <img src="assets/taliferro-website-logo.png" alt="Taliferro Tech, LLC" style="z-index: 9000;">
+        </a>
+    </div>
+  </div>
+  <div class="row mb-5 mt-5">
+    <div class="col">
+      <h1> Plan Selection </h1>
+      <i>All plans come with a free trial</i>
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-md-12">
+      <div class="container mt-5">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="card plan-card" [ngClass]="{'selected': selectedPlan === 'basic'}" (click)="selectPlan('basic')">
+              <div class="card-body">
+                <h5 class="card-title">Basic Plan</h5>
+                <div class="price-wrap">
+                  <h1 style="color: #287dcc;">$10/month</h1>
+                </div>
+                <p class="card-text">Perfect for individuals or small teams. Manage up to 500 contacts with basic reporting and analytics. Benefit from email notifications, proactive contact suggestions, and basic customer support. </p>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item">Manage up to 500 contacts</li>
+                  <li class="list-group-item">Basic reporting and analytics to track your engagement</li>
+                  <li class="list-group-item">Email notifications to stay updated</li>
+                  <li class="list-group-item">Proactive contact suggestions to maintain steady communication</li>
+                  <li class="list-group-item">Basic customer support for all your queries</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card plan-card" [ngClass]="{'selected': selectedPlan === 'standard'}" (click)="selectPlan('standard')">
+              <div class="card-body">
+                <h5 class="card-title">Standard Plan</h5>
+                <div class="price-wrap">
+                  <h1 style="color: #287dcc;">$25/month</h1>
+                </div>
+                <p class="card-text">Ideal for growing teams, the Standard Plan offers advanced features to enhance your contact management efforts. Manage up to 1000 contacts and leverage advanced AI-driven reporting and analytics to gain deeper insights into your interactions.</p>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item">Manage up to 1000 contacts</li>
+                  <li class="list-group-item">Advanced AI reporting and analytics for deeper insights</li>
+                  <li class="list-group-item">Email and SMS notifications for real-time updates</li>
+                  <li class="list-group-item">Intelligent contact suggestions to optimize your outreach</li>
+                  <li class="list-group-item">Priority customer support for faster resolutions</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card plan-card" [ngClass]="{'selected': selectedPlan === 'premium'}" (click)="selectPlan('premium')">
+              <div class="card-body">
+                <h5 class="card-title">Premium Plan</h5>
+                <div class="price-wrap">
+                  <h1 style="color: #287dcc;">$49/month</h1>
+                </div>
+                <p class="card-text">Best for larger teams or businesses, the Premium Plan offers the most comprehensive set of tools for superior contact management. Handle up to 5000 contacts and benefit from advanced AI and machine learning-driven reporting for unparalleled insights. </p>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item">Manage up to 5000 contacts</li>
+                  <li class="list-group-item">Advanced AI and ML reporting for cutting-edge insights</li>
+                  <li class="list-group-item">Proactive contact suggestions to maintain optimal communication</li>
+                  <li class="list-group-item">Dedicated customer support for personalized assistance</li>
+                  <li class="list-group-item">Enhanced security features for data protection</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mt-3">
+          <button class="btn btn-primary" [disabled]="!selectedPlan" (click)="confirmPlan()">Confirm Plan</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="half-circle" style="z-index: -1;"></div>
+<div class="small-circle" style="z-index: -1;"></div>
+<div class="half-circle-bottom" style="z-index: -1;"></div>
+<div class="small-circle-bottom" style="z-index: -1;"></div>

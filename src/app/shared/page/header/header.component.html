@@ -1,52 +1,55 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top custom-nav">
   <div class="container-fluid">
-    <a class="navbar-brand" href="https://taliferro.tech"><strong>{{companyName}}</strong>&nbsp;<span style="font-size: smaller;">{{version}}</span></a>
+    <a class="navbar-brand" [routerLink]="['/start-page']"><strong>{{companyName}}</strong>&nbsp;<span style="font-size: smaller;">{{version}}</span></a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="contactsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Contacts
           </a>
           <ul class="dropdown-menu" aria-labelledby="contactsDropdown">
-            <li><a class="dropdown-item" [routerLink]="['/contact-dashboard']">Dashboard</a></li>
-            <li><a class="dropdown-item" [routerLink]="['/contact-import']">Import</a></li>
-            <li><a class="dropdown-item" [routerLink]="['/contact-list']">Manage</a></li>
+            <li><a class="dropdown-item" [routerLink]="['/contact-dashboard']" routerLinkActive="active" ariaCurrentWhenActive="page">Dashboard</a></li>
+            <li><a class="dropdown-item" [routerLink]="['/contact-edit']" routerLinkActive="active" ariaCurrentWhenActive="page">Add New</a></li>
+            <li><a class="dropdown-item" [routerLink]="['/contact-import']" routerLinkActive="active" ariaCurrentWhenActive="page">Import</a></li>
+            <li><a class="dropdown-item" [routerLink]="['/contact-list']" routerLinkActive="active" ariaCurrentWhenActive="page">Manage</a></li>
+            <li><a class="dropdown-item" [routerLink]="['/match-maker']" routerLinkActive="active" ariaCurrentWhenActive="page">Match Maker</a></li>
           </ul>
         </li>
         <li class="nav-item">
-          <a class="nav-link" (click)="openHelp()" style="cursor: pointer;">Help</a>
+          <a class="nav-link" [routerLink]="['/chat-board']" (click)="clearNotification()" routerLinkActive="active" ariaCurrentWhenActive="page">Chat <span *ngIf="hasNewMessage" class="badge badge-danger">New</span></a>
         </li>
-        <!-- Dropdown Menu -->
+        <a class="nav-link dropdown-toggle" href="#" id="emailDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          Email
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="emailDropdown" aria-disabled="true">
+          <li><a class="dropdown-item" [routerLink]="['/inbox']" routerLinkActive="active" ariaCurrentWhenActive="page" aria-disabled="true">Inbox</a></li>
+          <li><a class="dropdown-item" [routerLink]="['/compose-email']" routerLinkActive="active" ariaCurrentWhenActive="page" aria-disabled="true">Compose</a></li>
+        </ul>
+      <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/help']" routerLinkActive="active" ariaCurrentWhenActive="page">Help</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav ms-auto">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="fa-solid fa-ellipsis"></i>
           </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li class="nav-item">
-              <a class="nav-link" (click)="onCalendar()" style="cursor: pointer;">Calendar</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link"  (click)="onEmail()" style="cursor: pointer;">Email</a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" [routerLink]="['/settings']">Settings</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" [routerLink]="['/platform-activity']">Platform Log</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" [routerLink]="['/start-page']">Start Page</a>
-            </li>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" (click)="openLMS()" style="cursor: pointer;">LMS</a></li>
+            <li><a class="dropdown-item" (click)="openLIS()" style="cursor: pointer;">LIS</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" [routerLink]="['/update-profile']" routerLinkActive="active" ariaCurrentWhenActive="page">Profile</a></li>
+            <li><a class="dropdown-item" [routerLink]="['/dropdown-manager']" routerLinkActive="active" ariaCurrentWhenActive="page">Dropdown Manager</a></li>
+            <li><a class="dropdown-item" [routerLink]="['/settings']" routerLinkActive="active" ariaCurrentWhenActive="page">Settings</a></li>
+            <li><a class="dropdown-item" [routerLink]="['/platform-activity']" routerLinkActive="active" ariaCurrentWhenActive="page">Platform Log</a></li>
+            <li><a class="dropdown-item" [routerLink]="['/start-page']" routerLinkActive="active" ariaCurrentWhenActive="page">Start Page</a></li>
           </ul>
         </li>
         <li class="nav-item">
-          <a class="nav-link" (click)="onLogout()" style="cursor: pointer;">Logout</a>
+          <a class="nav-link" [routerLink]="['/logout']" style="cursor: pointer;">Logout</a>
         </li>
       </ul>
     </div>

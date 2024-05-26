@@ -1,3 +1,4 @@
+<h1>Contacts</h1>
 <div class="container-fluid mt-5">
     <!-- Natural Language Query Input -->
     <div class="mb-4">
@@ -5,45 +6,209 @@
         <div class="input-group">
             <div class="input-group-prepend">
                 <button class="btn" (click)="navigateToEditContact()" id="addContactIcon" title="Add a Contact Record">
-                    <i class="fa-solid fa-plus"></i>
-                </button>
-                <button class="btn" (click)="navigateToList()" id="listContactsIcon" title="All Contacts">
-                    <i class="fa-solid fa-list"></i>
-                </button>
-
+                    <i class="fa-solid fa-plus"></i> Add a Contact </button>
                 <button class="btn" (click)="navigateToImport()" id="importContactsIcon" title="Import .csv file">
-                    <i class="fa-solid fa-file-arrow-up"></i>
-                </button>
+                    <i class="fa-solid fa-file-arrow-up"></i> Import </button>
             </div>
             <input type="text" class="form-control large-text ms-2" id="queryInput" placeholder="e.g., 'Show me all contacts in the Chicagoland area'">
             <button class="btn btn-primary ms-2" type="button" (click)="submitQuery()">Submit</button>
         </div>
     </div>
     <!-- Suggested Contact to Reach Out To -->
-    <div class="row mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-pm-summary bg-theme">
+                <div class="card-body">
+
+                    <div class="clearfix">
+                        <div class="float-left">
+                            <div class="h3 text-white">
+                                <strong>{{dashboardCounts?.totalContacts || 0}} TOTAL</strong>
+                            </div>
+                            
+                        </div>
+
+                        <div class="float-right">
+                            <button class="btn" (click)="navigateToList()" id="listContactsIcon" title="All Contacts">
+                                <i class="fa-solid fa-list"></i> Manage </button>
+            
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="card-body">
+                                <div class="widget-pm-summary">
+                                    <i class="fa-solid fa-calendar-day"></i>
+                                    <div class="widget-text">
+                                        <div class="h2 text-white">{{dashboardCounts?.contactsAddedToday || 0}}</div>
+                                        <small class="text-white">Added Today</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="card-body">
+                                <div class="widget-pm-summary">
+                                    <i class="fa-solid fa-star"></i>
+                                    <div class="widget-text">
+                                        <div class="h2 text-white">{{dashboardCounts?.importantContacts || 0}}</div>
+                                        <small class="text-white">Important</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="card-body">
+                                <div class="widget-pm-summary">
+                                    <i class="fa-solid fa-heart"></i>
+                                    <div class="widget-text">
+                                        <div class="h2 text-white">{{dashboardCounts?.contactsWithSocialMedia || 0}}</div>
+                                        <small class="text-white">With Social Media</small>
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                            
+                        </div>
+                        
+
+                        <div class="col-md-3">
+                            <div class="card-body">
+                                <div class="widget-pm-summary">
+                                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                                    <div class="widget-text">
+                                        <div class="h2 text-white">{{dashboardCounts?.documentsUploaded || 0}}</div>
+                                        <small class="text-white">Documents</small>
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                            
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" *ngIf="isContacts">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card card-accent-warning">
+                        <div class="card-body">
+                            <div class="clearfix">
+                                <div class="float-right">
+                                    <div class="h2 text-warning">{{dashboardCounts?.birthdaysThisMonth || 0}}</div>
+                                </div>
+                            </div>
+                            <div class="float-left">
+                                <div class="h3 ">
+                                    <strong>Birthdays</strong>
+                                </div>
+                                <div class="h6 text-warning"> This Month </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card card-accent-success">
+                        <div class="card-body">
+                            <div class="clearfix">
+                                <div class="float-right">
+                                    <div class="h2 text-success">{{dashboardCounts?.profileTypeCounts?.[0]?.count || 0}}</div>
+                                </div>
+                            </div>
+                            <div class="float-left">
+                                <div class="h3">
+                                    <strong>{{dashboardCounts?.profileTypeCounts?.[0]?.type || 'No Type'}}</strong>
+                                </div>
+                                <div class="h6 text-success"> Types </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card card-accent-primary">
+                        <div class="card-body">
+                            <div class="clearfix">
+                                <div class="float-right">
+                                    <div class="h2 text-primary">{{dashboardCounts?.contactsNeedingFollowUp || 0}}</div>
+                                </div>
+                            </div>
+                            <div class="float-left">
+                                <div class="h3 ">
+                                    <strong>Need </strong>
+                                </div>
+                                <div class="h6 text-primary"> Follow Up </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="col-md-6" *ngFor="let item of dashboardCounts?.missingDataCounts || 0">
+                    <div class="card card-accent-danger">
+                        <div class="card-body ">
+                            <div class="clearfix">
+                                <div class="float-right">
+                                    <div class="h2 text-danger">{{ item[1] }}</div>
+                                </div>
+                            </div>
+                            <div class="float-left">
+                                <div class="h3 ">
+                                    <strong>Missing</strong>
+                                </div>
+                                <div class="h6 text-danger"> {{ item[0] }} </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <app-chat-widget></app-chat-widget>
+
+        </div>
+    </div>
+
+    <div class="row mt-4" *ngIf="suggestedContact">
         <h2>Suggested Contact</h2>
         <div class="col">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-4">
-                        <app-contact-card-1 *ngIf="suggestedContact" [contact]="suggestedContact"></app-contact-card-1>
+                        <app-contact-card-1 *ngIf="suggestedContact" [contact]="suggestedContact.contact"></app-contact-card-1>
                     </div>
                     <div class="col-md-8">
-                        <app-contact-card-3 *ngIf="suggestedContact" [contact]="suggestedContact"></app-contact-card-3>
+                        <app-contact-card-3 *ngIf="suggestedContact" [contact]="suggestedContact.contact"></app-contact-card-3>
                         <p class="card-text">This section recommends a contact to reach out to, selected based on factors like the duration since your last interaction and the urgency of re-engagement. Staying connected can enhance relationship management and business opportunities.</p>
                         <!-- Placeholder for suggested contact details -->
                         <div id="suggestedContact" class="mt-3" *ngIf="suggestedContact">
-                            <strong>Last Contacted:</strong> 
+                            <strong>Last Contacted:</strong>
                             <span id="lastContacted">
-                                
-                                {{ suggestedContact.lastContacted ? (suggestedContact.lastContacted | date:'mediumDate') : (suggestedContact.dateAdded ? (suggestedContact.dateAdded | date:'mediumDate') : 'No Date Available') }}
+                                {{ suggestedContact.contact.lastContacted ? (suggestedContact.contact.lastContacted | date:'mediumDate') : (suggestedContact.contact.dateAdded ? (suggestedContact.contact.dateAdded | date:'mediumDate') : 'No Date Available') }}
                             </span><br>
-                            <strong>Reason for Suggestion:</strong> 
-                            <span id="contactReason">
-                                {{ determineReason() }}
-                            </span>
+                            <p class="mt-2">
+                                <strong>Reason for Suggestion: </strong>
+                                <span id="contactReason">
+                                    {{ suggestedContact.reason }}
+                                </span><br>
+                            </p>
+                            <p class="mt-2">
+                                <strong>Score: </strong>
+                                <span class="badge rounded-pill text-bg-light" style="font-size: x-large;"> {{ suggestedContact.score}}</span>
+                            </p>
                         </div>
-                        
                     </div>
                 </div>
             </div>
@@ -54,9 +219,8 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Who To Contact</h5>
-                    <p class="card-text">Display the contacts you should be contacting next.</p>
-                    <app-weekly-calendar [weekData]="weeklyChartData | async"></app-weekly-calendar>
-                    <canvas #priorityContactsChart style="max-height: 500px;"></canvas>
+                    <p class="card-text">Display the contacts you should be contacting next. Hover over contact for reason.</p>
+                    <app-weekly-calendar [contacts]="contacts" [communications]="communication"></app-weekly-calendar>
                 </div>
             </div>
         </div>
@@ -64,9 +228,9 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Data Quality Index: {{ healthScore | number:'1.0-2' }}</h5>
-                    <p  class="card-text">This chart provides a visual representation of missing contact information within the database. Each segment highlights the absence of key data points such as last names, phone numbers, email addresses, and more. By identifying these gaps, we aim to improve the completeness and reliability of our contact records.</p>
-
+                    <p class="card-text">This chart provides a visual representation of missing contact information within the database. </p>
                     <canvas #missingDataChart></canvas>
+                    <p class="mt-2">Each segment highlights the absence of key data points such as last names, phone numbers, email addresses, and more. By identifying these gaps, we aim to improve the completeness and reliability of our contact records.</p>
                 </div>
             </div>
         </div>
@@ -79,8 +243,6 @@
                 </div>
             </div>
         </div>
-
-
         <div class="col-md-5">
             <div class="card">
                 <div class="card-body">
@@ -99,7 +261,6 @@
                 </div>
             </div>
         </div>
-
         <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
@@ -156,6 +317,17 @@
                 </div>
             </div>
         </div>
-
+        <div class="col-md-6">
+            <app-content-interaction-chart></app-content-interaction-chart>
+        </div>
+        <div class="col-md-6">
+            <app-engagement-chart></app-engagement-chart>
+        </div>
+        <div class="col-md-6">
+            <app-influence-analysis-chart></app-influence-analysis-chart>
+        </div>
+        <div class="col-md-6">
+            <app-sentiment-analysis-chart></app-sentiment-analysis-chart>
+        </div>
     </div>
 </div>

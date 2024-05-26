@@ -19,20 +19,10 @@
 *  0.1      11/22/2017  Baselined
 *  0.2      04/23/2024  Upgrade to 17 and adhere to Typescript Naming 
 *****************************************************************************/
-export interface Docuttach {
+export interface Document {
+  src: string;
   name: string;
-  url: string;
-  
-  isImage: boolean;
-
-  contact_id?: string;
-  project_id?: string;
-  order_id?: string;
-  event_id?: string;
-  message_id?: string;
-  product_id?: string;
-  catalog_id?: string;
-  store_id?: string;
-  doc?: string;
-
+  type: 'document' | 'image';
+  uploadDate: string;
+  contactId?: string;
 }

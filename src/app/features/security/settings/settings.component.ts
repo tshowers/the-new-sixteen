@@ -31,18 +31,6 @@ authenticationSecurityFeatures = [
     enabled: true,
     shortDescription: 'Sign-Out Process',
     extendedText: 'Secure and straightforward mechanism for users to sign out of the platform.'
-  },
-  {
-    icon: 'fa-solid fa-handshake',
-    enabled: false,
-    shortDescription: 'Automated Conflict Resolution',
-    extendedText: 'Use NLP to suggest resolutions for common disputes or conflicts based on historical data and industry standards.'
-  },
-  {
-    icon: 'fa-solid fa-code-branch',
-    enabled: false,
-    shortDescription: 'Smart Contract Integration',
-    extendedText: 'Incorporate blockchain-based smart contracts to automate and secure contract agreements and payments.'
   }
 ];
 
@@ -62,7 +50,7 @@ communicationCollaborationFeatures = [
   },
   {
     icon: 'fa-solid fa-comments',
-    enabled: false,
+    enabled: true,
     shortDescription: 'Messaging and Communication',
     extendedText: 'Integrate a secure messaging system for vendors and contractors to communicate, with NLP suggesting responses and flagging important messages.'
   },
@@ -83,6 +71,24 @@ communicationCollaborationFeatures = [
     enabled: false,
     shortDescription: 'Project Collaboration Workspace',
     extendedText: 'Provide a collaborative workspace for project teams, including document sharing, task assignments, and progress tracking.'
+  },
+  {
+    icon: 'fa-solid fa-handshake',
+    enabled: false,
+    shortDescription: 'Automated Conflict Resolution',
+    extendedText: 'Use NLP to suggest resolutions for common disputes or conflicts based on historical data and industry standards.'
+  },
+  {
+    icon: 'fa-solid fa-code-branch',
+    enabled: false,
+    shortDescription: 'Smart Contract Integration',
+    extendedText: 'Incorporate blockchain-based smart contracts to automate and secure contract agreements and payments.'
+  },
+  {
+    "icon": "fa-solid fa-sticky-note",
+    "enabled": true,
+    "shortDescription": "Contact Notes",
+    "extendedText": "Enable users to attach notes to individual contacts, allowing for detailed record-keeping and personalized follow-ups. Notes can include text, dates, and reminders, helping users to maintain comprehensive contact histories."
   }
 ];
 
@@ -91,13 +97,13 @@ communicationCollaborationFeatures = [
 dataManagementFeatures = [
   {
     icon: 'fa-solid fa-database',
-    enabled: false,
+    enabled: true,
     shortDescription: 'NLP Query Page',
     extendedText: 'Features a single box where users can type in their natural language queries and submit them, making data retrieval intuitive and efficient.'
   },
   {
     icon: 'fa-solid fa-file-export',
-    enabled: false,
+    enabled: true,
     shortDescription: 'Dynamic Query Exporting',
     extendedText: 'Enable users to export their NLP query results into various formats like PDF, CSV, Excel for enhanced reporting and analysis.'
   },
@@ -121,13 +127,13 @@ dataManagementFeatures = [
   },
   {
     icon: 'fa-solid fa-file-import',
-    enabled: false,
+    enabled: true,
     shortDescription: 'Document Parsing/Import',
     extendedText: 'Allow users to upload and extract data from documents like PDFs or Word files using NLP and machine learning, categorizing data automatically into the database.'
   },
   {
     icon: 'fa-solid fa-dashboard',
-    enabled: false,
+    enabled: true,
     shortDescription: 'Interactive Import Dashboard',
     extendedText: 'Create an interactive dashboard for data imports, offering real-time feedback on data quality, import progress, and tools to rectify issues immediately.'
   },
@@ -136,7 +142,7 @@ dataManagementFeatures = [
     enabled: false,
     shortDescription: 'API for External Data',
     extendedText: 'Develop an API to integrate external data feeds, updating the database automatically from partner sites, industry databases, and public records.'
-  }
+  },
 ];
 
 // Project and Vendor Management

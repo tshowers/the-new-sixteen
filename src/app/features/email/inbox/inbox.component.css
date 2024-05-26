@@ -1,0 +1,26 @@
+.card {
+    border-radius: 0.75rem;
+  }
+  
+  .card-title {
+    font-weight: bold;
+  }
+  
+  .card-subtitle {
+    font-size: 0.85rem;
+    color: #6c757d;
+  }
+  
+  .card-text {
+    margin-top: 1rem;
+  }
+  
+  .card-link {
+    color: #007bff;
+    cursor: pointer;
+  }
+  
+  .card-link:hover {
+    text-decoration: underline;
+  }
+  

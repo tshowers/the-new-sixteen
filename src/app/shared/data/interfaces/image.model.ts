@@ -23,16 +23,7 @@ export interface Image {
 
   src: string;
   alt: string;
-
-  product_id?: string;
-  catalog_id?: string;
-  store_id?: string;
-  article_id?: string;
-  carousel_id?: string;
-  featurette_id?: string;
-  service_box_id?: string;
-  help_id?: string;
-
+  contactId?: string;
 
 
 }

@@ -1,11 +1,82 @@
-.social-media img {
-    width: 24px; /* Adjust size as needed */
-    height: 24px;
-    margin: 0 5px;
-  }
-  
-  .contact-icons img {
-    width: 24px; /* Adjust size as needed */
-    height: 24px;
-    margin: 0 5px;
-  }
+.card {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-body {
+  flex: 1 1 auto;
+}
+
+.card-body .btn {
+  margin-top: auto;
+}
+
+.card-img-top {
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+.card-header {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #007aff;
+}
+
+.card-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.card-subtitle {
+  font-size: 1rem;
+  font-weight: 400;
+  color: #6c757d;
+  margin-bottom: 1rem;
+}
+
+.social-media a {
+  color: #1a73e8;
+  font-size: 1.25rem;
+  transition: color 0.3s;
+}
+
+.social-media a:hover {
+  color: #0b57d0;
+}
+
+.list-group-item {
+  border: none;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.list-group-item:not(:last-child) {
+  border-bottom: 1px solid #ececec;
+}
+
+.btn-primary {
+  background-color: #007aff;
+  border-color: #007aff;
+}
+
+.btn-primary:hover {
+  background-color: #005bb5;
+  border-color: #005bb5;
+}
+
+.badge {
+  background-color: #f1f1f1;
+  color: #333;
+  font-size: 0.85rem;
+}
+
+.card-body a {
+  color: #007aff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.card-body a:hover {
+  text-decoration: underline;
+}

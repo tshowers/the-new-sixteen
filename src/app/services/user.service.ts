@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Firestore, collectionData, collection, query, where, doc, setDoc, updateDoc } from '@angular/fire/firestore';
-import { Observable, of } from 'rxjs';
+import { Auth, User } from '@angular/fire/auth';
+import { Observable, from, of, throwError } from 'rxjs';
 import { Contact, EmailAddress } from '../shared/data/interfaces/contact.model';
 import { map, catchError, switchMap } from 'rxjs/operators';
 
@@ -11,26 +12,116 @@ export class UserService {
 
   private loggedInContactInfo: Contact | null = null;
 
-  constructor(private firestore: Firestore) {}
+  constructor(private firestore: Firestore, private auth: Auth) { }
 
-  findContactByEmail(email: string): Observable<Contact[]> {
-    const contactsRef = collection(this.firestore, 'contacts');
-    const q = query(contactsRef, where('emailAddresses.emailAddress', 'array-contains', email));
+  /*******************************Multi Tenant ********************************************************/
+
+  findTenantContactById(tenantId: string, userId: string): Observable<Contact[]> {
+    // Reference the contacts collection for the specified tenant
+    const contactsRef = collection(this.firestore, `tenants/${tenantId}/contacts`);
+    // Query contacts by user ID within the tenant's contacts collection
+    const q = query(contactsRef, where('userId', '==', userId));
+    // Return an observable of the contact data
     return collectionData(q, { idField: 'id' }) as Observable<Contact[]>;
   }
 
-  findOrCreateContact(email: string, userId: string): Observable<Contact> {
-    return this.findContactByEmail(email).pipe(
+  findTenantCreateContact(tenantId: string, userId: string, email: string): Observable<Contact> {
+    return this.findTenantContactById(tenantId, userId).pipe(
+      switchMap(contacts => {
+        if (contacts.length > 0) {
+          // Return the first matching contact if it exists
+          const contact = contacts[0];
+          return of(contact);
+        } else {
+          // Create a new contact if none exists
+          const newContact: Contact = {
+            emailAddresses: [{ emailAddress: email, emailAddressType: 'primary', blocked: false }],
+            userId: userId,
+            firstName: '',
+            middleName: '',
+            lastName: '',
+            images: [{
+              src: 'assets/nophoto.jpg',
+              alt: 'No photo available'
+            }],
+            company: {
+              name: '',
+              numberOfEmployees: '',
+              other: '',
+              phoneNumbers: [],
+              emailAddresses: [],
+              addresses: [],
+              url: '',
+              sicCode: '',
+              status: '',
+              shared: false,
+              capabilities: []
+            },
+            connectionDetails: {
+              startDate: new Date().toISOString(),
+              mutualConnections: 0,
+              transactionHistory: []
+            },
+            engagements: [],
+            interactions: [],
+            acquisitionSource: 'web',
+            dateAdded: new Date().toISOString(),
+            lastContacted: new Date().toISOString()
+          };
+          // Reference for the new contact document within the tenant's contacts collection
+          const newContactRef = doc(collection(this.firestore, `tenants/${tenantId}/contacts`), userId);
+          // Set the new contact document in Firestore and return the contact with its ID
+          return from(setDoc(newContactRef, newContact)).pipe(
+            map(() => ({ ...newContact, id: newContactRef.id }))
+          );
+        }
+      }),
+      catchError(error => {
+        // Throw an error if the operation fails
+        throw new Error(`Failed to find or create contact: ${error}`);
+      })
+    );
+  }
+
+  getTennatLoggedInContactInfo(): Observable<Contact | null> {
+    if (this.loggedInContactInfo) {
+      return of(this.loggedInContactInfo);
+    } else {
+      const user = this.auth.currentUser;
+
+      if (!user) {
+        return throwError(() => new Error('No user logged in'));
+      }
+
+      return this.findOrCreateContact(user.uid, user.email ?? '').pipe(
+        map(contact => {
+          this.loggedInContactInfo = contact;
+          return contact;
+        }),
+        catchError(error => {
+          console.error('Error getting logged in contact info:', error);
+          return of(null);
+        })
+      );
+    }
+  }
+
+  
+
+
+  /*******************************Single Tenant ********************************************************/
+
+  findContactById(userId: string): Observable<Contact[]> {
+    const contactsRef = collection(this.firestore, 'contacts');
+    const q = query(contactsRef, where('userId', '==', userId));
+    return collectionData(q, { idField: 'id' }) as Observable<Contact[]>;
+  }
+
+  findOrCreateContact(userId: string, email: string): Observable<Contact> {
+    return this.findContactById(userId).pipe(
       switchMap(contacts => {
         if (contacts.length > 0) {
           const contact = contacts[0]; // Take the first matching contact
-          if (!contact.userId) {
-            // If there's no userId, update the document
-            const contactDocRef = doc(this.firestore, `contacts/${contact.id}`);
-            return updateDoc(contactDocRef, { userId: userId }).then(() => {
-              return { ...contact, userId: userId };
-            });
-          }
           return of(contact); // Return the contact if it already has a userId
         } else {
           // Create a new contact if none exists
@@ -69,10 +160,10 @@ export class UserService {
             dateAdded: new Date().toISOString(),
             lastContacted: new Date().toISOString()
           };
-          const newContactRef = doc(collection(this.firestore, 'contacts'));
-          return setDoc(newContactRef, newContact).then(() => {
-            return { ...newContact, id: newContactRef.id };
-          });
+          const newContactRef = doc(collection(this.firestore, 'contacts'), userId);
+          return from(setDoc(newContactRef, newContact)).pipe(
+            map(() => ({ ...newContact, id: newContactRef.id }))
+          );
         }
       }),
       catchError(error => {
@@ -81,12 +172,36 @@ export class UserService {
     );
   }
 
+  updateContact(contact: Contact): Observable<void> {
+    const contactDocRef = doc(this.firestore, `contacts/${contact.id}`);
+    return from(updateDoc(contactDocRef, { ...contact }));
+  }
+
   setLoggedInContactInfo(contact: Contact): void {
     this.loggedInContactInfo = contact;
   }
 
-  getLoggedInContactInfo(): Contact | null {
-    return this.loggedInContactInfo;
+  getLoggedInContactInfo(): Observable<Contact | null> {
+    if (this.loggedInContactInfo) {
+      return of(this.loggedInContactInfo);
+    } else {
+      const user = this.auth.currentUser;
+
+      if (!user) {
+        return throwError(() => new Error('No user logged in'));
+      }
+
+      return this.findOrCreateContact(user.uid, user.email ?? '').pipe(
+        map(contact => {
+          this.loggedInContactInfo = contact;
+          return contact;
+        }),
+        catchError(error => {
+          console.error('Error getting logged in contact info:', error);
+          return of(null);
+        })
+      );
+    }
   }
 
 }

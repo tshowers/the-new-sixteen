@@ -38,3 +38,47 @@
     padding: 10px; /* Padding around the icon */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Drop shadow */
 }
+
+.sorted-asc::after {
+    content: ' \25B2'; /* Unicode for upward triangle */
+  }
+  
+  .sorted-desc::after {
+    content: ' \25BC'; /* Unicode for downward triangle */
+  }
+  
+  .sortable {
+    cursor: pointer;
+  }
+  /* Add this to your list.component.css */
+
+/* Make headers clickable for sorting */
+.sortable {
+    cursor: pointer;
+  }
+  
+  .sorted-asc::after {
+    content: ' \25B2'; /* Unicode for upward triangle */
+  }
+  
+  .sorted-desc::after {
+    content: ' \25BC'; /* Unicode for downward triangle */
+  }
+  
+  /* Highlight row on hover */
+  .table-hover tbody tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  /* Add padding to table cells */
+  .table th,
+  .table td {
+    padding: 1rem;
+    vertical-align: middle;
+  }
+  
+  /* Badge styles for categories */
+  .badge {
+    margin-right: 5px;
+  }
+  

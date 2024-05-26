@@ -21,74 +21,66 @@
 *  0.2      08/18/2017  Added state and dropdown interface
 *  0.3      10/21/2017  Removed constructors
 *  0.4      04/23/2024  Upgrade to 17 and adhere to Typescript Naming 
+*  0.5      05/14/2024  chnages to Contact to return arrays on certain fields
 *****************************************************************************/
 
 import { Image } from "./image.model";
 import { JustText } from "./just-text.model";
 import { State } from "./state.model";
+import { Document } from "./docuttach.model";
+
 
 export interface Contact extends State {
-
   firstName: string;
   middleName?: string;
   lastName: string;
-
   isCompany?: boolean;
-
   ssn?: string;
   company?: Company;
-
   prefix?: string;
   url?: string;
   profession?: string;
   status?: string;
-  profileTypes?: Array<any>
-
+  profileTypes?: any[];
   linkedInUrl?: string;
-
   nickname?: string;
   birthday?: string;
   anniversary?: any;
   gender?: string;
   email?: string;
-
-  addresses?: Array<Address>;
-  phoneNumbers?: Array<PhoneNumber>;
-  // emailAddresses?: Array<EmailAddress>;
+  important?: boolean;
+  addresses?: Address[];
+  phoneNumbers?: PhoneNumber[];
   emailAddresses?: EmailAddress[];
-  socialMedia?: Array<SocialMedia>; // Array of social media profiles
-  notes?: Array<JustText>;
-
-  dependents?: Array<any>;
-  preferences?: Array<any>;
-  opportunities?: Array<any>;
-  orders?: Array<any>;
-  FOPs?: Array<any>;
-  events?: Array<any>;
-  alerts?: Array<any>;
-  projects?: Array<any>;
-  invoices?: Array<any>;
-  ratings?: Array<any>;
-  images?: Array<Image>;
-
+  socialMedia?: SocialMedia[];
+  notes?: JustText[];
+  dependents?: any[];
+  preferences?: any[];
+  opportunities?: any[];
+  orders?: any[];
+  FOPs?: any[];
+  events?: any[];
+  alerts?: any[];
+  projects?: any[];
+  invoices?: any[];
+  ratings?: any[];
+  documents?: Document[];
+  images?: Image[];
   tempScore?: number;
-
   shared?: boolean;
   systemUser?: boolean;
   employee?: boolean;
-
   billingRate?: number;
   loginID?: string;
   timezone?: string;
-
   engagements?: Engagement[];
   connectionDetails?: ConnectionDetail;
   interactions?: Interaction[];
-
   lastContacted?: string;
   acquisitionSource?: string;
-
+  stripeCustomerId?: any;
 }
+
 
 export interface Dependent {
   firstName: string;
@@ -188,4 +180,10 @@ export interface Communication {
 
   messageSent?: string;
   replyReceived?: string;
+}
+
+export interface SuggestedContact {
+  contact: Contact;
+  reason: string;
+  score: number;
 }

@@ -1,0 +1,83 @@
+<div class="container-fluid">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="container">
+          <form [formGroup]="courseForm" (ngSubmit)="submit()">
+            <div *ngIf="step === 0">
+              <div class="mb-3">
+                <label for="title" class="form-label">Course Title</label>
+                <input type="text" id="title" formControlName="title" class="form-control" />
+              </div>
+              <button type="button" class="btn btn-primary" (click)="nextStep()">Next</button>
+            </div>
+  
+            <div *ngIf="step === 1">
+              <div class="mb-3">
+                <label for="description" class="form-label">Course Description</label>
+                <textarea id="description" formControlName="description" class="form-control"></textarea>
+              </div>
+              <button type="button" class="btn btn-secondary" (click)="prevStep()">Previous</button>
+              <button type="button" class="btn btn-primary" (click)="nextStep()">Next</button>
+            </div>
+  
+            <div *ngIf="step === 2">
+              <div class="mb-3">
+                <label for="instructor" class="form-label">Instructor</label>
+                <select id="instructor" formControlName="instructor" class="form-control">
+                  <option *ngFor="let instructor of instructors" [value]="instructor.id">{{ instructor.firstName }} {{ instructor.lastName }}</option>
+                </select>
+              </div>
+              <button type="button" class="btn btn-secondary" (click)="prevStep()">Previous</button>
+              <button type="button" class="btn btn-primary" (click)="nextStep()">Next</button>
+            </div>
+  
+            <div *ngIf="step === 3">
+              <div class="mb-3">
+                <label for="moduleTitle" class="form-label">Module Title</label>
+                <input type="text" id="moduleTitle" formControlName="moduleTitle" class="form-control" />
+              </div>
+              <button type="button" class="btn btn-secondary" (click)="prevStep()">Previous</button>
+              <button type="button" class="btn btn-primary" (click)="addModule()">Add Module</button>
+              <button type="button" class="btn btn-primary" (click)="nextStep()">Next</button>
+            </div>
+  
+            <div *ngIf="step === 4">
+              <div *ngFor="let module of modules.controls; let i = index" [formGroupName]="i">
+                <div class="mb-3">
+                  <label for="contentType" class="form-label">Content Type</label>
+                  <select id="contentType" class="form-control" formControlName="contentType">
+                    <option value="lecture">Lecture</option>
+                    <option value="video">Video</option>
+                    <option value="reading">Reading</option>
+                    <option value="quiz">Quiz</option>
+                    <option value="assignment">Assignment</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="contentUrl" class="form-label">Content URL</label>
+                  <input type="file" id="contentUrl" (change)="handleFileInput($event, i)" class="form-control" />
+                </div>
+                <ul *ngIf="getContentArray(module) as contentArray">
+                  <li *ngFor="let content of contentArray.controls">{{ content.value.contentDescription }}</li>
+                </ul>
+              </div>
+              <button type="button" class="btn btn-secondary" (click)="prevStep()">Previous</button>
+              <button type="button" class="btn btn-primary" (click)="nextStep()">Next</button>
+            </div>
+  
+            <div *ngIf="step === 5">
+              <div class="mb-3">
+                <label for="status" class="form-label">Status</label>
+                <input type="text" id="status" formControlName="status" class="form-control" />
+              </div>
+              <button type="button" class="btn btn-secondary" (click)="prevStep()">Previous</button>
+              <button type="submit" class="btn btn-success">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="col-md-6">
+      </div>
+    </div>
+  </div>
+  

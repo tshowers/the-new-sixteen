@@ -1,23 +1,145 @@
 <div class="welcome-container">
-    <h1>Welcome {{firstName}}!</h1>
-    <p class="welcome-message">
-      Get started by managing your contacts efficiently. You can either upload new contacts or explore your dashboard if you've already added contacts.
-    </p>
-  
-    <div class="button-container">
+  <h1>Welcome {{firstName}}!</h1>
+  <p class="welcome-message">
+      Get started by managing your contacts efficiently.<br>
+      You can either upload new contacts or explore your dashboard if you've already added contacts.
+  </p>
+  <div class="button-container">
       <a [routerLink]="['/contact-dashboard']" class="button-dashboard">Go to Dashboard</a>
       <a [routerLink]="['/help']" class="button-help">Learn More</a>
-      <a [routerLink]="['/upload']"class="button-upload">Upload Contacts</a>
-    </div>
-  
-    <div class="whats-new">
-      <h2>What's New in Version 0.1.2</h2>
-      <p>We're thrilled to announce the latest update to our application! This version brings enhanced performance improvements and a smoother user experience. Although it might seem like small tweaks, these are big steps towards a more efficient and reliable tool for you.</p>
-    </div>
-  
-    <div class="whats-coming">
-      <h2>What's Coming</h2>
-      <p>Looking ahead, we're excited to be integrating Learning Management System (LMS) features into our platform. This will open up new possibilities for education and training directly within the app, helping you not only manage contacts but also empower them with knowledge and skills. Stay tuned for a transformative learning integration!</p>
-    </div>
+      <a [routerLink]="['/contact-import']" class="button-upload">Upload Contacts</a>
   </div>
-  
+  <div class="whats-new container">
+      <div class="mb-5">
+          <h1>What's New in {{version}}</h1>
+          <h2>Google Places Integration for Addresses</h2>
+          <p>
+              We're excited to announce that our application now integrates with Google Places for address input! This new feature enhances the accuracy and convenience of entering addresses. When you start typing an address, Google Places will provide suggestions in real-time, making the process faster and reducing errors. This integration ensures that you have access to the most up-to-date and accurate location data.
+          </p>
+          <h2>Menu Update</h2>
+          <p>
+              We've revamped our application menu for a more intuitive and user-friendly experience. The updated menu design is cleaner and more organized, allowing you to navigate through the application with ease. We've grouped related features together and streamlined the layout to help you find what you need quickly.
+          </p>
+          <h2>Icon JSON Toggle</h2>
+          <p>
+              A new Icon JSON Toggle feature has been added to give you more control over the icons in the application. With this toggle, you can easily switch between different icon sets or customize icons based on your preferences. This feature is especially useful for developers and designers who want to tailor the visual elements of the application to better suit their needs.
+          </p>
+          <h2>Bug Fixes to Dashboard</h2>
+          <p>We've addressed several bugs in the dashboard to improve its performance and reliability. Here are some of the key fixes:</p>
+          <ul>
+              <li><strong>Loading Speed</strong>: Enhanced the loading speed of dashboard widgets.</li>
+              <li><strong>Data Accuracy</strong>: Corrected data display issues to ensure accurate reporting.</li>
+              <li><strong>UI Glitches</strong>: Fixed various UI glitches to provide a smoother user experience.</li>
+          </ul>
+          <p>
+              Thank you for your continued support and feedback. We are committed to making our application better with each update. Enjoy the new features and improvements!
+          </p>
+          <p>If you have any questions or need assistance, feel free to reach out to our support team. Your feedback is always appreciated.</p>
+      </div>
+
+      <div class="alert alert-info alert-dismissible fade show mb-5" role="alert">
+          <h1>What's New May 21 2024: Introducing <span class="highlight">MatchMaker!</span></h1>
+          <p>
+              We are thrilled to announce the launch of MatchMaker, our latest innovation designed to revolutionize how organizations connect suppliers with government and larger entities.
+          </p>
+          <h2>Effortless Matching</h2>
+          <p>
+              MatchMaker uses advanced AI and machine learning algorithms to ensure precise and reliable matches. Simply provide the details of the company or government agency, select a few characteristics, and let MatchMaker handle the rest.
+          </p>
+          <h2>Intuitive Design</h2>
+          <p>
+              Our user-friendly interface guarantees a seamless experience. Personalized profiles and an intuitive design make it easy for you to find the perfect match quickly and efficiently.
+          </p>
+          <h2>Tailored for Your Needs</h2>
+          <p>
+              Whether you're part of a government agency, a large organization, or a supplier, MatchMaker is tailored to meet your specific needs. It’s built to help you save time, enhance efficiency, and build strong, lasting partnerships.
+          </p>
+          <a href="https://youtu.be/vz4STB2K0hs" target="_blank">Watch the short demo</a>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+
+      <div class="alert alert-info alert-dismissible fade show" role="alert">
+          <h2 class="alert-heading">What's New May 19, 2024</h2>
+          <div class="container mt-5">
+              <div class="card">
+                  <div class="card-body">
+                      <strong>New Features and Improvements:</strong>
+                      <ul class="list-group">
+                          <li class="list-group-item">
+                              <h5 class="mb-1">Enhanced Help Page</h5>
+                              <p class="mb-1">We've revamped the help page with a modern look and feel. Navigation has been improved, and a "Back to Top" button has been added for easier browsing.</p>
+                          </li>
+                          <li class="list-group-item">
+                              <h5 class="mb-1">Updated Menu Styles</h5>
+                              <p class="mb-1">The menu has received a fresh new style, making it more intuitive and visually appealing.</p>
+                          </li>
+                          <li class="list-group-item">
+                              <h5 class="mb-1">Improved Contacts List and Forms</h5>
+                              <p class="mb-1">The contacts list and forms have been updated for better usability and accessibility. This includes improved layout and enhanced form validation.</p>
+                          </li>
+                          <li class="list-group-item">
+                              <h5 class="mb-1">Dismissible Help Added</h5>
+                              <p class="mb-1">A dismissible help section has been added to the top of each page to provide quick tips and guidance. You can easily close it once you've read the information.</p>
+                          </li>
+                          <li class="list-group-item">
+                              <h5 class="mb-1">Bug Fixes</h5>
+                              <p class="mb-1">We've addressed several bugs to improve the overall stability and performance of the application.</p>
+                          </li>
+                      </ul>
+                  </div>
+              </div>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+
+      <div class="alert alert-info alert-dismissible fade show mt-5" role="alert">
+          <h2 class="alert-heading">What's New May 18, 2024</h2>
+          <h3>New Dashboard Items</h3>
+          <p>We have added several new dashboard items to enhance your experience. These include:</p>
+          <ul>
+              <li>Contact Suggestion Feature</li>
+              <li>Graph of Contacts Added Per Day</li>
+              <li>Pie Chart of Contacts by Type</li>
+              <li>Graph of Contacts by US Timezones</li>
+              <li>Timeline of Last Contact Dates</li>
+              <li>Chart of Contacts to be Contacted in the Next 7 Days</li>
+          </ul>
+          <h3>Contact Capture Screen</h3>
+          <p>We have updated the contact capture screen to include:</p>
+          <ul>
+              <li>Additional fields for Important and Status</li>
+              <li>New look and feel with a progress bar</li>
+          </ul>
+          <h3>Profile Update</h3>
+          <p>We are excited to introduce our latest feature: the Real-Time Chat Board!</p>
+          <p>Stay connected and engage with your community like never before. Our new chat board feature allows you to post messages, share updates, and interact with other users in real-time. Here’s what you can expect from this exciting addition:</p>
+          <h4>KEY FEATURES:</h4>
+          <ul>
+              <li><strong>Real-Time Messaging:</strong> See messages as they are posted, ensuring you stay up-to-date with the latest conversations and updates.</li>
+              <li><strong>Category Filters:</strong> Easily filter messages by category to find what you’re looking for. Toggle between "All", "Support", "News", and "App Activity" to view relevant posts.</li>
+              <li><strong>Link Previews:</strong> Share links and watch as they transform into beautiful preview cards, complete with an image, title, and description. Engage with shared content directly from the chat board.</li>
+              <li><strong>Infinite Scrolling:</strong> Load more messages seamlessly with the "Load More" button. Explore past conversations and never miss a message.</li>
+              <li><strong>User-Friendly Interface:</strong> Enjoy an intuitive and visually appealing design, complete with iOS-like toggle switches for filtering categories.</li>
+          </ul>
+          <h4>HOW TO USE:</h4>
+          <ul>
+              <li><strong>Viewing Messages:</strong> By default, all messages are displayed. Scroll through to see the latest posts.</li>
+              <li><strong>Filtering Messages:</strong> Use the toggle switches at the top of the chat board to filter messages by category.</li>
+              <li><strong>Posting a Message:</strong> Type your message in the input field at the bottom and click "Send". If your message contains a URL, a link preview will be generated.</li>
+              <li><strong>Loading More Messages:</strong> Click the "Load More" button at the bottom to fetch and view older messages.</li>
+              <li><strong>Interacting with Link Previews:</strong> Click on the "Go to link" button in the link preview card to visit the shared content.</li>
+          </ul>
+          <h3>Stay Connected and Informed</h3>
+          <p>Our new chat board feature is designed to enhance your experience, making it easier than ever to stay connected and informed. Whether you’re seeking support, sharing news, or just keeping up with app activities, our chat board has you covered.</p>
+          <p>Experience the new chat board today and join the conversation!</p>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+  </div>
+  <div class="whats-coming">
+      <h2>What's Coming</h2>
+      <p>
+          Looking ahead, we're excited to be integrating Learning Management System (LMS) features into our platform. This will open up new possibilities for education and training directly within the app, helping you not only manage contacts but also empower them with knowledge and skills. Stay tuned for a transformative learning integration!
+      </p>
+  </div>
+</div>
+

@@ -23,7 +23,22 @@
       ]
     },
     {
-      "site": "maven-inc-pa",
+      "site": "maven-nlp",
+      "public": "dist/the-new-sixteen/browser",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    },
+    {
+      "site": "taliferrotech",
       "public": "dist/the-new-sixteen/browser",
       "ignore": [
         "firebase.json",

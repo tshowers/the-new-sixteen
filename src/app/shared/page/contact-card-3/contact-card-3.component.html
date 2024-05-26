@@ -1,36 +1,56 @@
-<div class="card border-light  mb-3" *ngIf="contact">
-    <div class="card-header"><span *ngIf="contact.company && contact.company.name"><strong>{{contact.company.name}}</strong> </span></div>
-    <div class="card-body">
-        <h5 class="card-title">
-            <div>{{contact.profession}}</div>
-        </h5>
-        <div *ngIf="contact.emailAddresses && contact.emailAddresses.length">
+<div class="card border-light mb-3 shadow-sm d-flex flex-column" *ngIf="contact">
+    <img *ngIf="contact.images && (contact.images.length > 0)" src="{{contact.images[0].src}}" class="card-img-top" alt="{{contact.images[0].alt}}">
+    <div *ngIf="contact.company && contact.company.name" class="card-header bg-white border-bottom-0">
+        {{contact.company.name}}
+    </div>
+    <div class="card-body d-flex flex-column">
+        <h5 class="card-title"><span *ngIf="contact.firstName">{{contact.firstName}} </span><span *ngIf="contact.middleName">{{contact.middleName}} </span> <span *ngIf="contact.lastName">{{contact.lastName}}</span></h5>
+        <h6 class="card-subtitle mb-2 text-body-secondary">{{contact.profession}}</h6>
+        <div class="social-media mb-3">
+            <span *ngFor="let sm of contact.socialMedia; let i = index">
+                <a *ngIf="sm.platform === 'website'" href="{{sm.url}}" title="{{sm.platform}}">
+                    <i class="fa-solid fa-globe"></i>
+                </a>&nbsp; 
+                <a *ngIf="sm.platform !== 'website'" href="{{sm.url}}" title="{{sm.platform}}">
+                    <i class="fa-brands fa-{{sm.platform.toLowerCase()}}"></i>
+                </a>&nbsp; 
+            </span>
+        </div>
+        <div *ngIf="contact.emailAddresses && contact.emailAddresses.length" class="mb-3">
             <div *ngFor="let email of contact.emailAddresses; let i = index">
-                <span *ngIf="email.emailAddressType"><i>({{email.emailAddressType.slice(0,1)}})</i></span> {{email.emailAddress}} <br>
+                <a href="mailto:{{email.emailAddress}}">{{email.emailAddress}}</a> <span *ngIf="email.emailAddressType"><i>({{email.emailAddressType}})</i></span><br>
             </div>
         </div>
-        <div *ngIf="contact.phoneNumbers && contact.phoneNumbers.length">
+        <div *ngIf="contact.phoneNumbers && contact.phoneNumbers.length" class="mb-3">
             <div *ngFor="let phone of contact.phoneNumbers; let i = index">
-                <span *ngIf="phone.phoneNumberType"><i>({{phone.phoneNumberType.slice(0,1)}})</i></span> {{phone.phoneNumber}} <br>
+                {{phone.phoneNumber}} <span *ngIf="phone.phoneNumberType"><i>({{phone.phoneNumberType}})</i></span><br>
             </div>
         </div>
-        <div *ngIf="contact.addresses && contact.addresses.length">
+        <div *ngIf="contact.addresses && contact.addresses.length" class="mb-3">
             <div *ngFor="let address of contact.addresses; let i = index">
-                <span *ngIf="address.addressType"><i>({{address.addressType.slice(0,1)}})</i></span> {{address.streetAddress}} {{address.city}} {{address.state}} {{address.zip}}
-                {{address.county}}
-                {{address.country}}
+                <span *ngIf="address.addressType"><i>({{address.addressType}})</i></span>
+                {{address.streetAddress}} {{address.city}} {{address.state}} {{address.zip}} {{address.county}} {{address.country}}
             </div>
         </div>
-        <div class="mt-2" *ngIf="contact.nickname">nickname: {{contact.nickname}}</div>
-        <div class="mt-2" *ngIf="contact.birthday">birthday: {{contact.birthday}}</div>
-        <div class="mt-2" *ngIf="contact.anniversary">anniversary: {{contact.anniversary}}</div>
-        <div class="mt-2" *ngIf="contact.gender">gender: {{contact.gender}}</div>
-        <div class="mt-2" *ngIf="contact.timezone">timezone: {{contact.timezone}}</div>
-        <br>
-        <div *ngIf="contact.profileTypes">
-            <span class="badge badge-info" style="font-size: 1.5em;" *ngFor="let category of contact.profileTypes; let i = index">
+        <div *ngIf="contact.profileTypes" class="mb-3">
+            <span class="badge rounded-pill bg-light text-dark m-1" *ngFor="let category of contact.profileTypes; let i = index">
                 {{category}}
             </span>
+        </div>
+        <div class="mb-3">
+            <p *ngIf="contact.company && contact.company.capabilities && (contact.company.capabilities.length > 0)"> Capabilities:<br>
+                <span *ngFor="let code of contact.company?.capabilities">{{ code }}<br></span>
+            </p>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item" *ngIf="contact.nickname">nickname: {{contact.nickname}}</li>
+            <li class="list-group-item" *ngIf="contact.birthday">birthday: {{contact.birthday}}</li>
+            <li class="list-group-item" *ngIf="contact.anniversary">anniversary: {{contact.anniversary}}</li>
+            <li class="list-group-item" *ngIf="contact.gender">gender: {{contact.gender}}</li>
+            <li class="list-group-item" *ngIf="contact.timezone">timezone: {{contact.timezone}}</li>
+        </ul>
+        <div class="card-body mt-auto">
+            <a (click)="onView()" class="btn btn-primary btn-sm" style="cursor: pointer;">View</a>
         </div>
     </div>
 </div>

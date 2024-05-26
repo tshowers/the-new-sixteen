@@ -1,12 +1,20 @@
 {
   "projects": {
-    "default": "taliferro-de66f"
+    "default": "taliferro-de66f",
+    "maven": "maven-nlp"
   },
   "targets": {
     "taliferro-de66f": {
       "hosting": {
         "the-new-sixteen": [
           "taliferro-platform"
+        ]
+      }
+    },
+    "maven-nlp": {
+      "hosting": {
+        "the-new-sixteen": [
+          "maven-nlp"
         ]
       }
     }

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router, ActivatedRoute, RouterModule, NavigationEnd } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { LoggerService } from '../../../services/logger.service';
+import { environment } from '../../../../environments/environment';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -15,6 +16,7 @@ export class StartPageComponent {
 
   public firstName: string = '';
   private userSubscription!: Subscription;
+  version: string = environment.VERSION;
 
   constructor(private router: Router, private authService: AuthService, private logger: LoggerService) {
     
@@ -22,7 +24,8 @@ export class StartPageComponent {
 
   ngOnInit() {
     this.userSubscription = this.authService.getUser().subscribe(user => {
-      this.logger.info("user", user)
+      this.firstName = (user && user.displayName) ? user.displayName : '';
+      this.logger.info("user", user.displayName)
     })
   }
 

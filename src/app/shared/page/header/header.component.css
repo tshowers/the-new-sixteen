@@ -1,10 +1,43 @@
-.navbar-nav {
-    display: flex;
-    width: 100%; /* Ensure the nav takes full width of its container */
-  }
-  
-  .navbar-nav .nav-item:last-child {
-    margin-left: auto; /* This pushes the last item to the right */
-  }
-  
- 
+.custom-nav {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'><path stroke='rgba(0, 0, 0, 0.5)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/></svg>");
+}
+
+.nav-link {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.dropdown-menu {
+  border-radius: 0.5rem;
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.dropdown-item {
+  transition: background-color 0.2s ease-in-out;
+}
+
+.dropdown-item:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.navbar-brand {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.badge {
+  background-color: #d9534f;
+  color: white;
+}
+
+.dropdown-divider {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}

@@ -1,38 +1,132 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: #333;
+  line-height: 1.6;
+  margin: 20px;
+}
+
+h1, h2 {
+  color: #007aff;
+}
+
 .welcome-container {
-    text-align: center;
-    margin-top: 50px;
-  }
-  
-  .welcome-message, .whats-new p, .whats-coming p {
-    font-size: 20px;
-    margin-bottom: 20px;
-  }
-  
-  .button-container a {
-    display: inline-block;
-    padding: 20px 40px;
-    margin: 10px;
-    font-size: 18px;
-    border-radius: 5px;
-    text-decoration: none;
-    color: white;
-    background-color: #007bff; /* Bootstrap primary color */
-    transition: background-color 0.3s;
-  }
-  
-  .button-container a:hover {
-    background-color: #0056b3;
-  }
-  
-  .whats-new h2, .whats-coming h2 {
-    margin-top: 30px;
-    color: #333;
-  }
-  
-  .whats-new p, .whats-coming p {
-    color: #666;
-    max-width: 800px;
-    margin: 0 auto;
-    text-align: left;
-  }
-  
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.welcome-message {
+  font-size: 1.2em;
+  margin-bottom: 20px;
+}
+
+.button-container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.button-dashboard, 
+.button-help, 
+.button-upload {
+  padding: 10px 20px;
+  text-decoration: none;
+  color: #fff;
+  background-color: #007aff;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.button-dashboard:hover, 
+.button-help:hover, 
+.button-upload:hover {
+  background-color: #0056b3;
+}
+
+.whats-new {
+  margin-top: 40px;
+}
+
+.whats-new h1, 
+.whats-new h2, 
+.alert-heading, 
+.highlight {
+  color: #007aff;
+}
+
+.whats-new ul {
+  list-style-type: disc;
+  margin-left: 20px;
+  padding-left: 20px;
+}
+
+.alert {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #e9f7ff;
+  border-radius: 12px;
+  border: 1px solid #cce4ff;
+  position: relative;
+}
+
+.alert .btn-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.2em;
+  color: #333;
+  cursor: pointer;
+}
+
+.card {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.whats-coming {
+  margin-top: 50px;
+}
+
+.whats-coming h2 {
+  color: #007aff;
+}
+
+.container {
+  max-width: 800px;
+  margin: auto;
+}
+
+.alert .highlight {
+  font-weight: bold;
+  color: #ff3b30;
+}
+
+ul.list-group {
+  padding-left: 0;
+}
+
+ul.list-group li {
+  list-style: none;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+ul.list-group li:last-child {
+  border-bottom: none;
+}
+
+ul.list-group h5 {
+  margin-bottom: 0.5em;
+}
+
+ul.list-group p {
+  margin: 0;
+}

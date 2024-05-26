@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Firestore, collection, collectionData, doc, addDoc, getDocs, updateDoc, deleteDoc, DocumentData, query, where, orderBy, startAfter, limit } from '@angular/fire/firestore';
 import { ENDPOINTS } from './endpoints';  // Make sure the path is correct
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject, map, catchError } from 'rxjs';
+import { LoggerService } from './logger.service';
+import { environment } from '../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -10,122 +12,199 @@ export class DataService {
 
 
     private lastVisible: DocumentData | null = null;
+    private events = new BehaviorSubject<any[]>([]);
+    events$ = this.events.asObservable();
 
-    constructor(private firestore: Firestore) { }
+    constructor(private firestore: Firestore, private logger: LoggerService) { }
 
-    /**
-     * Retrieves real-time data from the specified Firestore collection.
-     * This method returns an Observable that emits the latest state of the collection
-     * whenever the data changes, making it suitable for real-time data binding.
-     * 
-     * @param {keyof typeof ENDPOINTS} endpointKey - The key from the ENDPOINTS object which corresponds
-     * to the desired Firestore collection.
-     * @returns {Observable<any[]>} An Observable that emits an array of the documents in the specified collection.
-     * Each document is represented as an object with its fields and an 'id' field added.
-     * 
-     * Usage:
-     * this.dataService.getRealtimeData('USERS').subscribe(users => {
-     *   console.log(users);
-     * });
-     */
-    // getRealtimeData(endpointKey: keyof typeof ENDPOINTS): Observable<any[]> {
-    //     const ref = collection(this.firestore, ENDPOINTS[endpointKey]);
-    //     return collectionData(ref, { idField: 'id' }) as Observable<any[]>;
-    // }
+    // Existing methods remain unchanged
     getRealtimeData(endpointKey: keyof typeof ENDPOINTS, user: string): Observable<any[]> {
-        const ref = collection(this.firestore, ENDPOINTS[endpointKey]);
-        // Log the initiation of a real-time data subscription
-        this.logEvent(`${user} started a real-time data subscription to ${ENDPOINTS[endpointKey]}`, user);
-        return collectionData(ref, { idField: 'id' }) as Observable<any[]>;
+        if (environment.multiTenant) {
+            return this.getTenantRealtimeData(endpointKey, user);
+        } else {
+            const ref = collection(this.firestore, ENDPOINTS[endpointKey]);
+            this.logEvent(`${user} started a real-time data subscription to ${ENDPOINTS[endpointKey]}`, user);
+            return collectionData(ref, { idField: 'id' }).pipe(
+                map((docs: any[]) => docs.map(doc => ({
+                    ...doc,
+                    id: doc.id
+                })))
+            ) as Observable<any[]>;
+        }
     }
 
-
-
-    /**
-   * Fetches data once from the specified Firestore collection.
-   * This method retrieves the entire collection's documents once and does not listen for changes.
-   * It is suitable for use cases where real-time data is not required.
-   * 
-   * @param {keyof typeof ENDPOINTS} endpointKey - The key from the ENDPOINTS object which corresponds
-   * to the desired Firestore collection.
-   * @returns {Promise<any[]>} A Promise that resolves to an array of the documents in the specified collection.
-   * Each document is represented as an object with its fields and an 'id' field added. The promise
-   * rejects with an error if there is an issue fetching the data.
-   * 
-   * Usage:
-   * this.dataService.getCollectionData('USERS').then(users => {
-   *   console.log(users);
-   * }).catch(error => {
-   *   console.error("Error fetching documents:", error);
-   * });
-   */
-    // getCollectionData(endpointKey: keyof typeof ENDPOINTS, user: string) {
-    //     const ref = collection(this.firestore, ENDPOINTS[endpointKey]);
-    //     return getDocs(ref)
-    //         .then(snapshot => snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })))
-    //         .catch(error => console.error("Error fetching documents:", error));
-    // }
     getCollectionData(endpointKey: keyof typeof ENDPOINTS, user: string) {
-        const ref = collection(this.firestore, ENDPOINTS[endpointKey]);
+        if (environment.multiTenant) {
+            return this.getTenantCollectionData(endpointKey, user);
+        } else {
+            const ref = collection(this.firestore, ENDPOINTS[endpointKey]);
+            return getDocs(ref)
+                .then(snapshot => {
+                    this.logEvent(`${user} fetched documents from ${ENDPOINTS[endpointKey]}`, user);
+                    const data = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+                    return data;
+                })
+                .catch(error => {
+                    this.logger.error("Error fetching documents:", error);
+                    this.logEvent(`${user} failed to fetch documents from ${ENDPOINTS[endpointKey]} due to ${error}`, user);
+                    throw new Error(error);
+                });
+        }
+    }
+
+    addDocument(endpointKey: keyof typeof ENDPOINTS, data: any, user: string) {
+        if (environment.multiTenant) {
+            return this.addTenantDocument(endpointKey, data, user);
+        } else {
+            const ref = collection(this.firestore, ENDPOINTS[endpointKey]);
+            return addDoc(ref, data)
+                .then(docRef => {
+                    this.logEvent(`${user} added a new document to ${ENDPOINTS[endpointKey]}`, user);
+                    const docId = docRef.id;
+                    const updatedData = { ...data, id: docId };
+                    return this.updateDocument(endpointKey, docId, updatedData, user)
+                        .then(() => docId);
+                })
+                .catch(error => {
+                    this.logger.error("Error adding document:", error);
+                    this.logEvent(`${user} failed to add document to ${ENDPOINTS[endpointKey]} due to ${error}`, user);
+                    throw error;
+                });
+        }
+    }
+
+    updateDocument(endpointKey: keyof typeof ENDPOINTS, id: string, data: any, user: string) {
+        if (environment.multiTenant) {
+            return this.updateTenantDocument(endpointKey, id, data, user);
+        } else {
+            const docRef = doc(this.firestore, ENDPOINTS[endpointKey], id);
+            return updateDoc(docRef, data).then(() => {
+                this.logEvent(`${user} updated a document in ${ENDPOINTS[endpointKey]}`, user);
+                return { success: true, id: id };
+            }).catch(error => {
+                this.logger.error("Error updating document:", error);
+                this.logEvent(`${user} failed to update document in ${ENDPOINTS[endpointKey]} due to ${error}`, user);
+                throw new Error(`Update failed: ${error}`);
+            });
+        }
+    }
+
+    deleteDocument(endpointKey: keyof typeof ENDPOINTS, id: string, user: string) {
+        if (environment.multiTenant) {
+            return this.deleteTenantDocument(endpointKey, id, user);
+        } else {
+            const docRef = doc(this.firestore, ENDPOINTS[endpointKey], id);
+            this.logger.log(`Document with ID ${id} attempted deletion.`);
+            return deleteDoc(docRef).then(() => {
+                this.logEvent(`${user} deleted a document in ${ENDPOINTS[endpointKey]}`, user);
+                return { success: true, id: id };
+            }).catch(error => {
+                this.logger.error("Error deleting document:", error);
+                this.logEvent(`${user} failed to delete document in ${ENDPOINTS[endpointKey]} due to ${error}`, user);
+                throw new Error(`Delete failed: ${error}`);
+            });
+        }
+    }
+
+    /************************************** Multi-tenant methods ******************************************************/ 
+    
+    private getTenantRealtimeData(endpointKey: keyof typeof ENDPOINTS, user: string): Observable<any[]> {
+        const tenantId = this.getTenantId();
+        const ref = collection(this.firestore, `tenants/${tenantId}/${ENDPOINTS[endpointKey]}`);
+        this.logEvent(`${user} started a real-time data subscription to tenants/${tenantId}/${ENDPOINTS[endpointKey]}`, user);
+        return collectionData(ref, { idField: 'id' }).pipe(
+            map((docs: any[]) => docs.map(doc => ({
+                ...doc,
+                id: doc.id
+            })))
+        ) as Observable<any[]>;
+    }
+
+    private getTenantCollectionData(endpointKey: keyof typeof ENDPOINTS, user: string) {
+        const tenantId = this.getTenantId();
+        const ref = collection(this.firestore, `tenants/${tenantId}/${ENDPOINTS[endpointKey]}`);
         return getDocs(ref)
             .then(snapshot => {
-                // Log the fetch action after successful data retrieval
-                this.logEvent(`${user} fetched documents from ${ENDPOINTS[endpointKey]}`, user);
-                return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                this.logEvent(`${user} fetched documents from tenants/${tenantId}/${ENDPOINTS[endpointKey]}`, user);
+                const data = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+                return data;
             })
             .catch(error => {
-                console.error("Error fetching documents:", error);
-                // Optionally, log the error event here as well
-                this.logEvent(`${user} failed to fetch documents from ${ENDPOINTS[endpointKey]} due to ${error}`, user);
+                this.logger.error("Error fetching documents:", error);
+                this.logEvent(`${user} failed to fetch documents from tenants/${tenantId}/${ENDPOINTS[endpointKey]} due to ${error}`, user);
                 throw new Error(error);
             });
     }
 
-
-
-    addDocument(endpointKey: keyof typeof ENDPOINTS, data: any, user: string) {
-        const ref = collection(this.firestore, ENDPOINTS[endpointKey]);
+    private addTenantDocument(endpointKey: keyof typeof ENDPOINTS, data: any, user: string) {
+        const tenantId = this.getTenantId();
+        const ref = collection(this.firestore, `tenants/${tenantId}/${ENDPOINTS[endpointKey]}`);
         return addDoc(ref, data)
             .then(docRef => {
-                this.logEvent(`${user} added a new document to ${ENDPOINTS[endpointKey]}`, user);
-                return docRef.id
+                this.logEvent(`${user} added a new document to tenants/${tenantId}/${ENDPOINTS[endpointKey]}`, user);
+                const docId = docRef.id;
+                const updatedData = { ...data, id: docId };
+                return this.updateTenantDocument(endpointKey, docId, updatedData, user)
+                    .then(() => docId);
             })
             .catch(error => {
-                console.error("Error adding document:", error);
-                this.logEvent(`${user} failed to add document to ${ENDPOINTS[endpointKey]} due to ${error}`, user);
-
+                this.logger.error("Error adding document:", error);
+                this.logEvent(`${user} failed to add document to tenants/${tenantId}/${ENDPOINTS[endpointKey]} due to ${error}`, user);
+                throw error;
             });
     }
 
-    updateDocument(endpointKey: keyof typeof ENDPOINTS, id: string, data: any, user: string) {
-        const docRef = doc(this.firestore, ENDPOINTS[endpointKey], id);
+    private updateTenantDocument(endpointKey: keyof typeof ENDPOINTS, id: string, data: any, user: string) {
+        const tenantId = this.getTenantId();
+        const docRef = doc(this.firestore, `tenants/${tenantId}/${ENDPOINTS[endpointKey]}`, id);
         return updateDoc(docRef, data).then(() => {
-            this.logEvent(`${user} updated a document in ${ENDPOINTS[endpointKey]}`, user);
-            // Optionally return some identifier or success message
+            this.logEvent(`${user} updated a document in tenants/${tenantId}/${ENDPOINTS[endpointKey]}`, user);
             return { success: true, id: id };
         }).catch(error => {
-            console.error("Error updating document:", error);
-            this.logEvent(`${user} failed to update document in ${ENDPOINTS[endpointKey]} due to ${error}`, user);
-            // Optionally rethrow or handle the error for caller
+            this.logger.error("Error updating document:", error);
+            this.logEvent(`${user} failed to update document in tenants/${tenantId}/${ENDPOINTS[endpointKey]} due to ${error}`, user);
             throw new Error(`Update failed: ${error}`);
         });
     }
 
-    deleteDocument(endpointKey: keyof typeof ENDPOINTS, id: string, user: string) {
-        const docRef = doc(this.firestore, ENDPOINTS[endpointKey], id);
+    private deleteTenantDocument(endpointKey: keyof typeof ENDPOINTS, id: string, user: string) {
+        const tenantId = this.getTenantId();
+        const docRef = doc(this.firestore, `tenants/${tenantId}/${ENDPOINTS[endpointKey]}`, id);
+        this.logger.log(`Document with ID ${id} attempted deletion in tenant ${tenantId}.`);
         return deleteDoc(docRef).then(() => {
-            this.logEvent(`${user} deleted a document in ${ENDPOINTS[endpointKey]}`, user);
-            // Optionally return some identifier or success message
+            this.logEvent(`${user} deleted a document in tenants/${tenantId}/${ENDPOINTS[endpointKey]}`, user);
             return { success: true, id: id };
         }).catch(error => {
-            console.error("Error deleting document:", error);
-            this.logEvent(`${user} failed to delete document in ${ENDPOINTS[endpointKey]} due to ${error}`, user);
-            // Optionally rethrow or handle the error for caller
+            this.logger.error("Error deleting document:", error);
+            this.logEvent(`${user} failed to delete document in tenants/${tenantId}/${ENDPOINTS[endpointKey]} due to ${error}`, user);
             throw new Error(`Delete failed: ${error}`);
         });
     }
 
+    // Helper method to get tenant ID (e.g., from localStorage or another source)
+    private getTenantId(): string {
+        const tenantId = localStorage.getItem('tenantId'); // Example: get tenant ID from localStorage
+        if (!tenantId) {
+            throw new Error('Tenant ID not found');
+        }
+        return tenantId;
+    }
 
+    // Other existing methods
+    getDropdownData(endpointKey: keyof typeof ENDPOINTS): Observable<any[]> {
+        try {
+            const ref = collection(this.firestore, ENDPOINTS[endpointKey]);
+            return collectionData(ref, { idField: 'id' }).pipe(
+                catchError(error => {
+                    console.error(`Error retrieving data for endpoint ${ENDPOINTS[endpointKey]}:`, error);
+                    throw new Error(`${ENDPOINTS[endpointKey]} Dropdown retrieval failed: ${error.message}`);
+                })
+            );
+        } catch (error) {
+            console.error(`Error initializing data retrieval for endpoint ${ENDPOINTS[endpointKey]}:`, error);
+            throw new Error(`${ENDPOINTS[endpointKey]} Dropdown initialization failed: ${error}`);
+        }
+    }
 
     private logEvent(action: string, user: string) {
         const logEntry = {
@@ -133,35 +212,32 @@ export class DataService {
             user: user,
             timestamp: new Date() // Use server timestamp for consistency
         };
-        // Logging directly to the 'auditLogs' collection
-        // this.firestore.collection('auditLogs').add(logEntry);
         const logRef = collection(this.firestore, 'auditLogs');
         addDoc(logRef, logEntry)
             .then(docRef => {
-                console.log(`Audit log recorded with ID: ${docRef.id}`);
+                this.logger.log(`Audit log recorded with ID: ${docRef.id}`);
+                this.events.next([...this.events.value, logEntry]);
             })
             .catch(error => {
-                console.error('Error logging event:', error);
+                this.logger.error('Error logging event:', error);
             });
-
     }
 
     async fetchData(pageSize: number, endpointKey: keyof typeof ENDPOINTS, id: string): Promise<any> {
         const colRef = collection(this.firestore, ENDPOINTS[endpointKey]);
         const q = this.lastVisible ? query(colRef, orderBy('lastName'), startAfter(this.lastVisible), limit(pageSize))
-                                   : query(colRef, orderBy('lastName'), limit(pageSize));
-    
+            : query(colRef, orderBy('lastName'), limit(pageSize));
+
         const documentSnapshots = await getDocs(q);
-        
+
         // Capture the last visible document
         this.lastVisible = documentSnapshots.docs[documentSnapshots.docs.length - 1];
-    
+
         // Map documents to data
         return documentSnapshots.docs.map(doc => doc.data());
-      }
+    }
 
-      resetPagination() {
+    resetPagination() {
         this.lastVisible = null;
-      }
-
+    }
 }

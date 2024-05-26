@@ -24,23 +24,16 @@ import { EmailAddress } from "./contact.model";
 
 export interface Email  {
 
-  toAddresses: Array<any>;
-  fromAddress?: EmailAddress;
-  fromFriendlyName: string;
-  createDate: string;
-  sentDate: string;
-  messageType: string;
-  attachments: Array<any>;
-  answered: boolean;
-  blindCopyAddresses: Array<any>;
-  copyAddresses: Array<any>;
-  multipart: boolean;
-  seen: boolean;
-  size: number;
-  spam: boolean;
-  replyEmail: EmailAddress;
-  forwardEmail: EmailAddress;
-  emailFlag: string;
+  id: string;
+  from: string;
+  subject: string;
+  date: string;
+  body: string;
+
+
+  seen?: boolean;
+  size?: number;
+  spam?: boolean;
 
 
 }

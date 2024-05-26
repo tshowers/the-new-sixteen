@@ -29,23 +29,28 @@ export class ListComponent implements OnInit {
   ];
 
   private subscription!: Subscription;
-  private userSubscription!: Subscription;
 
   contacts$!: Observable<any[]>;
   selectedContact!: Contact;
   filteredContacts: Contact[] = [];
   userId!: string
-
+  sortField: string = '';
+  sortOrder: 'asc' | 'desc' = 'asc';
   data: any[] = [];
   pageSize = 25; // Number of items per page
+  userSubscription!: Subscription;
 
-  constructor(private logger: LoggerService, private dataService: DataService, private router: Router, private contactService: ContactService, private authService: AuthService) { 
+  constructor(private logger: LoggerService, private dataService: DataService, private router: Router, private contactService: ContactService, private authService: AuthService) {
   }
 
 
   ngOnInit() {
-    this.userId = 'Unknown'
-    this.loadData();
+    this.userSubscription = this.authService.getUserId().subscribe(userId => {
+      this.userId = userId;
+      this.resetPagination();
+      this.loadData();
+    })
+
 
   }
 
@@ -54,21 +59,14 @@ export class ListComponent implements OnInit {
       this.subscription.unsubscribe();
     if (this.userSubscription)
       this.userSubscription.unsubscribe();
+    this.data = []; // Clear the data on component destroy to avoid stale data
   }
 
-  // readDatabase(userId:string): void {
-  //   this.contacts$ = this.dataService.getRealtimeData('CONTACTS', userId);
-  //   this.subscription = this.contacts$.subscribe(data => {
-  //     this.filteredContacts = data; // Assuming initial data without filter applied.
-  //     this.print(data);
-  //   });
-  // }
-
-  onNumberOfItemsChange(): void {
-  }
 
   async loadData() {
+    this.data = []; // Reset the list
     this.data = await this.dataService.fetchData(this.pageSize, 'CONTACTS', this.userId);
+    this.logger.log(`Number of contacts items returned: ${this.data.length}`);
   }
 
   async loadMore() {
@@ -77,6 +75,7 @@ export class ListComponent implements OnInit {
   }
 
   resetPagination() {
+    this.logger.debug("Resetting Pagination")
     this.dataService.resetPagination();
     this.loadData();
   }
@@ -171,6 +170,54 @@ export class ListComponent implements OnInit {
   print(data: any): void {
     this.logger.log(JSON.stringify(data, null, 2));
   }
+
+  applyFilterAndSort() {
+    const filtered = this.applyFilter(this.data, this.searchText);
+    this.filteredContacts = this.sortContacts(filtered, this.sortField, this.sortOrder);
+  }
+
+  sortContacts(contacts: Contact[], field: string, order: 'asc' | 'desc'): Contact[] {
+    if (!field) return contacts;
+    return contacts.sort((a, b) => {
+      const valueA = this.getFieldValue(a, field);
+      const valueB = this.getFieldValue(b, field);
+      if (valueA < valueB) return order === 'asc' ? -1 : 1;
+      if (valueA > valueB) return order === 'asc' ? 1 : -1;
+      return 0;
+    });
+  }
+
+  getFieldValue(contact: Contact, field: string): any {
+    switch (field) {
+      case 'company':
+        return contact?.company?.name ?? '';
+      case 'firstName':
+        return contact.firstName ?? '';
+      case 'lastName':
+        return contact.lastName ?? '';
+      case 'email':
+        return contact?.emailAddresses?.length ? contact.emailAddresses[0].emailAddress : 'No email';
+      case 'profileTypes':
+        return contact.profileTypes?.join(', ') ?? '';
+      default:
+        return '';
+    }
+  }
+
+  sortData(field: string) {
+    if (this.sortField === field) {
+      this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortField = field;
+      this.sortOrder = 'asc';
+    }
+    this.applyFilterAndSort();
+  }
+
+  onNumberOfItemsChange() {
+    this.applyFilterAndSort();
+  }
+
 
 
 }

@@ -1,5 +1,5 @@
 <app-header  *ngIf="showHeader"></app-header>
-<div class="app-body platform-content">
+<div class="app-body" [ngClass]="{'platform-content': showHeader}">
     <main class="main">
         <div class="container-fluid">
             <div class="row">

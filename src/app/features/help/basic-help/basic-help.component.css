@@ -1,0 +1,101 @@
+/* basic-help.component.css */
+
+.container {
+  margin-top: 30px;
+}
+
+h2 {
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+h3 {
+  font-weight: 600;
+  margin-top: 20px;
+  margin-bottom: 15px;
+}
+
+h4 {
+  font-weight: 500;
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+
+p, ul, ol, dl {
+  margin-bottom: 20px;
+}
+
+ul, ol {
+  padding-left: 20px;
+}
+
+.nav-link {
+  color: #007bff;
+  font-weight: 500;
+}
+
+.nav-link:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+#toc {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+#toc h5 {
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+#toc .nav-item {
+  margin-bottom: 10px;
+}
+
+#toc .nav-link {
+  padding: 0;
+}
+
+.help-section {
+  padding: 20px;
+  background: #ffffff;
+  border: 1px solid #e3e3e3;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+dl dt {
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+dl dd {
+  margin-left: 20px;
+  margin-bottom: 10px;
+}
+
+a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+#back-to-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: none;
+}
+
+.nav-link.active {
+  font-weight: bold;
+  color: #0056b3;
+}

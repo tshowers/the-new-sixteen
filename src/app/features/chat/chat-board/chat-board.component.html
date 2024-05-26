@@ -1,0 +1,136 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <h1>Chat Board</h1>
+        </div>
+        <div class="col text-right">
+            <button class="btn btn-primary btn-lg btn-round btn-width" (click)="loadMore()">Load More</button>
+            <button class="btn btn-primary btn-lg btn-round btn-width" (click)="resetPagination()">Reset</button>
+        </div>
+    </div>
+    <div class="row" *ngIf="(filteredPosts && filteredPosts.length && (filteredPosts.length < 10))">
+        <div class="col">
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                    <h3>Instructions for Using the Chat Board</h3>
+                    <p><strong>Welcome to the Chat Board! Here's how you can make the most of this feature:</strong></p>
+                    <h5>Viewing Messages:</h5>
+                    <ul>
+                        <li>By default, the chat board displays messages from all categories. You can scroll through the messages to see the latest posts.</li>
+                    </ul>
+                    <h5>Filtering Messages:</h5>
+                    <ul>
+                        <li>The chat board allows you to filter messages by category. Use the toggle switches at the top of the chat board to select a category.</li>
+                        <ul>
+                            <li><strong>All</strong>: Displays all messages from every category.</li>
+                            <li><strong>Support</strong>: Shows messages related to support inquiries and assistance.</li>
+                            <li><strong>News</strong>: Displays messages with news and updates.</li>
+                            <li><strong>App Activity</strong>: Shows messages about activities within the app, like document uploads or note creation.</li>
+                        </ul>
+                        <li>Simply click on the toggle switch next to the category name to filter the messages.</li>
+                    </ul>
+                    <h5>Posting a Message:</h5>
+                    <ul>
+                        <li>To post a message, type your message in the input field at the bottom of the chat board.</li>
+                        <li>Click the <strong>Send</strong> button to post your message. If your message contains a URL, a link preview with an image, title, and description will be automatically generated.</li>
+                    </ul>
+                    <h5>Loading More Messages:</h5>
+                    <ul>
+                        <li>If you want to see older messages, click the <strong>Load More</strong> button at the bottom of the chat board. This will fetch and display additional messages.</li>
+                    </ul>
+                    <h5>Interacting with Link Previews:</h5>
+                    <ul>
+                        <li>If a message contains a URL, it will be displayed with a link preview card. The card includes an image, title, and description of the linked content.</li>
+                        <li>Click the <strong>Go to link</strong> button in the link preview card to visit the linked content.</li>
+                    </ul>
+                    <h5>Tips for Effective Use:</h5>
+                    <ul>
+                        <li><strong>Stay Organized:</strong> Use the category filters to quickly find relevant messages and reduce clutter.</li>
+                        <li><strong>Engage with Content:</strong> Take advantage of link previews to easily access additional content shared by other users.</li>
+                        <li><strong>Contribute:</strong> Share your thoughts, updates, and helpful links by posting messages regularly.</li>
+                    </ul>
+                    <p><strong>We hope you find the chat board useful for staying connected and informed. Enjoy your conversations!</strong></p>
+
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="container-fluid my-4 chat-board">
+                <div class="row mb-5">
+                    <div class="col">
+                        <div class="settings-container d-flex justify-content-between">
+                            <div class="setting-row">
+                                <span class="setting-text">All </span>
+                                <label class="switch">
+                                    <input type="radio" name="category" value="all" (change)="filterByCategory('all')" [checked]="selectedCategory === 'all'">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-row">
+                                <span class="setting-text">Support</span>
+                                <label class="switch">
+                                    <input type="radio" name="category" value="support" (change)="filterByCategory('support')" [checked]="selectedCategory === 'support'">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-row">
+                                <span class="setting-text">News</span>
+                                <label class="switch">
+                                    <input type="radio" name="category" value="news" (change)="filterByCategory('news')" [checked]="selectedCategory === 'news'">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-row">
+                                <span class="setting-text">App Activity</span>
+                                <label class="switch">
+                                    <input type="radio" name="category" value="company" (change)="filterByCategory('company')" [checked]="selectedCategory === 'company'">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col">
+                        <form (ngSubmit)="postMessage()">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Type your message..." [(ngModel)]="newMessage" name="message">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary btn-round btn-width" type="submit"><i class="fa-regular fa-paper-plane"></i> Post</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div>
+                            <div class="card-body">
+                                <div *ngFor="let post of filteredPosts" class="mb-3">
+                                    <div class="media chat-item">
+                                        <img [src]="post.imageUrl" class="mr-3 rounded-circle chat-avatar" alt="User avatar">
+                                        <div class="media-body chat-content">
+                                            <h5 class="mt-0 chat-name">{{ post.displayName || post.user }}
+                                            </h5>
+                                            <p class="text-muted chat-message" [innerHTML]="post.content | linkify"></p>
+                                            <div *ngIf="post.linkPreview" class="card link-preview" style="width: 18rem;">
+                                                <img [src]="post.linkPreview.image" class="card-img-top" alt="Link image">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">{{ post.linkPreview.title }}</h5>
+                                                    <p class="card-text">{{ post.linkPreview.description }}</p>
+                                                    <a [href]="post.linkPreview.url" class="btn btn-primary">Go to link</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="chat-timestamp" [title]="getExactTime(post.timestamp)">{{ getRelativeTime(post.timestamp) }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

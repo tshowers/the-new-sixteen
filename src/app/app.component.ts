@@ -17,6 +17,7 @@ import { filter } from 'rxjs/operators';
 export class AppComponent {
   title = 'Taliferro Platform';
   showHeader = true;
+  noHeaderRoutes = ['/login', '/plan-selection', '/sign-up', '/lms', '/finish-sign-up', '/finish-sign-in'];
   
   constructor(private router: Router) {
     // Listen to changes in the router
@@ -24,7 +25,7 @@ export class AppComponent {
       filter((event: RouterEvent): event is NavigationEnd => event instanceof NavigationEnd)
     ).subscribe((event: NavigationEnd) => {
       // Check if the current route is 'login'
-      this.showHeader = !event.urlAfterRedirects.includes('/login');
+      this.showHeader = !this.noHeaderRoutes.includes(event.urlAfterRedirects);
     });
   }
 

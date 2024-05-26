@@ -1,0 +1,30 @@
+.drop-zone {
+    border: 2px dashed #007bff;
+    border-radius: 5px;
+    padding: 20px;
+    text-align: center;
+    color: #007bff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .drop-zone:hover,
+  .drop-zone.dragover {
+    background-color: #f0f8ff;
+  }
+  
+  .file-browse-link {
+    color: #007bff;
+    text-decoration: underline;
+  }
+.progress {
+    height: 20px;
+  }
+  
+  .progress-bar {
+    background-color: #007bff;
+    text-align: center;
+    line-height: 20px;
+    color: white;
+  }
+  

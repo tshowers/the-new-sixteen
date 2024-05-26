@@ -1,0 +1,27 @@
+<div class="naics-type-ahead">
+    <input
+      type="text"
+      [(ngModel)]="naicsInput"
+      (input)="onInputChange(naicsInput)"
+      placeholder="Type NAICS code or title"
+      class="form-control"
+    />
+    <ul class="list-group mt-2" *ngIf="naicsInput">
+      <li
+        class="list-group-item"
+        *ngFor="let code of filteredNaicsCodes | async"
+        (click)="onSelectNaicsCode(code)"
+      >
+        {{ code.display }}
+      </li>
+    </ul>
+    <div class="selected-naics-codes mt-3">
+      <h5>Selected NAICS Codes:</h5>
+      <ul>
+        <li *ngFor="let code of selectedNaicsCodes">
+          {{ code }}
+        </li>
+      </ul>
+    </div>
+  </div>
+  

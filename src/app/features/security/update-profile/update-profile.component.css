@@ -1,0 +1,43 @@
+/* update-profile.component.css */
+.update-profile-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 1rem;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .update-profile-container h2 {
+    margin-bottom: 1rem;
+  }
+  
+  .update-profile-container div {
+    margin-bottom: 1rem;
+  }
+  
+  .update-profile-container label {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  
+  .update-profile-container input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .update-profile-container button {
+    padding: 0.5rem 1rem;
+    background: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .update-profile-container button:disabled {
+    background: #ccc;
+  }
+  

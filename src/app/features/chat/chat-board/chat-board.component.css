@@ -1,0 +1,201 @@
+
+  
+  .settings-container {
+    background-color: white; /* White background for the overall container */
+    padding: 20px;
+    border-radius: 12px; /* Rounded corners for the container */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: adds subtle shadow for depth */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .setting-row {
+    display: flex;
+    align-items: center;
+    margin-right: 10px; /* Space between each toggle */
+  }
+  
+  .setting-text {
+    margin-right: 10px; /* Space between text and switch */
+  }
+  
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 50px; /* Reduced width */
+    height: 28px; /* Reduced height */
+  }
+  
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 28px; /* Rounded corners */
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 20px; /* Reduced size */
+    width: 20px; /* Reduced size */
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+  }
+  
+  input:checked + .slider {
+    background-color: #2196F3;
+  }
+  
+  input:checked + .slider:before {
+    transform: translateX(22px); /* Adjusted for reduced size */
+  }
+  
+  .divider {
+    background-color: #ffffff;
+    margin: 20px 0;
+  }
+  
+  .new-section {
+    margin-top: 20px;
+    border-top: 1px solid #eee; /* Optional: if you want a top border for new sections */
+  }
+
+  .chat-board {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.chat-board h1 {
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+
+
+.input-group {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.input-group .form-control {
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+}
+
+.input-group .form-control:focus {
+    box-shadow: none;
+}
+
+.input-group .input-group-append .btn {
+    border: none;
+}
+
+/* Container card */
+.card {
+  background-color: #f9f9f9;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Chat item */
+.chat-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 15px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s, box-shadow 0.3s;
+  margin-bottom: 10px;
+}
+
+.chat-item:hover {
+  background-color: #f1f1f1;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Chat avatar */
+.chat-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+
+/* Chat content */
+.chat-content {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Chat name */
+.chat-name {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+/* Chat message */
+.chat-message {
+  margin-bottom: 5px;
+  color: #666;
+}
+
+/* Link preview card */
+.link-preview {
+  margin-top: 10px;
+  border-radius: 10px;
+}
+
+.link-preview img {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.link-preview .card-body {
+  padding: 15px;
+}
+
+.link-preview .card-title {
+  margin-bottom: 10px;
+  font-size: 1.1em;
+}
+
+.link-preview .card-text {
+  margin-bottom: 15px;
+  color: #666;
+}
+
+
+  
+/* Chat timestamp */
+.chat-timestamp {
+  font-size: 0.85em;
+  color: #888;
+  margin-left: auto;
+  padding-left: 10px;
+  white-space: nowrap;
+}  
+
+  

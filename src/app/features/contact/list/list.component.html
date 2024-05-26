@@ -3,13 +3,12 @@
         <div class="col">
             <h1>Contacts</h1>
         </div>
-        <div class="col-md-5 text-right">
-            <button (click)="navigateToEditContact()" class="btn" id="addContactIcon" title="Add a Contact Record"><i class="fa-solid fa-plus"></i></button>
+        <div class="col-md-7 text-right">
+            <button (click)="navigateToEditContact()" class="btn" id="addContactIcon" title="Add a Contact Record"><i class="fa-solid fa-plus"></i> Add a Contact </button>
             <button class="btn" (click)="exportToCSV()" id="exportContactsIcon" title="Export">
-                <i class="fa-solid fa-file-export"></i>
-            </button>
-            <button (click)="resetPagination()" class="btn" id="exportContactsIcon" title="Reset the Record List"><i class="fa-solid fa-window-restore"></i></button>
-            <button (click)="loadMore()" class="btn" id="exportContactsIcon" title="Load More Records"><i class="fa-solid fa-download"></i></button>
+                <i class="fa-solid fa-file-export"></i> Export </button>
+            <button (click)="resetPagination()" class="btn" id="exportContactsIcon" title="Reset the Record List"><i class="fa-solid fa-window-restore"></i> Reset</button>
+            <button (click)="loadMore()" class="btn" id="exportContactsIcon" title="Load More Records"><i class="fa-solid fa-download"></i> Load More</button>
         </div>
         <div class="col-md-1">
             <select name="numberOfItems" id="numberOfItems" class="form-control form-control-lg ta-input-element" [(ngModel)]="pageSize" (change)="onNumberOfItemsChange()">
@@ -20,8 +19,32 @@
             </select>
         </div>
     </div>
+    <div class="row">
+        <div class="col">
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                <div class="instructions">
+                    <h3>Contact Filtering</h3>
+                    <ol>
+                      <li><strong>Enter Keywords:</strong> Use the search bar to enter keywords related to the contact you’re looking for (e.g., name, email, company).</li>
+                      <li><strong>Automatic Filtering:</strong> The contact list will automatically update to show only those contacts that match your search criteria.</li>
+                      <li><strong>Clear Search:</strong> To clear the filter and view all contacts again, simply delete the text in the search bar.</li>
+                    </ol>
+                    
+                    <h3>Contact Sorting</h3>
+                    <ol>
+                      <li><strong>Click Column Headers:</strong> Click on any column header (e.g., Name, Email, Company) to sort the contact list by that column.</li>
+                      <li><strong>Toggle Sort Order:</strong> Clicking the same column header again will toggle the sort order between ascending and descending.</li>
+                      <li><strong>Active Sort Indication:</strong> The current sorted column will be highlighted, and an arrow will indicate the sort direction (up for ascending, down for descending).</li>
+                    </ol>
+                  </div>
+                  
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+        </div>
+    </div>
     <div class="row mb-5 mt-2">
         <div class="col-md-10">
+
             <div class="input-group"> <span class="input-group-addon bg-theme"><i class="fas fa-filter"></i></span>
                 <!-- Use 'disabled' binding with the async pipe to check if contacts exist and are more than 0 -->
                 <input [(ngModel)]="searchText" type="text" name="searchText" id="searchText" class="form-control form-control-lg ta-input-element" placeholder="Filter contacts . . ." [disabled]="(contacts$ | async)?.length === 0">
@@ -34,27 +57,27 @@
             </span>
         </div>
     </div>
-    <table class="table table-hover table-striped">
-        <thead>
+    <table class="table table-hover table-striped table-bordered table-responsive-md">
+        <thead class="table-dark">
             <tr>
-                <th>Company</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Email</th>
-                <th>Category</th>
+                <th (click)="sortData('company')" [class.sortable]="true" [class.sorted-asc]="sortField === 'company' && sortOrder === 'asc'" [class.sorted-desc]="sortField === 'company' && sortOrder === 'desc'">Company</th>
+                <th (click)="sortData('firstName')" [class.sortable]="true" [class.sorted-asc]="sortField === 'firstName' && sortOrder === 'asc'" [class.sorted-desc]="sortField === 'firstName' && sortOrder === 'desc'">First Name</th>
+                <th (click)="sortData('lastName')" [class.sortable]="true" [class.sorted-asc]="sortField === 'lastName' && sortOrder === 'asc'" [class.sorted-desc]="sortField === 'lastName' && sortOrder === 'desc'">Last Name</th>
+                <th (click)="sortData('email')" [class.sortable]="true" [class.sorted-asc]="sortField === 'email' && sortOrder === 'asc'" [class.sorted-desc]="sortField === 'email' && sortOrder === 'desc'">Email</th>
+                <th (click)="sortData('profileTypes')" [class.sortable]="true" [class.sorted-asc]="sortField === 'profileTypes' && sortOrder === 'asc'" [class.sorted-desc]="sortField === 'profileTypes' && sortOrder === 'desc'">Type</th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let contact of data | filterContacts:searchText" (click)="onView(contact)" style="cursor: pointer;">
                 <td>{{ contact?.company?.name }}</td>
-                <!-- Safely access the first email address, if available -->
                 <td class="text-capitalize">{{ contact?.firstName }}</td>
                 <td class="text-capitalize">{{ contact?.lastName }}</td>
+                <!-- Safely access the first email address, if available -->
                 <td>{{ (contact.emailAddresses && contact.emailAddresses.length && contact.emailAddresses.length > 0) ? contact.emailAddresses[0].emailAddress : 'No email' }}</td>
                 <td>
                     <div *ngIf="contact.profileTypes">
-                        <span *ngFor="let category of contact.profileTypes; let i = index">
-                            {{category}}
+                        <span *ngFor="let type of contact.profileTypes; let i = index">
+                            {{type}}
                         </span>
                     </div>
                 </td>

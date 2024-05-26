@@ -1,0 +1,87 @@
+<h1>
+    Dropdown Manager
+</h1>
+<div class="dropdown-manager">
+    <div class="dropdown-header">
+      <label class="header-label">Select Dropdown to Manage:</label>
+      <div class="radio-group">
+        <div *ngFor="let collection of collections" class="radio-item">
+          <input type="radio" [value]="collection" name="collection" [(ngModel)]="selectedCollection" (change)="onCollectionChange()" id="{{collection}}" class="radio-input">
+          <label [for]="collection" class="radio-label">{{ collection | formatKey }}</label>
+        </div>
+      </div>
+    </div>
+  
+    <div *ngIf="selectedCollection" class="dropdown-content">
+      <h2 class="content-header">Managing {{ selectedCollection | formatKey }}</h2>
+      <ul class="item-list">
+        <li *ngFor="let item of dropdownItems" class="item">
+          <input [(ngModel)]="item.name" (blur)="updateItem(item)" class="item-input">
+          <button (click)="deleteItem(item.id)" class="delete-button">Delete</button>
+        </li>
+      </ul>
+  
+      <div class="add-item">
+        <input type="text" [(ngModel)]="newItem.name" placeholder="New Item" class="add-input">
+        <button (click)="addItem()" class="add-button">Add</button>
+      </div>
+    </div>
+  </div>
+  
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="alert alert-info alert-dismissible fade show mt-5" role="alert">
+                <div class="instructions">
+                    <h2>How to Use the Dropdown Manager Component</h2>
+                    <p>This guide will help you manage various dropdown items stored in your Firebase Firestore database using the Dropdown Manager Component.</p>
+                    
+                    <h3>Step-by-Step Instructions:</h3>
+                    <ol>
+                      <li><strong>Select a Dropdown Type:</strong>
+                        <p>In the "Select Dropdown to Manage" section, choose the type of dropdown you want to manage by clicking on one of the radio buttons (e.g., Categories, States, Status, Profile Types, Product Types).</p>
+                      </li>
+                      <li><strong>View Existing Items:</strong>
+                        <p>After selecting a dropdown type, a list of existing items for that dropdown will be displayed. Each item will have an input field and a "Delete" button.</p>
+                      </li>
+                      <li><strong>Update an Item:</strong>
+                        <p>To update an item's name, simply modify the text in the input field. The change will be saved automatically when you click outside the input field.</p>
+                      </li>
+                      <li><strong>Delete an Item:</strong>
+                        <p>To delete an item, click the "Delete" button next to the item. This will remove the item from the list and the database.</p>
+                      </li>
+                      <li><strong>Add a New Item:</strong>
+                        <p>At the bottom of the list, there is an "Add Item" section.</p>
+                        <ul>
+                          <li>Enter the name of the new item in the input field provided.</li>
+                          <li>Click the "Add" button to save the new item to the database. The item will then appear in the list of existing items.</li>
+                        </ul>
+                      </li>
+                    </ol>
+                    
+                    <h3>Example Usage:</h3>
+                    <ul>
+                      <li>Select "Categories" from the radio buttons.</li>
+                      <li>View the current list of categories.</li>
+                      <li>Edit the name of a category by typing a new name and clicking outside the input field to save.</li>
+                      <li>Delete a category by clicking the "Delete" button next to it.</li>
+                      <li>Add a new category by typing its name in the "New Item" field and clicking "Add."</li>
+                    </ul>
+                    
+                    <h3>Notes:</h3>
+                    <ul>
+                      <li>Ensure you have a stable internet connection as the component interacts with Firebase Firestore to fetch, update, and delete data.</li>
+                      <li>Any changes you make (add, update, delete) are immediately reflected in the database.</li>
+                    </ul>
+                    
+                    <p>This component provides a user-friendly interface to manage dropdown items efficiently, enhancing the overall usability of your application.</p>
+                  </div>
+                  
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+                    </div>
+    </div>
+</div>
+
+  
+  

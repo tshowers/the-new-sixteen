@@ -1,0 +1,20 @@
+/* src/app/components/plan-selection/plan-selection.component.css */
+.plan-card {
+  border-radius: 15px;
+  cursor: pointer;
+  height: 100%;
+  transition: transform 0.2s;
+}
+
+.plan-card:hover {
+  transform: scale(1.05);
+}
+
+.plan-card.selected {
+  background-color: #d1e7dd;
+  border-color: #0f5132;
+}
+
+.plan-card:not(.selected):not(:hover) {
+  opacity: 0.9;
+}
