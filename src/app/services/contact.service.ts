@@ -8,7 +8,8 @@ import { Contact, Communication, Interaction, SuggestedContact } from '../shared
 export class ContactService {
   private contactSource = new BehaviorSubject<Contact | null>(null);
   currentContact = this.contactSource.asObservable();
-
+  private queueSource = new BehaviorSubject<Contact[]>([]);
+  currentQueue = this.queueSource.asObservable();
   constructor() { }
 
   changeContact(contact: Contact) {
@@ -90,6 +91,8 @@ export class ContactService {
 
     return { score, reason };
   }
+
+  
 
   getSuggestedContact(contacts: Contact[], communications: Communication[], interactions: Interaction[]): SuggestedContact {
     if (!contacts.length) {
@@ -181,5 +184,7 @@ export class ContactService {
   }
 
 
-
+  setQueue(queue: Contact[]): void {
+    this.queueSource.next(queue);
+  }
 }
